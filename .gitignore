@@ -1,0 +1,15 @@
+#-------------------------------------------------------------------------------------------------------------------------------#
+# https://www.atlassian.com/git/tutorials/saving-changes/gitignore																#
+#-------------------------------------------------------------------------------------------------------------------------------#
+# Pattern			| Example matches							| Explanation													#
+#-------------------|-------------------------------------------|---------------------------------------------------------------#
+# file.name			| file.name and		dir/file.name			| By default, patterns match files in any directory				#
+# /file.name		| file.name but not	dir/file.name			| Prepending a slash matches files only in the repository root	#
+# name				| name name/* dir/name dir/name/*			| The pattern will match both files and the contents of dirs	#
+# name/				| name/* 	and		dir/name/*				| The entire contents of any directory will be ignored			#
+# !file.name		| file.name will NOT be ignored				| Prepending an exclamation mark to a pattern negates it		#
+#-------------------------------------------------------------------------------------------------------------------------------#
+.idea/
+logs/
+venv
+/node_modules
