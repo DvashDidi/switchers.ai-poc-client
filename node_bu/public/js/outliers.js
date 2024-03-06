@@ -105,7 +105,7 @@ function getQuestionData(questionNumber) {
     }).then(function (data) {
         updateQuestionData(charts.questions, data);
     }).catch(function (error) {
-        console.error(error)
+        console.error(error);
     });
 }
 
@@ -164,7 +164,7 @@ function getOutliersData() {
             addClickableItem(question[0], question[1]);
         });
     }).catch(function (error) {
-        console.error(error)
+        console.error(error);
     });
 }
 
@@ -174,6 +174,9 @@ $(document).ready(function () {
     });
     $("#questions-nav-btn").on('click', function () {
         window.location.replace("questions");
+    });
+    $("#settings-nav-btn").on('click', function () {
+        window.location.replace("settings");
     });
 
     $('#sensitivity-level-input').on('input', function () {

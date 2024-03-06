@@ -1,4 +1,4 @@
-let apiHost = "https://12a2-2a06-c701-7400-5c00-8ccb-6baf-43a5-68db.ngrok-free.app";
+let apiHost = "https://ba00-2a06-c701-4cf4-af00-d5f9-1ba8-6bee-bc47.ngrok-free.app";
 
 const CHART_COLORS = {
     BLUE: 'rgb(54, 162, 235)',
@@ -109,3 +109,152 @@ function setGlobalViewMode() {
 }
 
 setGlobalViewMode();
+
+
+///////////////////////////////////////////
+///////////////////////////////     filters
+const pov_filters = {
+    "Arben Vitia": {
+        "Vitia's Base Voters": {
+            "filters": [{
+                "question_id": 13,
+                "excluded_answers_ids": [2, 10, 11, 12]
+            }],
+            "logical_operator": "AND"
+        },
+        "Vitia's Potential Voters": {
+            "filters": [{
+                "question_id": 13,
+                "excluded_answers_ids": [1, 2]
+            }, {
+                "question_id": 15,
+                "excluded_answers_ids": [3, 5, 6]
+            }, {
+                "question_id": 16,
+                "excluded_answers_ids": [1, 2]
+            }],
+            "logical_operator": "AND"
+        }
+    },
+    "Përparim Rama": {
+        "Rama's Base Voters": {
+            "filters": [{
+                "question_id": 13,
+                "excluded_answers_ids": [1, 10, 11, 12]
+            }],
+            "logical_operator": "AND"
+        },
+        "Rama's Potential Voters": {
+            "filters": [{
+                "question_id": 13,
+                "excluded_answers_ids": [1, 2]
+            }, {
+                "question_id": 15,
+                "excluded_answers_ids": [1, 2]
+            }, {
+                "question_id": 16,
+                "excluded_answers_ids": [3, 5, 6]
+            }],
+            "logical_operator": "AND"
+        }
+    }
+}
+
+async function set_pov(pov_name, filters_list) {
+    if (pov_name in pov_filters) {
+        let new_filters = Object.keys(pov_filters[pov_name]);
+
+        if (!new_filters.includes("All")) {
+            new_filters.push("All");
+        }
+
+        const filtersToRemove = filters_list.filter(item => !new_filters.includes(item));
+        const filtersToAdd = new_filters.filter(item => !filters_list.includes(item));
+
+        // Remove old filters
+        filtersToRemove.forEach(async value => await remove_filter(value));
+
+        // Create new filters
+        for (const filter_name of filtersToAdd) {
+            await create_filter(filter_name, pov_filters[pov_name][filter_name]);
+        }
+    }
+}
+
+function remove_filter(filter_name) {
+    return new Promise(function (resolve, reject) {
+        fetch(`${apiHost}/filter/${filter_name}`, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": true
+                }
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                return response.text().then(function (message) {
+                    throw new Error(`${message}`);
+                });
+            }
+
+            return response.json();
+        }).then(function (data) {
+            resolve(data);
+        }).catch(function (error) {
+            reject(error);
+        });
+    });
+}
+
+function create_filter(filter_name, filter_config) {
+    return new Promise(function (resolve, reject) {
+        fetch(`${apiHost}/filter/${filter_name}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": true
+                },
+                body: JSON.stringify(filter_config)
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                return response.text().then(function (message) {
+                    throw new Error(`${message}`);
+                });
+            }
+
+            return response.json();
+        }).then(function (data) {
+            resolve(data);
+        }).catch(function (error) {
+            reject(error);
+        });
+    });
+}
+
+function getAllFilters() {
+    return new Promise(function (resolve, reject) {
+        fetch(`${apiHost}/filter`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": true
+                }
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                return response.text().then(function (message) {
+                    throw new Error(`${message}`);
+                });
+            }
+
+            return response.json();
+        }).then(function (data) {
+            resolve(data);
+        }).catch(function (error) {
+            reject(error);
+        });
+    });
+}
+
+//////////////////////////////////////////

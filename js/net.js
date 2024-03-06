@@ -6,6 +6,9 @@ $(document).ready(function () {
         $("#outliers-nav-btn").on('click', function () {
             window.location.replace("outliers");
         });
+        $("#settings-nav-btn").on('click', function () {
+            window.location.replace("settings");
+        });
 
         // Function to create the dynamic table
         function createDynamicTable(headers, rows) {
@@ -32,7 +35,6 @@ $(document).ready(function () {
             });
         }
 
-
         fetch( `${apiHost}/statistics/net`, {
                 method: "GET",
                 headers: {
@@ -51,7 +53,7 @@ $(document).ready(function () {
         }).then(function (data) {
             createDynamicTable(data.headers, data.rows);
         }).catch(function (error) {
-            console.error(error)
+            console.error(error);
         });
     }
 });

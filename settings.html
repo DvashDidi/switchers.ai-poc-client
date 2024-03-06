@@ -6,7 +6,7 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <link href="images/icons/dashboard.webp" rel="shortcut icon">
 
-    <title>Switchers.ai | Dashboard</title>
+    <title>Switchers.ai | Settings</title>
 
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           rel="stylesheet" type="text/css">
@@ -20,46 +20,55 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/main_view.css">
-    <link rel="stylesheet" href="css/net.css">
+<!--    <link rel="stylesheet" href="css/settings.css">-->
 </head>
+<body class="body-background-dark">
 <style>
-    /* Custom CSS for scrollable table with sticky header */
-    .table-container {
-        max-height: 80vh; /* Adjust the maximum height as needed */
-        overflow-y: auto;
-        overflow-x: auto;
-    }
-
-    thead {
-        position: sticky;
-        top: 0;
-        background-color: #fff; /* Change the background color as needed */
-        z-index: 1; /* Ensure the header stays above other elements */
-    }
-
     .navbar-brand img {
         height: 40px; /* or whatever size you prefer */
         width: auto; /* this will keep the image ratio */
         /* additional styles if needed */
     }
+
+    /* Style for the floating button */
+    #save-settings {
+        position: fixed; /* Fixed position relative to the viewport */
+        right: 20px; /* 20px from the right */
+        bottom: 20px; /* 20px from the bottom */
+        padding: 10px 20px;
+        background-color: #007bff; /* Example background color */
+        color: white; /* Text color */
+        border: none; /* No border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        z-index: 1000; /* Ensure it's above other items */
+    }
+
+    /* Optional: Add some responsiveness to ensure it doesn't overlap content */
+    @media (max-width: 600px) {
+        #floatingButton {
+            right: 10px;
+            bottom: 10px;
+            padding: 5px 10px;
+        }
+    }
 </style>
-<body class="body-background-dark">
 
 <div>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-md bg-dark">
 <!--        <h1 class="navbar-brand random-color text-success">Switchers.ai</h1>-->
         <a href="/" class="navbar-brand">
-            <img src="images/icons/logo.svg" alt="Switchers.ai Logo">
+            <img src="images/icons/logo.jpg" alt="Switchers.ai Logo">
         </a>
 
         <div class="collapse navbar-collapse" id="switchers-navbar">
             <div class="navbar-nav">
-                <button type="button" class="btn btn-sm text-white m-1" id="settings-nav-btn" data-toggle="tooltip" data-placement="bottom" title="settings">
+                <button type="button" class="btn btn-sm bg-primary text-white m-1" id="settings-nav-btn" data-toggle="tooltip" data-placement="bottom" title="settings">
                     <i class="bi bi-gear"></i>
                     Settings
                 </button>
-                <button type="button" class="btn btn-sm bg-primary text-white m-1" id="net-nav-btn" data-toggle="tooltip" data-placement="bottom" title="net">
+                <button type="button" class="btn btn-sm text-white m-1" id="net-nav-btn" data-toggle="tooltip" data-placement="bottom" title="net">
                     <i class="bi bi-speedometer2"></i>
                     Net
                 </button>
@@ -91,22 +100,24 @@
 
     <!-- MAIN VIEW-->
     <div class="container-fluid">
-            <!--Main layout-->
-            <main>
+        <!--Main layout-->
+        <main>
 
-                <div class="pt-2">
-                    <div class="row mt-3 mb-2">
-                            <h2>Net Data</h2>
-                            <div class="table-container">
-                                <table class="table table-bordered">
-                                    <thead id="table-header"></thead>
-                                    <tbody id="table-body"></tbody>
-                                </table>
-                            </div>
-                    </div>
+            <div class="pt-2">
+                <div class="row mt-3 mb-2">
+                    <h2>Set point of view:</h2>
+                    <select id="pov-choice" class="form-select" aria-label="Default select example">
+                        <option disabled selected>Select a candidate to inspect</option>
+                        <option value="Përparim Rama">Përparim Rama</option>
+                        <option value="Arben Vitia">Arben Vitia</option>
+                    </select>
                 </div>
-            </main>
-            <!--Main layout-->
+
+                <!-- Floating button at the bottom -->
+                <button id="save-settings">Save Settings</button>
+            </div>
+        </main>
+        <!--Main layout-->
     </div>
     <!-- END OF MAIN VIEW-->
 </div>
@@ -120,9 +131,11 @@
 <script crossorigin="anonymous" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"
         type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"
+        type="text/javascript"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="js/template.js" type="text/javascript"></script>
-<script src="js/net.js" type="text/javascript"></script>
+<script src="js/settings.js" type="text/javascript"></script>
 </body>
 </html>

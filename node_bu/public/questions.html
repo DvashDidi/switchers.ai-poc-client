@@ -52,15 +52,29 @@
         width: auto; /* or any other fixed size */
         height: 72.65vh;
     }
+
+    .navbar-brand img {
+        height: 40px; /* or whatever size you prefer */
+        width: auto; /* this will keep the image ratio */
+        /* additional styles if needed */
+    }
 </style>
 <body class="body-background-dark">
 
 <div>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-md bg-dark">
-        <h1 class="navbar-brand random-color text-success">Switchers.ai</h1>
+<!--        <h1 class="navbar-brand random-color text-success">Switchers.ai</h1>-->
+        <a href="/" class="navbar-brand">
+            <img src="images/icons/logo.svg" alt="Switchers.ai Logo">
+        </a>
+
         <div class="collapse navbar-collapse" id="switchers-navbar">
             <div class="navbar-nav">
+                <button type="button" class="btn btn-sm text-white m-1" id="settings-nav-btn" data-toggle="tooltip" data-placement="bottom" title="settings">
+                    <i class="bi bi-gear"></i>
+                    Settings
+                </button>
                 <button type="button" class="btn btn-sm text-white m-1" id="net-nav-btn" data-toggle="tooltip"
                         data-placement="bottom" title="net">
                     <i class="bi bi-speedometer2"></i>
