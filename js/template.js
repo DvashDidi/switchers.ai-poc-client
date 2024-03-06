@@ -94,6 +94,8 @@ function updateLightDarkView() {
     $(".btn-success, .btn-info").toggleClass("btn-success btn-info");
     $(".text-dark, .text-white").toggleClass("text-dark text-white");
     $(".body-background-dark, .body-background-light").toggleClass("body-background-dark body-background-light");
+
+    $('#site-logo').toggleClass('light-logo');
 }
 
 function setGlobalViewMode() {

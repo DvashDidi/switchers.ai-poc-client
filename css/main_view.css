@@ -80,3 +80,22 @@ h3 {
     }
 
 }
+
+.logo {
+    width: 150px; /* or the width of your logo */
+    height: 50px; /* or the height of your logo */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: background-image 0.5s ease; /* smooth transition for changing the logo */
+}
+
+/* Default logo, assuming it's the dark theme logo */
+.logo {
+    background-image: url('../images/icons/white_logo.svg');
+}
+
+/* Class to add to your element to switch to the light theme logo */
+.light-logo {
+    background-image: url('../images/icons/black_logo.svg');
+}
