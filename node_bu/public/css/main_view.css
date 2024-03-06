@@ -91,11 +91,11 @@ h3 {
 }
 
 /* Default logo, assuming it's the dark theme logo */
-.logo {
+.dark-mode-logo {
     background-image: url('../images/icons/white_logo.svg');
 }
 
 /* Class to add to your element to switch to the light theme logo */
-.light-logo {
+.light-mode-logo {
     background-image: url('../images/icons/black_logo.svg');
 }
