@@ -1,4 +1,4 @@
-let apiHost = "https://ba00-2a06-c701-4cf4-af00-d5f9-1ba8-6bee-bc47.ngrok-free.app";
+let apiHost = "https://f8c2-2a06-c701-44b2-1e00-755f-b255-d1cb-fd9d.ngrok-free.app";
 
 const CHART_COLORS = {
     BLUE: 'rgb(54, 162, 235)',
