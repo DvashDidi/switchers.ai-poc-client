@@ -1,4 +1,4 @@
-let apiHost = "https://f8c2-2a06-c701-44b2-1e00-755f-b255-d1cb-fd9d.ngrok-free.app";
+let apiHost = "https://api.switchers.ai/";
 
 const CHART_COLORS = {
     BLUE: 'rgb(54, 162, 235)',
