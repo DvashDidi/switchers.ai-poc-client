@@ -1,4 +1,4 @@
-let apiHost = "https://api.switchers.ai/";
+let apiHost = "https://api.switchers.ai";
 
 const CHART_COLORS = {
     BLUE: 'rgb(54, 162, 235)',
