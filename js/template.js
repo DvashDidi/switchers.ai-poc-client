@@ -118,14 +118,14 @@ setGlobalViewMode();
 ///////////////////////////////     filters
 const pov_filters = {
     "Arben Vitia": {
-        "Vitia's Base Voters": {
+        "Base Vitia": {
             "filters": [{
                 "question_id": 13,
                 "excluded_answers_ids": [2, 10, 11, 12]
             }],
             "logical_operator": "AND"
         },
-        "Vitia's Potential Voters": {
+        "Switchers Vitia": {
             "filters": [{
                 "question_id": 13,
                 "excluded_answers_ids": [1, 2]
@@ -140,14 +140,14 @@ const pov_filters = {
         }
     },
     "Përparim Rama": {
-        "Rama's Base Voters": {
+        "Base Rama": {
             "filters": [{
                 "question_id": 13,
                 "excluded_answers_ids": [1, 10, 11, 12]
             }],
             "logical_operator": "AND"
         },
-        "Rama's Potential Voters": {
+        "Switchers Rama's": {
             "filters": [{
                 "question_id": 13,
                 "excluded_answers_ids": [1, 2]
