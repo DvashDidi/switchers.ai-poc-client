@@ -147,7 +147,7 @@ const pov_filters = {
             }],
             "logical_operator": "AND"
         },
-        "Switchers Rama's": {
+        "Switchers Rama": {
             "filters": [{
                 "question_id": 13,
                 "excluded_answers_ids": [1, 2]
