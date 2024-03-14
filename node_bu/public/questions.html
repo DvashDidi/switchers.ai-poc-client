@@ -22,57 +22,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           crossorigin="anonymous">
 
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/main_view.css">
     <link rel="stylesheet" href="css/questions.css">
 </head>
-<style>
-    /* Custom CSS for scrollable container */
-    .scrollable-container {
-        max-height: 80vh; /* Adjust the maximum height as needed */
-        overflow-y: auto;
-        overflow-x: auto;
-    }
 
-    /* Media query for small screens */
-    @media (max-width: 576px) {
-        .scrollable-container {
-            max-height: 35vh; /* Adjusted height for small screens */
-            overflow-y: scroll;
-        }
-    }
-
-    /* Custom CSS for distinction between list items */
-    .list-group-item {
-        border: 1px solid #dee2e6; /* Add border around list items */
-        cursor: pointer;
-        transition: background-color 0.3s ease; /* Smooth transition for background color */
-    }
-
-    .list-group-item.clicked {
-        background-color: rgba(144, 181, 230, 0.87); /* Background color for clicked item */
-    }
-
-    .list-group-item:hover {
-        background-color: #9ed797; /* Background color on hover */
-    }
-
-    .list-group-item:not(:last-child) {
-        border-bottom: 1px solid #6f7580; /* Add border between list items */
-    }
-
-    .chart-container {
-        width: auto; /* or any other fixed size */
-        height: 71.55vh;
-    }
-
-    .navbar-brand img {
-        height: 40px; /* or whatever size you prefer */
-        width: auto; /* this will keep the image ratio */
-        /* additional styles if needed */
-    }
-
-</style>
 <body class="body-background-dark">
 
 <div>
@@ -85,21 +40,28 @@
 
         <div class="collapse navbar-collapse" id="switchers-navbar">
             <div class="navbar-nav">
-                <button type="button" class="btn btn-sm text-white m-1" id="settings-nav-btn" data-toggle="tooltip" data-placement="bottom" title="settings">
+                <button type="button" class="btn btn-sm text-white m-1" id="settings-nav-btn"
+                        data-target="settings.html"
+                        data-toggle="tooltip"
+                        data-placement="bottom" title="settings">
                     <i class="bi bi-gear"></i>
                     Settings
                 </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="net-nav-btn" data-toggle="tooltip"
+                <button type="button" class="btn btn-sm text-white m-1" id="net-nav-btn"
+                        data-target="net.html"
+                        data-toggle="tooltip"
                         data-placement="bottom" title="net">
                     <i class="bi bi-speedometer2"></i>
                     Net
                 </button>
                 <button type="button" class="btn btn-sm bg-primary text-white m-1" id="questions-nav-btn"
+                        data-target="questions.html"
                         data-toggle="tooltip" data-placement="bottom" title="questions">
                     <i class="bi bi-pie-chart"></i>
                     Questions
                 </button>
                 <button type="button" class="btn btn-sm text-white m-1" id="impacts-nav-btn"
+                        data-target="outliers.html"
                         data-toggle="tooltip" data-placement="bottom" title="impacts">
                     <i class="bi bi-clipboard-data"></i>
                     Impacts
@@ -135,29 +97,6 @@
                             <div class="list-group" id="questions-list">
                                 <!-- Clickable list items will be appended here dynamically -->
                             </div>
-                            <!--                            <div class="accordion" id="accordionExample">-->
-                            <!--                                <div class="accordion-item">-->
-                            <!--                                    <h2 class="accordion-header" id="headingOne">-->
-                            <!--                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"-->
-                            <!--                                                data-bs-target="#collapseOne" aria-expanded="true"-->
-                            <!--                                                aria-controls="collapseOne">-->
-                            <!--                                            Accordion Item #1-->
-                            <!--                                        </button>-->
-                            <!--                                    </h2>-->
-                            <!--                                    <div id="collapseOne" class="accordion-collapse collapse show"-->
-                            <!--                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">-->
-                            <!--                                        <div class="accordion-body">-->
-                            <!--                                            <strong>This is the first item's accordion body.</strong> It is shown by-->
-                            <!--                                            default, until the collapse plugin adds the appropriate classes that we use-->
-                            <!--                                            to style each element. These classes control the overall appearance, as well-->
-                            <!--                                            as the showing and hiding via CSS transitions. You can modify any of this-->
-                            <!--                                            with custom CSS or overriding our default variables. It's also worth noting-->
-                            <!--                                            that just about any HTML can go within the <code>.accordion-body</code>,-->
-                            <!--                                            though the transition does limit overflow.-->
-                            <!--                                        </div>-->
-                            <!--                                    </div>-->
-                            <!--                                </div>-->
-                            <!--                            </div>-->
                         </div>
                     </div>
                     <div class="col-md-9 mb-2 col-sm-12 mb-1">
@@ -170,11 +109,6 @@
                                     <div class="col-4">
                                     </div>
                                     <div class="col-4">
-<!--                                        <button class="btn btn-sm btn-success btn-block" id="questions-table-style-btn">-->
-<!--                                            <i class="bi bi-arrow-clockwise"></i>-->
-<!--                                            Change Table Style-->
-<!--                                        </button>-->
-<!--                                        <h3 class="text-white" id="sensitivity-level-value"></h3>-->
                                     </div>
                                 </div>
                             </div>

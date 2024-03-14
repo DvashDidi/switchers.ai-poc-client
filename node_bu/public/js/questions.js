@@ -54,23 +54,25 @@ let charts = {
     }
 };
 
-function addClickableItem(parentContainer, questionNumber, questionText) {
+function addClickableItem(parentContainer, question) {
     // Create the list item element
     const listItem = document.createElement('a');
-    listItem.dataset.questionNumber = questionNumber;
+    listItem.dataset.questionId = question["id"]
+    listItem.dataset.questionNumber = question["sequence_number"];
+    listItem.dataset.createdAt = question["created_at"];
 
     listItem.href = '#'; // Add a dummy href attribute for styling
     listItem.className = 'list-group-item list-group-item-action';
 
     // Create a strong element for the question number
     const strongElement = document.createElement('strong');
-    strongElement.textContent = `Question ${questionNumber}: `;
+    strongElement.textContent = `Question ${listItem.dataset.questionNumber}: `;
 
     // Append the strong element to the list item
     listItem.appendChild(strongElement);
 
     // Append the question text to the list item
-    listItem.appendChild(document.createTextNode(questionText));
+    listItem.appendChild(document.createTextNode(question["text"]));
 
     // Add click event listener to the list item
     listItem.addEventListener('click', (event) => {
@@ -82,18 +84,18 @@ function addClickableItem(parentContainer, questionNumber, questionText) {
         // Add the 'clicked' class to the clicked item
         listItem.classList.add('clicked');
 
-        getQuestionData(questionNumber);
+        getQuestionData(listItem.dataset.questionId);
     });
 
     // Append the new item to the list
     parentContainer.appendChild(listItem);
 }
 
-function getQuestionData(questionNumber) {
+function getQuestionData(questionId) {
     updateQuestionData(charts.questions, {datasets:[], labels: []});
 
 
-    fetch(`${apiHost}/statistics/${questionNumber}`, {
+    fetch(`${apiHost}/statistics/${questionId}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -144,17 +146,20 @@ function updateQuestionData(chartObj, data) {
 
 
 $(document).ready(function () {
-    $("#net-nav-btn").on('click', function () {
-        window.location.replace("net");
-    });
-    $("#impacts-nav-btn").on('click', function () {
-        window.location.replace("outliers");
-    });
-    $("#settings-nav-btn").on('click', function () {
-        window.location.replace("settings");
+    // Navigation button event handlers
+    $("#impacts-nav-btn, #net-nav-btn, #settings-nav-btn").each(function() {
+        $(this).on('click', function (e) {
+            e.preventDefault(); // Prevent the default action
+
+            // Push the current state to the history stack
+            history.pushState(null, null, location.href);
+
+            // Redirect to the target page
+            window.location.href = $(this).data('target');
+        });
     });
 
-    fetch(`${apiHost}/question`, {
+    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -173,9 +178,12 @@ $(document).ready(function () {
 
         // TODO: sort by q number
 
-        Object.entries(data).forEach((question) => {
-            addClickableItem(document.getElementById('questions-list'), question[0], question[1]);
-        });
+        for (const question of data){
+            addClickableItem(document.getElementById('questions-list'), question);
+        }
+        // Object.entries(data).forEach((question) => {
+        //     addClickableItem(document.getElementById('questions-list'), question);
+        // });
     }).catch(function (error) {
         console.error(error);
     });
