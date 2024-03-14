@@ -3,8 +3,8 @@ Chart.register(ChartDataLabels);
 let charts = {
     questions: {
         endpoint: "query/prediction/accuracy",
-        label: 'Questions Data',
-        canvas: $("#questions-chart"),
+        label: 'Impact Data',
+        canvas: $("#impacts-chart"),
         chart: undefined,
         currentData: {},
         baseConfig: {
@@ -13,7 +13,7 @@ let charts = {
                 labels: [],
                 datasets: [
                     {
-                        label: 'Empty Data',
+                        label: 'No data for selected impact',
                         data: [0, 0, 0],
                         backgroundColor: "rgba(255,0,0,0.34)",
                     }
@@ -23,6 +23,13 @@ let charts = {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
+                    tooltip: {
+                      callbacks: {
+                          title: (context) => {
+                              return context[0].label.replaceAll(',', ' ');
+                          }
+                      }
+                    },
                     datalabels: {
                         anchor: 'end', // Position of the labels (start, end, center, etc.)
                         align: 'end', // Alignment of the labels (start, end, center, etc.)
@@ -37,10 +44,10 @@ let charts = {
                     legend: {
                         position: 'top',
                     },
-                    title: {
-                        display: true,
-                        text: 'Question data'
-                    }
+                    // title: {
+                    //     display: true,
+                    //     text: 'Impact data'
+                    // }
                 },
                 height: 650
             }
@@ -50,7 +57,7 @@ let charts = {
 
 let sensitivityLevel = 30;
 
-function addClickableItem(questionNumber, questionText) {
+function addClickableItem(parentContainer, questionNumber, questionText) {
     // Create the list item element
     const listItem = document.createElement('a');
     listItem.dataset.questionNumber = questionNumber;
@@ -82,7 +89,7 @@ function addClickableItem(questionNumber, questionText) {
     });
 
     // Append the new item to the list
-    document.getElementById('questions-list').appendChild(listItem);
+    parentContainer.appendChild(listItem);
 }
 
 
@@ -132,6 +139,8 @@ function updateQuestionData(chartObj, data) {
 
     configCopy.data = chartObj.currentData;
 
+    configCopy.data.labels =  configCopy.data.labels.map(label => label.split (' '));
+
     if (chartObj.chart) {
         chartObj.chart.destroy();
     }
@@ -140,7 +149,12 @@ function updateQuestionData(chartObj, data) {
 }
 
 
-function getOutliersData() {
+function getImpactsData(first) {
+    if (!first) {
+        updateQuestionData(charts.questions, {datasets:[], labels: []});
+    }
+
+
     fetch(`${apiHost}/statistics/outliers/${sensitivityLevel}`, {
             method: "GET",
             headers: {
@@ -161,7 +175,7 @@ function getOutliersData() {
 
         // TODO: sort by q number
         Object.entries(data).forEach((question) => {
-            addClickableItem(question[0], question[1]);
+            addClickableItem(document.getElementById('questions-list'), question[0], question[1]);
         });
     }).catch(function (error) {
         console.error(error);
@@ -188,10 +202,54 @@ $(document).ready(function () {
     $('#sensitivity-level-value').text(sensitivityLevel);
 
     $("#new-data-btn").on("click", function () {
-        getOutliersData();
+        getImpactsData();
     });
 
-    getOutliersData();
+    $('.sensitivity-level-button').on('click', function() {
+        // Remove 'btn-primary' from all buttons and set them to 'btn-secondary'
+        $('.sensitivity-level-button').removeClass('btn-primary').addClass('btn-secondary');
+
+        // Set the clicked button to 'btn-primary'
+        $(this).removeClass('btn-secondary').addClass('btn-primary');
+
+        // Check the dataset level and perform actions accordingly
+        if ($(this).data('level') === "high") {
+            sensitivityLevel = 60;
+            // Code for 'high' level button
+        } else if ($(this).data('level') === "low") {
+            // Code for 'low' level button
+            sensitivityLevel = 20;
+        } else {
+            // Code for other cases
+            sensitivityLevel = 40;
+        }
+
+        getImpactsData();
+    });
+
+    // document.querySelectorAll('').forEach(button => {
+    //     button.addEventListener('click', function() {
+    //         // Remove 'btn-primary' from all buttons and set them to 'btn-secondary'
+    //         document.querySelectorAll('.sensitivity-level-button').forEach(btn => {
+    //             btn.classList.remove('btn-success');
+    //             btn.classList.add('btn-secondary');
+    //         });
+    //
+    //         // Set the clicked button to 'btn-primary'
+    //         this.classList.remove('btn-secondary');
+    //         this.classList.add('btn-success');
+    //
+    //         if (button.dataset.level === "high") {
+    //
+    //         } else if (button.dataset.level === "low") {
+    //
+    //         } else {
+    //
+    //         }
+    //     });
+    // });
+
+    getImpactsData(true);
 
     charts.questions.currentData = charts.questions.baseConfig.data;
     charts.questions.chart = new Chart(charts.questions.canvas, charts.questions.baseConfig);

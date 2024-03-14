@@ -2,7 +2,6 @@ Chart.register(ChartDataLabels);
 
 let charts = {
     questions: {
-        endpoint: "query/prediction/accuracy",
         label: 'Questions Data',
         canvas: $("#questions-chart"),
         chart: undefined,
@@ -13,7 +12,7 @@ let charts = {
                 labels: [],
                 datasets: [
                     {
-                        label: 'Empty Data',
+                        label: 'No data for selected question',
                         data: [0, 0, 0],
                         backgroundColor: "rgba(255,0,0,0.34)",
                     }
@@ -23,6 +22,13 @@ let charts = {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: (context) => {
+                                return context[0].label.replaceAll(',', ' ');
+                            }
+                        }
+                    },
                     datalabels: {
                         anchor: 'end', // Position of the labels (start, end, center, etc.)
                         align: 'end', // Alignment of the labels (start, end, center, etc.)
@@ -37,10 +43,10 @@ let charts = {
                     legend: {
                         position: 'top',
                     },
-                    title: {
-                        display: true,
-                        text: 'Question data'
-                    }
+                    // title: {
+                    //     display: true,
+                    //     text: 'Question data'
+                    // }
                 },
                 height: 650
             }
@@ -48,7 +54,7 @@ let charts = {
     }
 };
 
-function addClickableItem(questionNumber, questionText) {
+function addClickableItem(parentContainer, questionNumber, questionText) {
     // Create the list item element
     const listItem = document.createElement('a');
     listItem.dataset.questionNumber = questionNumber;
@@ -80,10 +86,13 @@ function addClickableItem(questionNumber, questionText) {
     });
 
     // Append the new item to the list
-    document.getElementById('questions-list').appendChild(listItem);
+    parentContainer.appendChild(listItem);
 }
 
 function getQuestionData(questionNumber) {
+    updateQuestionData(charts.questions, {datasets:[], labels: []});
+
+
     fetch(`${apiHost}/statistics/${questionNumber}`, {
             method: "GET",
             headers: {
@@ -123,6 +132,8 @@ function updateQuestionData(chartObj, data) {
     let configCopy = deepCopy(chartObj.baseConfig);
 
     configCopy.data = chartObj.currentData;
+    configCopy.data.labels = configCopy.data.labels.map(label => label.split(' '));
+
 
     if (chartObj.chart) {
         chartObj.chart.destroy();
@@ -136,7 +147,7 @@ $(document).ready(function () {
     $("#net-nav-btn").on('click', function () {
         window.location.replace("net");
     });
-    $("#outliers-nav-btn").on('click', function () {
+    $("#impacts-nav-btn").on('click', function () {
         window.location.replace("outliers");
     });
     $("#settings-nav-btn").on('click', function () {
@@ -163,7 +174,7 @@ $(document).ready(function () {
         // TODO: sort by q number
 
         Object.entries(data).forEach((question) => {
-            addClickableItem(question[0], question[1]);
+            addClickableItem(document.getElementById('questions-list'), question[0], question[1]);
         });
     }).catch(function (error) {
         console.error(error);

@@ -6,11 +6,11 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <link href="images/icons/favicon.svg" rel="shortcut icon">
 
-    <title>Switchers.ai | Outliers</title>
+    <title>Switchers.ai | Impacts</title>
 
-    <meta property="og:title" content="Switchers.ai | Outliers" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://app.switchers.ai/images/icons/favicon.svg" />
+    <meta property="og:title" content="Switchers.ai | Impacts"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://app.switchers.ai/images/icons/favicon.svg"/>
 
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           rel="stylesheet" type="text/css">
@@ -27,11 +27,22 @@
     <link rel="stylesheet" href="css/questions.css">
 </head>
 <style>
+    .col-8 .btn {
+        margin: 0 2px; /* Adjust the space between buttons */
+    }
+
     /* Custom CSS for scrollable container */
     .scrollable-container {
         max-height: 80vh; /* Adjust the maximum height as needed */
         overflow-y: auto;
-        overflow-x: auto;
+    }
+
+    /* Media query for small screens */
+    @media (max-width: 576px) {
+        .scrollable-container {
+            max-height: 35vh; /* Adjusted height for small screens */
+            overflow-y: scroll;
+        }
     }
 
     /* Custom CSS for distinction between list items */
@@ -69,14 +80,15 @@
 <div>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-md bg-dark">
-<!--        <h1 class="navbar-brand random-color text-success">Switchers.ai</h1>-->
+        <!--        <h1 class="navbar-brand random-color text-success">Switchers.ai</h1>-->
         <a href="https://switchers.ai" class="navbar-brand">
             <div class="logo dark-mode-logo" id="site-logo"></div>
         </a>
 
         <div class="collapse navbar-collapse" id="switchers-navbar">
             <div class="navbar-nav">
-                <button type="button" class="btn btn-sm text-white m-1" id="settings-nav-btn" data-toggle="tooltip" data-placement="bottom" title="settings">
+                <button type="button" class="btn btn-sm text-white m-1" id="settings-nav-btn" data-toggle="tooltip"
+                        data-placement="bottom" title="settings">
                     <i class="bi bi-gear"></i>
                     Settings
                 </button>
@@ -90,10 +102,10 @@
                     <i class="bi bi-pie-chart"></i>
                     Questions
                 </button>
-                <button type="button" class="btn btn-sm bg-primary text-white m-1" id="outliers-nav-btn"
-                        data-toggle="tooltip" data-placement="bottom" title="outliers">
+                <button type="button" class="btn btn-sm bg-primary text-white m-1" id="impacts-nav-btn"
+                        data-toggle="tooltip" data-placement="bottom" title="Impacts">
                     <i class="bi bi-clipboard-data"></i>
-                    Outliers
+                    Impacts
                 </button>
             </div>
         </div>
@@ -121,7 +133,7 @@
         <main>
             <div class="pt-2">
                 <div class="row mt-3 mb-2">
-                    <div class="col-md-3 mb-2 col-3 mb-1">
+                    <div class="col-md-3 mb-2 col-sm-12 mb-1">
                         <div class="scrollable-container">
                             <div class="list-group" id="questions-list">
                                 <!-- Clickable list items will be appended here dynamically -->
@@ -151,23 +163,53 @@
                             <!--                            </div>-->
                         </div>
                     </div>
-                    <div class="col-md-9 mb-2 col-9 mb-1">
+                    <!--                    <div class="col-md-9 mb-2 col-9 mb-1">-->
+                    <!--                        <div class="card">-->
+                    <!--                            <div class="card bg-dark d-flex justify-content-center">-->
+                    <!--                                <div class="row p-2 align-items-center">-->
+                    <!--                                    <div class="col-4">-->
+                    <!--                                        <h3 class="text-white">Outliers Data</h3>-->
+                    <!--                                    </div>-->
+                    <!--                                    <div class="col-4">-->
+                    <!--                                        <label for="sensitivity-level-input" class="text-white">Sensitivity level:-->
+                    <!--                                            <strong class="text-success" id="sensitivity-level-value"></strong></label>-->
+                    <!--                                        <input type="range" class="form-control-range" id="sensitivity-level-input"-->
+                    <!--                                               min="0" max="100" value="30">-->
+                    <!--                                    </div>-->
+                    <!--                                    <div class="col-4">-->
+                    <!--                                        <button class="btn btn-sm btn-success btn-block" id="new-data-btn">-->
+                    <!--                                            <i class="bi bi-arrow-clockwise"></i>-->
+                    <!--                                            Get New Data-->
+                    <!--                                        </button>-->
+                    <!--                                    </div>-->
+                    <!--                                </div>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                        <div class="card mt-2">-->
+                    <!--                            <div class="chart-container" style="position: relative;">-->
+                    <!--                                <canvas id="questions-chart"></canvas>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+
+
+                    <div class="col-md-9 mb-2 col-sm-12 mb-1">
                         <div class="card">
                             <div class="card bg-dark d-flex justify-content-center">
                                 <div class="row p-2 align-items-center">
                                     <div class="col-4">
-                                        <h3 class="text-white">Questions Data</h3>
+                                        <h3 class="text-white">Impacts Data</h3>
                                     </div>
-                                    <div class="col-4">
-                                        <label for="sensitivity-level-input" class="text-white">Sensitivity level:
-                                            <strong class="text-success" id="sensitivity-level-value"></strong></label>
-                                        <input type="range" class="form-control-range" id="sensitivity-level-input"
-                                               min="0" max="100" value="30">
-                                    </div>
-                                    <div class="col-4">
-                                        <button class="btn btn-sm btn-success btn-block" id="new-data-btn">
-                                            <i class="bi bi-arrow-clockwise"></i>
-                                            Get New Data
+                                    <div class="col-8 d-flex justify-content-end">
+                                        <!-- Use flexbox to space out buttons -->
+                                        <button type="button" class="btn btn-secondary sensitivity-level-button"
+                                                data-level="high">High
+                                        </button>
+                                        <button type="button" class="btn btn-primary sensitivity-level-button"
+                                                data-level="medium">Medium
+                                        </button>
+                                        <button type="button" class="btn btn-secondary sensitivity-level-button"
+                                                data-level="low">Low
                                         </button>
                                     </div>
                                 </div>
@@ -175,16 +217,30 @@
                         </div>
                         <div class="card mt-2">
                             <div class="chart-container" style="position: relative;">
-                                <canvas id="questions-chart"></canvas>
+                                <canvas id="impacts-chart"></canvas>
                             </div>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </main>
         <!--Main layout-->
     </div>
     <!-- END OF MAIN VIEW-->
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-dark">
+                    <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
 </div>
 
 <script crossorigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"

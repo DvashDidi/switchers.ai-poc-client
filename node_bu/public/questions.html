@@ -33,6 +33,15 @@
         overflow-y: auto;
         overflow-x: auto;
     }
+
+    /* Media query for small screens */
+    @media (max-width: 576px) {
+        .scrollable-container {
+            max-height: 35vh; /* Adjusted height for small screens */
+            overflow-y: scroll;
+        }
+    }
+
     /* Custom CSS for distinction between list items */
     .list-group-item {
         border: 1px solid #dee2e6; /* Add border around list items */
@@ -54,7 +63,7 @@
 
     .chart-container {
         width: auto; /* or any other fixed size */
-        height: 72.65vh;
+        height: 71.55vh;
     }
 
     .navbar-brand img {
@@ -62,6 +71,7 @@
         width: auto; /* this will keep the image ratio */
         /* additional styles if needed */
     }
+
 </style>
 <body class="body-background-dark">
 
@@ -89,10 +99,10 @@
                     <i class="bi bi-pie-chart"></i>
                     Questions
                 </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="outliers-nav-btn"
-                        data-toggle="tooltip" data-placement="bottom" title="outliers">
+                <button type="button" class="btn btn-sm text-white m-1" id="impacts-nav-btn"
+                        data-toggle="tooltip" data-placement="bottom" title="impacts">
                     <i class="bi bi-clipboard-data"></i>
-                    Outliers
+                    Impacts
                 </button>
             </div>
         </div>
@@ -120,7 +130,7 @@
         <main>
             <div class="pt-2">
                 <div class="row mt-3 mb-2">
-                    <div class="col-md-3 mb-2 col-3 mb-1">
+                    <div class="col-md-3 mb-2 col-sm-12 mb-1">
                         <div class="scrollable-container">
                             <div class="list-group" id="questions-list">
                                 <!-- Clickable list items will be appended here dynamically -->
@@ -150,7 +160,7 @@
                             <!--                            </div>-->
                         </div>
                     </div>
-                    <div class="col-md-9 mb-2 col-9 mb-1">
+                    <div class="col-md-9 mb-2 col-sm-12 mb-1">
                         <div class="card">
                             <div class="card bg-dark d-flex justify-content-center">
                                 <div class="row p-2 align-items-center">
@@ -181,6 +191,18 @@
         <!--Main layout-->
     </div>
     <!-- END OF MAIN VIEW-->
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-dark">
+                    <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End of Footer -->
 </div>
 
 <script crossorigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"

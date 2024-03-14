@@ -3,7 +3,7 @@ $(document).ready(function () {
         $("#questions-nav-btn").on('click', function () {
             window.location.replace("questions");
         });
-        $("#outliers-nav-btn").on('click', function () {
+        $("#impacts-nav-btn").on('click', function () {
             window.location.replace("outliers");
         });
         $("#net-nav-btn").on('click', function () {
