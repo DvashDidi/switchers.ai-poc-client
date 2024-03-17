@@ -1,8 +1,11 @@
+.col-8 .btn {
+    margin: 0 2px; /* Adjust the space between buttons */
+}
+
 /* Custom CSS for scrollable container */
 .scrollable-container {
     max-height: 80vh; /* Adjust the maximum height as needed */
     overflow-y: auto;
-    overflow-x: auto;
 }
 
 /* Media query for small screens */
