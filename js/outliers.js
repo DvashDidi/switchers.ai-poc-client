@@ -143,10 +143,12 @@ function populateQuestionsList(data, selectedCategory) {
     // Fetch questions from the selected category
     const questions = data[selectedCategory];
 
-    // Iterate through the questions in the selected category
-    Object.entries(questions).forEach(([questionNumber, question]) => {
-        addClickableItem(questionsList, question.id, question.text, questionNumber);
-    });
+    if (questions !== undefined) {
+        // Iterate through the questions in the selected category
+        Object.entries(questions).forEach(([questionNumber, question]) => {
+            addClickableItem(questionsList, question.id, question.text, questionNumber);
+        });
+    }
 }
 
 function addClickableItem(parentContainer, questionId, questionText, questionNumber) {
@@ -322,6 +324,8 @@ $(document).ready(function () {
         });
 
         $("#new-data-btn").on("click", function () {
+            updateQuestionData(charts.questions, {datasets: [], labels: []});
+            
             getImpactsData();
         });
 

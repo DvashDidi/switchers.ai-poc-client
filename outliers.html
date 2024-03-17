@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/main_view.css">
     <link rel="stylesheet" href="css/outliers.css">
 </head>
@@ -161,6 +161,23 @@
         </div>
     </footer>
     <!-- End of Footer -->
+
+    <style>
+        #notificationBar {
+            background-color: #ffc107; /* Warning color */
+            color: #333; /* Text color */
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0; /* Changed from top to bottom */
+            left: 0;
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 -2px 4px rgba(0,0,0,.2); /* Adjusted shadow for bottom appearance */
+        }
+    </style>
+    <div id="notificationBar" style="display: none;"></div>
 </div>
 
 <script crossorigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"

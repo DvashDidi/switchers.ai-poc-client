@@ -115,6 +115,10 @@ function getSelectedResearch() {
     return localStorage.getItem("selectedResearch");
 }
 
+function getPOV() {
+    return localStorage.getItem("pov");
+}
+
 function setSelectedResearch(value) {
     if (value) {
         localStorage.setItem("selectedResearch", value);
@@ -147,6 +151,17 @@ function getDefaultResearchFromApi() {
     });
 }
 
+function showPOVNotification() {
+    var notificationBar = document.getElementById('notificationBar');
+    notificationBar.innerHTML = 'Your Point of View (POV) has not been set up yet. Please set it up to continue. <a href="settings.html" style="color: #333; text-decoration: underline;">Set up POV now</a>';
+    notificationBar.style.display = 'block';
+
+    // Optionally hide the notification after some time
+    setTimeout(function() {
+        notificationBar.style.display = 'none';
+    }, 10000); // Hides after 10 seconds
+}
+
 function init_page() {
     return new Promise(function (resolve, reject) {
         setGlobalViewMode();
@@ -155,9 +170,17 @@ function init_page() {
             getDefaultResearchFromApi().then((selectedResearch) => {
                 setSelectedResearch(selectedResearch);
 
+                if (getPOV() === null) {
+                    showPOVNotification();
+                }
+
                 resolve(true);
             }).catch(error => reject(error));
         } else {
+            if (getPOV() === null) {
+                showPOVNotification();
+            }
+
             resolve(true);
         }
     });
