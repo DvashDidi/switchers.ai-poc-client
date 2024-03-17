@@ -1,14 +1,58 @@
-/*html, body {*/
-/*    margin: 0;*/
-/*    height: 100%;*/
-/*    overflow: hidden*/
-/*}*/
+.chart-container {
+    width: auto; /* or any other fixed size */
+    height: 71.55vh;
+}
 
-/*.navbar .navbar-nav {*/
-/*    color: #fff;*/
-/*    font-size: 1.1em;*/
-/*}*/
+.navbar-brand img {
+    height: 40px; /* or whatever size you prefer */
+    width: auto; /* this will keep the image ratio */
+    /* additional styles if needed */
+}
 
-footer {
-    margin-top: auto;
+
+/* Custom CSS for scrollable table with sticky header */
+.table-container {
+    max-height: 75vh; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Change the background color as needed */
+    z-index: 1; /* Ensure the header stays above other elements */
+}
+
+/* Add some colors */
+.table thead {
+    background-color: #f2f2f2; /* Header background color */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternate row background color */
+}
+
+/* Apply hover effects */
+.table tbody tr:hover {
+    background-color: #e2e2e2; /* Hover color */
+}
+
+/* Define borders and spacing */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table th,
+.table td {
+    border: 1px solid #dddddd; /* Border for cells */
+    padding: 8px; /* Adjust cell padding */
+}
+
+/* Use typography */
+.table th,
+.table td {
+    font-size: 14px; /* Adjust font size */
+    font-weight: normal; /* Normal font weight */
 }

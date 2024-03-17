@@ -47,7 +47,6 @@ const charts = {
 
 // A helper function to deep copy configurations
 
-
 // Update chart data
 function updateNetData(data) {
     const scoreCategories = Object.keys(data[0].scores);
@@ -68,50 +67,52 @@ function updateNetData(data) {
 }
 
 $(document).ready(() => {
-    // Navigation button event handlers
-    $("#questions-nav-btn, #impacts-nav-btn, #settings-nav-btn").each(function() {
-        $(this).on('click', function (e) {
-            e.preventDefault(); // Prevent the default action
+    init_page().then(function () {
+        // Navigation button event handlers
+        $("#questions-nav-btn, #impacts-nav-btn, #settings-nav-btn").each(function () {
+            $(this).on('click', function (e) {
+                e.preventDefault(); // Prevent the default action
 
-            // Push the current state to the history stack
-            history.pushState(null, null, location.href);
+                // Push the current state to the history stack
+                history.pushState(null, null, location.href);
 
-            // Redirect to the target page
-            window.location.href = $(this).data('target');
+                // Redirect to the target page
+                window.location.href = $(this).data('target');
+            });
         });
-    });
 
-    // Create dynamic table
-    function createDynamicTable(data) {
-        const tableHeader = $('#table-header').empty();
-        const tableBody = $('#table-body').empty();
-        const headers = ["Name", ...Object.keys(data[0].scores)];
+        // Create dynamic table
+        function createDynamicTable(data) {
+            const tableHeader = $('#table-header').empty();
+            const tableBody = $('#table-body').empty();
+            const headers = ["Name", ...Object.keys(data[0].scores)];
 
-        $('<tr>').append(headers.map(text => $('<th>').text(text))).appendTo(tableHeader);
-        data.forEach(item => {
-            const row = $('<tr>').append($('<td>').text(item.name));
-            Object.values(item.scores).forEach(score => row.append($('<td>').text(score)));
-            row.appendTo(tableBody);
-        });
-    }
+            $('<tr>').append(headers.map(text => $('<th>').text(text))).appendTo(tableHeader);
+            data.forEach(item => {
+                const row = $('<tr>').append($('<td>').text(item.name));
+                Object.values(item.scores).forEach(score => row.append($('<td>').text(score)));
+                row.appendTo(tableBody);
+            });
+        }
 
-    // Fetch and update data
-    const fetchDataAndUpdateUI = () => {
-        const apiUrl = `${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/net`;
-        fetch(apiUrl, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": true
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                createDynamicTable(data);
-                updateNetData(data);
+        // Fetch and update data
+        const fetchDataAndUpdateUI = () => {
+            const apiUrl = `${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/net`;
+            fetch(apiUrl, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": true
+                }
             })
-            .catch(error => console.error('Failed to load data:', error));
-    };
+                .then(response => response.json())
+                .then(data => {
+                    createDynamicTable(data);
+                    updateNetData(data);
+                })
+                .catch(error => console.error('Failed to load data:', error));
+        };
 
-    fetchDataAndUpdateUI(); // Initiate fetch operation
+        fetchDataAndUpdateUI(); // Initiate fetch operation
+    });
 });

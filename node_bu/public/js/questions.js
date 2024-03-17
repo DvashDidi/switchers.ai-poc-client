@@ -94,8 +94,7 @@ function addClickableItem(parentContainer, question) {
 function getQuestionData(questionId) {
     updateQuestionData(charts.questions, {datasets:[], labels: []});
 
-
-    fetch(`${apiHost}/statistics/${questionId}`, {
+    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -111,10 +110,35 @@ function getQuestionData(questionId) {
 
         return response.json();
     }).then(function (data) {
-        updateQuestionData(charts.questions, data);
+        updateQuestionData(charts.questions, translateStatistics(data));
     }).catch(function (error) {
         console.error(error);
     });
+}
+
+function translateStatistics(serverData) {
+    // Collect all labels from the original object's sub-objects.
+    // This set will help in ensuring uniqueness and the order of labels.
+    const allLabels = new Set();
+    Object.values(serverData).forEach(subObject => {
+        Object.keys(subObject).forEach(label => {
+            allLabels.add(label);
+        });
+    });
+    const labels = Array.from(allLabels);
+
+    // Construct the dataset array
+    const datasets = Object.entries(serverData).map(([key, value]) => {
+        return {
+            label: key,
+            data: labels.map(label => value[label] || 0) // Use || 0 to handle missing labels
+        };
+    });
+
+    return {
+        labels,
+        datasets
+    };
 }
 
 function updateQuestionData(chartObj, data) {
@@ -144,67 +168,68 @@ function updateQuestionData(chartObj, data) {
     chartObj.chart = new Chart(chartObj.canvas, configCopy);
 }
 
-
 $(document).ready(function () {
-    // Navigation button event handlers
-    $("#impacts-nav-btn, #net-nav-btn, #settings-nav-btn").each(function() {
-        $(this).on('click', function (e) {
-            e.preventDefault(); // Prevent the default action
+    init_page().then(function () {
+        // Navigation button event handlers
+        $("#impacts-nav-btn, #net-nav-btn, #settings-nav-btn").each(function () {
+            $(this).on('click', function (e) {
+                e.preventDefault(); // Prevent the default action
 
-            // Push the current state to the history stack
-            history.pushState(null, null, location.href);
+                // Push the current state to the history stack
+                history.pushState(null, null, location.href);
 
-            // Redirect to the target page
-            window.location.href = $(this).data('target');
-        });
-    });
-
-    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": true
-            }
-        }
-    ).then(function (response) {
-        if (!response.ok) {
-            return response.text().then(function (message) {
-                throw new Error(`${message}`);
+                // Redirect to the target page
+                window.location.href = $(this).data('target');
             });
-        }
+        });
 
-        return response.json();
-    }).then(function (data) {
+        fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "ngrok-skip-browser-warning": true
+                }
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                return response.text().then(function (message) {
+                    throw new Error(`${message}`);
+                });
+            }
 
-        // TODO: sort by q number
+            return response.json();
+        }).then(function (data) {
 
-        for (const question of data){
-            addClickableItem(document.getElementById('questions-list'), question);
-        }
-        // Object.entries(data).forEach((question) => {
-        //     addClickableItem(document.getElementById('questions-list'), question);
-        // });
-    }).catch(function (error) {
-        console.error(error);
+            // TODO: sort by q number
+
+            for (const question of data) {
+                addClickableItem(document.getElementById('questions-list'), question);
+            }
+            // Object.entries(data).forEach((question) => {
+            //     addClickableItem(document.getElementById('questions-list'), question);
+            // });
+        }).catch(function (error) {
+            console.error(error);
+        });
+
+        charts.questions.currentData = charts.questions.baseConfig.data;
+        charts.questions.chart = new Chart(charts.questions.canvas, charts.questions.baseConfig);
+
+        // TODO: Change button style
+        // // calling each table to refresh values
+        // for (let chart of Object.keys(charts)) {
+        //     charts[chart].changeTableStyleBtn.on('click', function () {
+        //         changeChartType(charts[chart]);
+        //     });
+        // }
+        //
+        // function changeChartType(chartObj, type = "bar") {
+        //     if (!chartObj || !chartObj.chart) return;
+        //
+        //     if (chartObj.chart) chartObj.chart.destroy();
+        //     chartObj.config.type = type;
+        //     chartObj.chart = new Chart(chartObj.canvas, chartObj.config);
+        //     chartObj.canvas[0].style.display = "";
+        // }
     });
-
-    charts.questions.currentData = charts.questions.baseConfig.data;
-    charts.questions.chart = new Chart(charts.questions.canvas, charts.questions.baseConfig);
-
-    // TODO: Change button style
-    // // calling each table to refresh values
-    // for (let chart of Object.keys(charts)) {
-    //     charts[chart].changeTableStyleBtn.on('click', function () {
-    //         changeChartType(charts[chart]);
-    //     });
-    // }
-    //
-    // function changeChartType(chartObj, type = "bar") {
-    //     if (!chartObj || !chartObj.chart) return;
-    //
-    //     if (chartObj.chart) chartObj.chart.destroy();
-    //     chartObj.config.type = type;
-    //     chartObj.chart = new Chart(chartObj.canvas, chartObj.config);
-    //     chartObj.canvas[0].style.display = "";
-    // }
 });

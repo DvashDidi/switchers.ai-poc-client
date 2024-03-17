@@ -36,29 +36,31 @@ function getPovs() {
 
 // Document ready function
 $(document).ready(() => {
-    // Initialize points of view dropdown
-    getPovs();
+    init_page().then(function () {
+        // Initialize points of view dropdown
+        getPovs();
 
-    // Setup navigation button event handlers
-    $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn").on('click', function(e) {
-        e.preventDefault();
-        history.pushState(null, null, location.href); // Push the current state to the history stack
-        window.location.href = $(this).data('target'); // Redirect to the target page
-    });
+        // Setup navigation button event handlers
+        $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn").on('click', function (e) {
+            e.preventDefault();
+            history.pushState(null, null, location.href); // Push the current state to the history stack
+            window.location.href = $(this).data('target'); // Redirect to the target page
+        });
 
-    // Setup the save settings button click handler
-    $("#save-settings").click(async () => {
-        const candidate = $('#pov-choice').val();
+        // Setup the save settings button click handler
+        $("#save-settings").click(async () => {
+            const candidate = $('#pov-choice').val();
 
-        if (candidate) {
-            localStorage.setItem('pov', candidate);
-            Swal.fire({
-                title: "Settings Updated Successfully",
-                text: `You set the pov to '${candidate}'`,
-                icon: "success",
-                timer: 1500,
-                showConfirmButton: false
-            });
-        }
+            if (candidate) {
+                localStorage.setItem('pov', candidate);
+                Swal.fire({
+                    title: "Settings Updated Successfully",
+                    text: `You set the pov to '${candidate}'`,
+                    icon: "success",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            }
+        });
     });
 });
