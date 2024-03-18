@@ -99,3 +99,35 @@ h3 {
 .light-mode-logo {
     background-image: url('../images/icons/black_logo.svg');
 }
+
+/* notificationBar - for POV alert */
+#notificationBar {
+    background-color: #ffc107; /* Warning color */
+    color: #333; /* Text color */
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0; /* Changed from top to bottom */
+    left: 0;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, .2); /* Adjusted shadow for bottom appearance */
+}
+
+.close-pov-notification {
+    position: absolute;
+    right: 2px;
+    top: -20px;
+    border: none;
+    background: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}

@@ -152,36 +152,33 @@ function getDefaultResearchFromApi() {
 }
 
 function showPOVNotification() {
-    var notificationBar = document.getElementById('notificationBar');
-    notificationBar.innerHTML = 'Your Point of View (POV) has not been set up yet. Please set it up to continue. <a href="settings.html" style="color: #333; text-decoration: underline;">Set up POV now</a>';
-    notificationBar.style.display = 'block';
+    $('#notificationBar').html('To enhance your experience, consider setting up your Point of View (POV). <a href="settings.html" style="color: #333; text-decoration: underline;">Set up POV now</a> <button class="close-pov-notification" id="closeNotification">&times;</button>')
+        .css('display', 'block');
 
-    // Optionally hide the notification after some time
+    // Close button functionality
+    $('#closeNotification').click(function() {
+        $('#notificationBar').fadeOut(1000);
+    });
+
+    // Hide the notification after some time
     setTimeout(function() {
-        notificationBar.style.display = 'none';
-    }, 10000); // Hides after 10 seconds
+        $('#notificationBar').fadeOut(1000);
+    }, 15000); // Hides after 15 seconds
 }
 
 function init_page() {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         setGlobalViewMode();
 
-        if (getSelectedResearch() === null) {
-            getDefaultResearchFromApi().then((selectedResearch) => {
-                setSelectedResearch(selectedResearch);
+        const researchPromise = getSelectedResearch() === null ?
+            getDefaultResearchFromApi().then(setSelectedResearch) :
+            Promise.resolve();
 
-                if (getPOV() === null) {
-                    showPOVNotification();
-                }
-
-                resolve(true);
-            }).catch(error => reject(error));
-        } else {
+        researchPromise.then(() => {
             if (getPOV() === null) {
                 showPOVNotification();
             }
-
             resolve(true);
-        }
+        }).catch(reject);
     });
 }

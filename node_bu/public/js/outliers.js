@@ -325,7 +325,7 @@ $(document).ready(function () {
 
         $("#new-data-btn").on("click", function () {
             updateQuestionData(charts.questions, {datasets: [], labels: []});
-            
+
             getImpactsData();
         });
 
