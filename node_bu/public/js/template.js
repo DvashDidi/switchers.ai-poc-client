@@ -155,12 +155,12 @@ function showPOVNotification() {
         .css('display', 'block');
 
     // Close button functionality
-    $('#closeNotification').click(function() {
+    $('#closeNotification').click(function () {
         $('#notificationBar').fadeOut(1000);
     });
 
     // Hide the notification after some time
-    setTimeout(function() {
+    setTimeout(function () {
         $('#notificationBar').fadeOut(1000);
     }, 15000); // Hides after 15 seconds
 }
@@ -177,6 +177,7 @@ function init_page() {
             if (getPOV() === null) {
                 showPOVNotification();
             }
+
             resolve(true);
         }).catch(reject);
     });

@@ -101,8 +101,7 @@ $(document).ready(() => {
             fetch(apiUrl, {
                 method: "GET",
                 headers: {
-                    'Content-Type': 'application/json',
-                    "ngrok-skip-browser-warning": true
+                    'Content-Type': 'application/json'
                 }
             })
                 .then(response => response.json())

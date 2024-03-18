@@ -1,5 +1,13 @@
 Chart.register(ChartDataLabels);
 
+let emptyDataset = [
+    {
+        label: 'No data for selected impact',
+        data: [0, 0, 0],
+        backgroundColor: "rgba(54, 162, 235, 0.7)"
+    }
+]
+
 let charts = {
     questions: {
         endpoint: "query/prediction/accuracy",
@@ -11,13 +19,7 @@ let charts = {
             type: 'bar',
             data: {
                 labels: [],
-                datasets: [
-                    {
-                        label: 'No data for selected impact',
-                        data: [0, 0, 0],
-                        backgroundColor: "rgba(255,0,0,0.34)",
-                    }
-                ]
+                datasets: emptyDataset
             },
             options: {
                 responsive: true,
@@ -43,11 +45,7 @@ let charts = {
                     },
                     legend: {
                         position: 'top',
-                    },
-                    // title: {
-                    //     display: true,
-                    //     text: 'Impact data'
-                    // }
+                    }
                 },
                 height: 650
             }
@@ -56,86 +54,6 @@ let charts = {
 };
 let questionsData = undefined;
 
-// function addClickableItem(parentContainer, question) {
-//     // Create the list item element
-//     const listItem = document.createElement('a');
-//     listItem.dataset.questionId = question["id"]
-//     listItem.dataset.questionNumber = question["sequence_number"];
-//     listItem.dataset.createdAt = question["created_at"];
-//
-//     listItem.href = '#'; // Add a dummy href attribute for styling
-//     listItem.className = 'list-group-item list-group-item-action';
-//
-//     // Create a strong element for the question number
-//     const strongElement = document.createElement('strong');
-//     strongElement.textContent = `Question ${listItem.dataset.questionNumber}: `;
-//
-//     // Append the strong element to the list item
-//     listItem.appendChild(strongElement);
-//
-//     // Append the question text to the list item
-//     listItem.appendChild(document.createTextNode(question["text"]));
-//
-//     // Add click event listener to the list item
-//     listItem.addEventListener('click', (event) => {
-//         event.preventDefault(); // Prevent default link behavior
-//         // Remove the 'clicked' class from all items
-//         document.querySelectorAll('.list-group-item').forEach(item => {
-//             item.classList.remove('clicked');
-//         });
-//         // Add the 'clicked' class to the clicked item
-//         listItem.classList.add('clicked');
-//
-//         getQuestionData(listItem.dataset.questionId);
-//     });
-//
-//     // Append the new item to the list
-//     parentContainer.appendChild(listItem);
-// }
-// function addClickableItem(parentContainer, questionText, questionId, category) {
-//     const listItem = document.createElement('a');
-//     listItem.href = '#';
-//     listItem.className = 'list-group-item list-group-item-action';
-//     listItem.textContent = `${questionId}: ${questionText}`;
-//
-//     // Create a strong element for the question number
-//     const strongElement = document.createElement('strong');
-//     strongElement.textContent = `Question ${listItem.dataset.questionNumber}: `;
-//
-//     // Append the strong element to the list item
-//     listItem.appendChild(strongElement);
-//
-//
-//     // `Question ${listItem.dataset.questionNumber}: `
-//     listItem.dataset.category = category; // Store category if needed
-//     listItem.dataset.questionId = questionId;
-//
-//     listItem.addEventListener('click', (event) => {
-//         event.preventDefault();
-//
-//         getQuestionData(listItem.dataset.questionId);
-//     });
-//
-//     parentContainer.appendChild(listItem);
-// }
-
-// function populateQuestionsList(data) {
-//     const questionsList = document.getElementById('questions-list');
-//     questionsList.innerHTML = ''; // Clear the list first
-//
-//     // Iterate through each severity category ("low", "medium", "high")
-//     Object.entries(data).forEach(([category, questions]) => {
-//         // Add a category header (optional)
-//         const categoryHeader = document.createElement('h3');
-//         categoryHeader.textContent = category.charAt(0).toUpperCase() + category.slice(1); // Capitalize first letter
-//         questionsList.appendChild(categoryHeader);
-//
-//         // Iterate through the questions in the current category
-//         Object.entries(questions).forEach(([key, question]) => {
-//             addClickableItem(questionsList, question.id, question.text);
-//         });
-//     });
-// }
 function populateQuestionsList(data, selectedCategory) {
     const questionsList = document.getElementById('questions-list');
     questionsList.innerHTML = ''; // Clear the list first
@@ -165,12 +83,9 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
 
     // Append the question text to the list item
     listItem.appendChild(document.createTextNode(questionText));
-    // listItem.textContent = questionText; // Set the question text as the list item's text
-    // listItem.classList.add("border-bottom", "border-light");
 
     // Add an event listener for clicks on this list item
     listItem.addEventListener('click', function () {
-        console.log(`Question ID ${questionId} clicked`); // Example action
         // Implement the logic to handle the click event, e.g., fetch more data or display details
         getQuestionData(questionId);
     });
@@ -183,8 +98,7 @@ function getQuestionData(questionId) {
 
             method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": true
+                'Content-Type': 'application/json'
             }
         }
     ).then(function (response) {
@@ -229,13 +143,8 @@ function translateStatistics(serverData) {
 }
 
 function updateQuestionData(chartObj, data) {
-    // for (let dataset of data.datasets) {
-    //     dataset.backgroundColor = getRandomColor();
-    // }
-
     let idx = 0;
     for (let dataset of data.datasets) {
-        // dataset.backgroundColor = = getRandomColor();
         dataset.borderColor = baseColors[idx % baseColors.length].border;
         dataset.hoverBorderColor = baseColors[idx % baseColors.length].hoverBackground.hoverBorder;
         dataset.backgroundColor = baseColors[idx % baseColors.length].background;
@@ -261,14 +170,13 @@ function updateQuestionData(chartObj, data) {
 
 function getImpactsData(first) {
     if (!first) {
-        updateQuestionData(charts.questions, {datasets: [], labels: []});
+        updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
     }
 
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": true
+                'Content-Type': 'application/json'
             }
         }
     ).then(function (response) {
@@ -280,27 +188,6 @@ function getImpactsData(first) {
 
         return response.json();
     }).then(function (data) {
-        // document.getElementById('questions-list').innerHTML = "";
-        // Object.entries(data).forEach((question) => {
-        //     addClickableItem(document.getElementById('questions-list'), question);
-        // });
-
-        // const questionsList = document.getElementById('questions-list');
-        // questionsList.innerHTML = ""; // Clear existing items
-        //
-        // // Flatten the grouped data into a list
-        // const flattenedData = [];
-        // Object.entries(data).forEach(([category, questions]) => {
-        //     Object.entries(questions).forEach(([id, text]) => {
-        //         flattenedData.push({ id, text, category });
-        //     });
-        // });
-        //
-        // // Populate the list with the flattened data
-        // flattenedData.forEach(question => {
-        //     addClickableItem(questionsList, question.text, question.id, question.category);
-        // });
-
         questionsData = data;
         populateQuestionsList(questionsData, localStorage.getItem("impactLevel") || "medium");
     }).catch(function (error) {
@@ -324,12 +211,14 @@ $(document).ready(function () {
         });
 
         $("#new-data-btn").on("click", function () {
-            updateQuestionData(charts.questions, {datasets: [], labels: []});
+            updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
 
             getImpactsData();
         });
 
         $('.sensitivity-level-button').on('click', function () {
+            updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
+
             // Remove 'btn-primary' from all buttons and set them to 'btn-secondary'
             $('.sensitivity-level-button').removeClass('btn-primary').addClass('btn-secondary');
 

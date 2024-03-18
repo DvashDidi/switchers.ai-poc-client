@@ -1,5 +1,13 @@
 Chart.register(ChartDataLabels);
 
+let emptyDataset = [
+    {
+        label: 'No data for selected question',
+        data: [0, 0, 0],
+        backgroundColor: "rgba(54, 162, 235, 0.7)"
+    }
+]
+
 let charts = {
     questions: {
         label: 'Questions Data',
@@ -10,13 +18,7 @@ let charts = {
             type: 'bar',
             data: {
                 labels: [],
-                datasets: [
-                    {
-                        label: 'No data for selected question',
-                        data: [0, 0, 0],
-                        backgroundColor: "rgba(255,0,0,0.34)",
-                    }
-                ]
+                datasets: emptyDataset
             },
             options: {
                 responsive: true,
@@ -92,13 +94,12 @@ function addClickableItem(parentContainer, question) {
 }
 
 function getQuestionData(questionId) {
-    updateQuestionData(charts.questions, {datasets:[], labels: []});
+    updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
 
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": true
+                'Content-Type': 'application/json'
             }
         }
     ).then(function (response) {
@@ -186,8 +187,7 @@ $(document).ready(function () {
         fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
                 method: "GET",
                 headers: {
-                    'Content-Type': 'application/json',
-                    "ngrok-skip-browser-warning": true
+                    'Content-Type': 'application/json'
                 }
             }
         ).then(function (response) {
