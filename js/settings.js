@@ -28,7 +28,19 @@ function getPovs() {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => response.ok ? response.json() : Promise.reject(response.text()))
+        .then((response) => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    outdatedResearchFound();
+                }
+
+                return response.text().then(function (message) {
+                    throw new Error(`${message}`);
+                });
+            }
+
+            return response.json();
+        })
         .then(populateDropList)
         .catch(error => console.error('Error fetching povs:', error));
 }

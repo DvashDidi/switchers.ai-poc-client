@@ -182,3 +182,17 @@ function init_page() {
         }).catch(reject);
     });
 }
+
+
+function outdatedResearchFound() {
+    Swal.fire({
+        title: "Research data was updated",
+        text: `Fetching new data...`,
+        icon: "info",
+        timer: 1800,
+        showConfirmButton: false
+    }).then(() => {
+        delete localStorage.selectedResearch;
+        location.reload();
+    });
+}

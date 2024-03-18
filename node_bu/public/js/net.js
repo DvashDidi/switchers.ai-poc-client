@@ -104,7 +104,19 @@ $(document).ready(() => {
                     'Content-Type': 'application/json'
                 }
             })
-                .then(response => response.json())
+                .then((response) => {
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            outdatedResearchFound();
+                        }
+
+                        return response.text().then(function (message) {
+                            throw new Error(`${message}`);
+                        });
+                    }
+
+                    return response.json();
+                })
                 .then(data => {
                     createDynamicTable(data);
                     updateNetData(data);

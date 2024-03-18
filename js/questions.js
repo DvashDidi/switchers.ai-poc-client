@@ -104,6 +104,10 @@ function getQuestionData(questionId) {
         }
     ).then(function (response) {
         if (!response.ok) {
+            if (response.status === 404) {
+                outdatedResearchFound();
+            }
+
             return response.text().then(function (message) {
                 throw new Error(`${message}`);
             });
@@ -192,6 +196,10 @@ $(document).ready(function () {
             }
         ).then(function (response) {
             if (!response.ok) {
+                if (response.status === 404) {
+                    outdatedResearchFound();
+                }
+
                 return response.text().then(function (message) {
                     throw new Error(`${message}`);
                 });
