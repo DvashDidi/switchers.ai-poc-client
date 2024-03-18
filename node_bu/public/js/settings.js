@@ -25,8 +25,7 @@ function getPovs() {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/points-of-view`, {
         method: "GET",
         headers: {
-            'Content-Type': 'application/json',
-            "ngrok-skip-browser-warning": true
+            'Content-Type': 'application/json'
         }
     })
         .then(response => response.ok ? response.json() : Promise.reject(response.text()))

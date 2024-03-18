@@ -99,8 +99,7 @@ function getQuestionData(questionId) {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": true
+                'Content-Type': 'application/json'
             }
         }
     ).then(function (response) {
@@ -188,8 +187,7 @@ $(document).ready(function () {
         fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
                 method: "GET",
                 headers: {
-                    'Content-Type': 'application/json',
-                    "ngrok-skip-browser-warning": true
+                    'Content-Type': 'application/json'
                 }
             }
         ).then(function (response) {

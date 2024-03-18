@@ -98,8 +98,7 @@ function getQuestionData(questionId) {
 
             method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": true
+                'Content-Type': 'application/json'
             }
         }
     ).then(function (response) {
@@ -177,8 +176,7 @@ function getImpactsData(first) {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json',
-                "ngrok-skip-browser-warning": true
+                'Content-Type': 'application/json'
             }
         }
     ).then(function (response) {

@@ -130,8 +130,7 @@ function getDefaultResearchFromApi() {
         fetch(`${apiHost}/v1/research/default`, {
                 method: "GET",
                 headers: {
-                    'Content-Type': 'application/json',
-                    "ngrok-skip-browser-warning": true
+                    'Content-Type': 'application/json'
                 }
             }
         ).then(function (response) {
