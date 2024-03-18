@@ -52,7 +52,7 @@ $(document).ready(() => {
         getPovs();
 
         // Setup navigation button event handlers
-        $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn").on('click', function (e) {
+        $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn, #icebergs-nav-btn").on('click', function (e) {
             e.preventDefault();
             history.pushState(null, null, location.href); // Push the current state to the history stack
             window.location.href = $(this).data('target'); // Redirect to the target page

@@ -69,7 +69,7 @@ function updateNetData(data) {
 $(document).ready(() => {
     init_page().then(function () {
         // Navigation button event handlers
-        $("#questions-nav-btn, #impacts-nav-btn, #settings-nav-btn").each(function () {
+        $("#questions-nav-btn, #impacts-nav-btn, #settings-nav-btn, #icebergs-nav-btn").each(function () {
             $(this).on('click', function (e) {
                 e.preventDefault(); // Prevent the default action
 
