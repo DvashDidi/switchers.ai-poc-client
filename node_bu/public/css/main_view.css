@@ -131,3 +131,78 @@ h3 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 10;
 }
+
+/* Custom CSS for distinction between list items */
+.list-group-item {
+    border: 1px solid #dee2e6 !important; /* Add border around list items */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.list-group-item.clicked {
+    background-color: rgba(144, 181, 230, 0.87) !important; /* Background color for clicked item */
+    color: black !important;
+}
+
+.list-group-item:hover {
+    background-color: #9ed797 !important; /* Background color on hover */
+    color: black !important;
+}
+
+.list-group-item:not(:last-child) {
+    border-bottom: 1px solid #6f7580 !important; /* Add border between list items */
+}
+
+
+
+
+/* Customize the scrollbar */
+/* Main scrollbar (for the entire page) */
+::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the scrollbar handle on hover */
+}
+
+/* Inner scrollbar (for inner elements) */
+/* You may override these styles as needed for specific elements */
+.inner-element::-webkit-scrollbar {
+    width: 5px; /* Width of the inner scrollbar */
+}
+
+/* Track */
+.inner-element::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color of the inner scrollbar track */
+}
+
+/* Handle */
+.inner-element::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the inner scrollbar handle */
+}
+
+/* Handle on hover */
+.inner-element::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the inner scrollbar handle on hover */
+}
+
+.btn-group .btn.active {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+}
+.btn-group .btn {
+    background-color: #6c757d; /* Bootstrap secondary color */
+    color: white;
+}

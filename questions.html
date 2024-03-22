@@ -8,9 +8,9 @@
 
     <title>Switchers.ai | Questions</title>
 
-    <meta property="og:title" content="Switchers.ai | Questions" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://app.switchers.ai/images/icons/favicon.svg" />
+    <meta property="og:title" content="Switchers.ai | Questions"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://app.switchers.ai/images/icons/favicon.svg"/>
 
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           rel="stylesheet" type="text/css">
@@ -34,7 +34,7 @@
 <div>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-md bg-dark">
-<!--        <h1 class="navbar-brand random-color text-success">Switchers.ai</h1>-->
+        <!--        <h1 class="navbar-brand random-color text-success">Switchers.ai</h1>-->
         <a href="https://switchers.ai" class="navbar-brand">
             <div class="logo dark-mode-logo" id="site-logo"></div>
         </a>
@@ -66,6 +66,12 @@
                         data-toggle="tooltip" data-placement="bottom" title="impacts">
                     <i class="bi bi-clipboard-data"></i>
                     Impacts
+                </button>
+                <button type="button" class="btn btn-sm text-white m-1" id="icebergs-nav-btn"
+                        data-target="icebergs.html"
+                        data-toggle="tooltip" data-placement="bottom" title="icebergs">
+                    <i class="bi bi-exclamation-triangle text-danger"></i>
+                    Icebergs
                 </button>
             </div>
         </div>
@@ -99,6 +105,7 @@
                                 <!-- Clickable list items will be appended here dynamically -->
                             </div>
                         </div>
+                        <div id="additional-text-container" class="additional-text-container mt-2"></div>
                     </div>
                     <div class="col-md-9 mb-2 col-sm-12 mb-1">
                         <div class="card">
@@ -109,14 +116,35 @@
                                     </div>
                                     <div class="col-4">
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-4 text-right">
+                                        <!-- Chart Type Toggle -->
+                                        <div class="btn-group btn-group-toggle" id="chartTypeToggle" role="group" aria-label="Chart Type Toggle">
+                                            <button type="button" class="btn btn-sm" onclick="toggleChartType('ColumnChart')" title="Column Chart">
+                                                <i class="bi bi-bar-chart-line"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm" onclick="toggleChartType('BarChart')" title="Bar Chart">
+                                                <i class="bi bi-bar-chart-steps"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Stacked/Grouped Toggle -->
+                                        <div class="btn-group btn-group-toggle ml-2" id="stackedGroupedToggle" role="group" aria-label="Stacked/Grouped Toggle">
+                                            <button type="button" class="btn btn-sm" onclick="toggleStackMode(true)" title="Stacked">
+                                                <i class="bi bi-stack"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm" onclick="toggleStackMode(false)" title="Grouped">
+                                                <i class="bi bi-layout-three-columns"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card mt-2">
-                            <div class="chart-container" style="position: relative;">
-                                <canvas id="questions-chart"></canvas>
+                            <div id="chart_div" style="width: auto; height: 70vh; display: flex; align-items: center; justify-content: center;">
+                                <div style="text-align: center;">
+                                    <strong id="chart-placeholder" class="text-black">Choose a question to inspect.</strong>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +182,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script src="js/template.js" type="text/javascript"></script>
+<script src="js/googleChart.js" type="text/javascript"></script>
 <script src="js/questions.js" type="text/javascript"></script>
 </body>
 </html>

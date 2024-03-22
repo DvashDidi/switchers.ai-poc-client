@@ -1,57 +1,3 @@
-Chart.register(ChartDataLabels);
-
-let emptyDataset = [
-    {
-        label: 'No data for selected iceberg',
-        data: [0, 0, 0],
-        backgroundColor: "rgba(54, 162, 235, 0.7)"
-    }
-]
-
-let charts = {
-    questions: {
-        endpoint: "query/prediction/accuracy",
-        label: 'Iceberg Data',
-        canvas: $("#icebergs-chart"),
-        chart: undefined,
-        currentData: {},
-        baseConfig: {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: emptyDataset
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            title: (context) => {
-                                return context[0].label.replaceAll(',', ' ');
-                            }
-                        }
-                    },
-                    datalabels: {
-                        anchor: 'end', // Position of the labels (start, end, center, etc.)
-                        align: 'end', // Alignment of the labels (start, end, center, etc.)
-                        color: 'black', // Color of the labels
-                        // font: {
-                        //     weight: 'bold',
-                        // },
-                        formatter: function (value, context) {
-                            return value; // Display the actual data value
-                        }
-                    },
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                height: 650
-            }
-        }
-    }
-};
 let questionsData = undefined;
 
 function populateQuestionsList(data, selectedCategory) {
@@ -84,9 +30,21 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
     // Append the question text to the list item
     listItem.appendChild(document.createTextNode(questionText));
 
-    // Add an event listener for clicks on this list item
-    listItem.addEventListener('click', function () {
-        // Implement the logic to handle the click event, e.g., fetch more data or display details
+    // Add click event listener to the list item
+    listItem.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent default link behavior
+        // Remove the 'clicked' class from all items
+        document.querySelectorAll('.list-group-item').forEach(item => {
+            item.classList.remove('clicked');
+        });
+
+        // Add the 'clicked' class to the clicked item
+        listItem.classList.add('clicked');
+
+        // Add additional text below the scrollable-container
+        const additionalTextContainer = document.getElementById('additional-text-container');
+        additionalTextContainer.innerHTML = `<div class="additional-text"><strong>Q${listItem.dataset.questionNumber}:</strong> ${questionText}</div>`;
+
         getQuestionData(questionId);
     });
 
@@ -114,8 +72,8 @@ function getQuestionData(questionId) {
 
         return response.json();
     }).then(function (data) {
-        // TODO: Define data in server
-        updateQuestionData(charts.questions, translateStatistics(data));
+        updateChart = true;
+        drawChart(data);
     }).catch(function (error) {
         console.error(error);
     });
@@ -172,11 +130,8 @@ function updateQuestionData(chartObj, data) {
     chartObj.chart = new Chart(chartObj.canvas, configCopy);
 }
 
-function getIcebergsData(first) {
-    if (!first) {
-        updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
-    }
-
+function getIcebergsData() {
+    // TODO: GET THE REAL DATA !
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
             method: "GET",
             headers: {
@@ -203,6 +158,17 @@ function getIcebergsData(first) {
     });
 }
 
+function addPlaceholderListeners() {
+    const placeholder = $('#chart-placeholder');
+    const questionsList = $('#questions-list');
+
+    placeholder.on("mouseenter", function () {
+        questionsList.fadeTo(700, 0.3, function () {
+            questionsList.fadeTo(500, 1);
+        });
+    });
+}
+
 $(document).ready(function () {
     init_page().then(function () {
         // Navigation button event handlers
@@ -218,14 +184,20 @@ $(document).ready(function () {
             });
         });
 
-        $("#new-data-btn").on("click", function () {
-            updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
+        // Event listener for window resize
+        window.addEventListener('resize', resizeChart);
 
-            getIcebergsData();
-        });
+        addPlaceholderListeners();
 
         $('.sensitivity-level-button').on('click', function () {
-            updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
+            updateChart = false;
+
+            $("#chart_div")
+                .empty()
+                .append(`<div style="text-align: center;">
+                                    <strong id="chart-placeholder" class="text-black">Choose a question to inspect.</strong>
+                                </div>`);
+            addPlaceholderListeners();
 
             // Remove 'btn-primary' from all buttons and set them to 'btn-secondary'
             $('.sensitivity-level-button').removeClass('btn-primary').addClass('btn-secondary');
@@ -233,9 +205,12 @@ $(document).ready(function () {
             // Set the clicked button to 'btn-primary'
             $(this).removeClass('btn-secondary').addClass('btn-primary');
 
-            localStorage.setItem("icebergLevel", $(this).data('level'));
+            localStorage.setItem("icebergLevel", $(this).data('level') || "medium");
 
             populateQuestionsList(questionsData, localStorage.getItem("icebergLevel"));
+
+            // Clear the additional text container
+            document.getElementById('additional-text-container').innerHTML = '';
         });
 
         // Get the desired iceberg level from localStorage, defaulting to "medium" if not set
@@ -257,9 +232,6 @@ $(document).ready(function () {
             }
         });
 
-        getIcebergsData(true);
-
-        charts.questions.currentData = charts.questions.baseConfig.data;
-        charts.questions.chart = new Chart(charts.questions.canvas, charts.questions.baseConfig);
+        getIcebergsData();
     });
 });

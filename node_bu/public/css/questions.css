@@ -1,6 +1,6 @@
 /* Custom CSS for scrollable container */
 .scrollable-container {
-    max-height: 80vh; /* Adjust the maximum height as needed */
+    max-height: 60vh; /* Adjust the maximum height as needed */
     overflow-y: auto;
     overflow-x: auto;
 }
@@ -13,25 +13,6 @@
     }
 }
 
-/* Custom CSS for distinction between list items */
-.list-group-item {
-    border: 1px solid #dee2e6; /* Add border around list items */
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
-}
-
-.list-group-item.clicked {
-    background-color: rgba(144, 181, 230, 0.87); /* Background color for clicked item */
-}
-
-.list-group-item:hover {
-    background-color: #9ed797; /* Background color on hover */
-}
-
-.list-group-item:not(:last-child) {
-    border-bottom: 1px solid #6f7580; /* Add border between list items */
-}
-
 .chart-container {
     width: auto; /* or any other fixed size */
     height: 71.55vh;
@@ -41,4 +22,27 @@
     height: 40px; /* or whatever size you prefer */
     width: auto; /* this will keep the image ratio */
     /* additional styles if needed */
+}
+
+.additional-text-container {
+    max-height: 19vh; /* Set maximum height */
+    overflow: auto; /* Add scrollbar if text overflows */
+}
+
+.additional-text {
+    background-color: #f8f9fa; /* Adjust background color as needed */
+    border: 1px solid #dee2e6; /* Adjust border color as needed */
+    padding: 10px; /* Adjust padding as needed */
+    margin-top: 10px; /* Adjust margin top as needed */
+}
+
+
+@keyframes blink {
+    0% { background-color: transparent; }
+    50% { background-color: rgba(16, 63, 210, 0.85); } /* Change color to your preference */
+    100% { background-color: transparent; }
+}
+
+.blinking {
+    animation: blink 1s ease-in-out infinite;
 }
