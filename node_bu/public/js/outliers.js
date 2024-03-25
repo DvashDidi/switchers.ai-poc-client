@@ -85,31 +85,6 @@ function getQuestionData(questionId) {
     });
 }
 
-function translateStatistics(serverData) {
-    // Collect all labels from the original object's sub-objects.
-    // This set will help in ensuring uniqueness and the order of labels.
-    const allLabels = new Set();
-    Object.values(serverData).forEach(subObject => {
-        Object.keys(subObject).forEach(label => {
-            allLabels.add(label);
-        });
-    });
-    const labels = Array.from(allLabels);
-
-    // Construct the dataset array
-    const datasets = Object.entries(serverData).map(([key, value]) => {
-        return {
-            label: key,
-            data: labels.map(label => value[label] || 0) // Use || 0 to handle missing labels
-        };
-    });
-
-    return {
-        labels,
-        datasets
-    };
-}
-
 function getImpactsData() {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
             method: "GET",

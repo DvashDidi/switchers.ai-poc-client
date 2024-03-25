@@ -86,57 +86,6 @@ function getQuestionData(questionId) {
     });
 }
 
-function translateStatistics(serverData) {
-    // Collect all labels from the original object's sub-objects.
-    // This set will help in ensuring uniqueness and the order of labels.
-    const allLabels = new Set();
-    Object.values(serverData).forEach(subObject => {
-        Object.keys(subObject).forEach(label => {
-            allLabels.add(label);
-        });
-    });
-    const labels = Array.from(allLabels);
-
-    // Construct the dataset array
-    const datasets = Object.entries(serverData).map(([key, value]) => {
-        return {
-            label: key,
-            data: labels.map(label => value[label] || 0) // Use || 0 to handle missing labels
-        };
-    });
-
-    return {
-        labels,
-        datasets
-    };
-}
-
-function updateQuestionData(chartObj, data) {
-    let idx = 0;
-    for (let dataset of data.datasets) {
-        dataset.borderColor = baseColors[idx % baseColors.length].border;
-        dataset.hoverBorderColor = baseColors[idx % baseColors.length].hoverBackground.hoverBorder;
-        dataset.backgroundColor = baseColors[idx % baseColors.length].background;
-        dataset.hoverBackgroundColor = baseColors[idx % baseColors.length].hoverBackground;
-
-        idx += 1;
-    }
-
-    chartObj.currentData = data;
-
-    let configCopy = deepCopy(chartObj.baseConfig);
-
-    configCopy.data = chartObj.currentData;
-
-    configCopy.data.labels = configCopy.data.labels.map(label => label.split(' '));
-
-    if (chartObj.chart) {
-        chartObj.chart.destroy();
-    }
-
-    chartObj.chart = new Chart(chartObj.canvas, configCopy);
-}
-
 function getIcebergsData() {
     // TODO: GET THE REAL DATA !
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {

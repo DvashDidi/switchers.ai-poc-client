@@ -9,11 +9,11 @@ let _chart, _data, _view;
 let seriesVisibility = [];
 let _options = {
     // Your chart options
-    title: 'Your Chart Title',
+    // title: 'Your Chart Title',
     width: '100%',
     height: '100%',
     chartArea: {
-        // Define as percentages to maintain aspect ratio
+        // Define as percentages to maintain the aspect ratio
         width: '90%',
         // height: '80%'
     },
@@ -23,10 +23,10 @@ let _options = {
     legend: {position: 'top', maxLines: 3},
     bar: {groupWidth: '75%'},
     isStacked: true,
-    animation: {
-        duration: 1000,
-        easing: 'inAndOut',
-    },
+    // animation: {
+    //     duration: 1000,
+    //     easing: 'inAndOut',
+    // }
 };
 
 // Set initial chart type and stack mode based on localStorage or defaults
@@ -37,7 +37,6 @@ setStackModeUI(savedStackMode);
 
 // Ensure chart options reflect saved preferences
 _options.isStacked = savedStackMode;
-
 
 function resizeChart() {
     if (_chart && _data && _options) {
@@ -71,7 +70,6 @@ function setStackModeUI(isStacked) {
     }
 }
 
-
 function toggleChartType(type) {
     localStorage.setItem('chartType', type);
     setChartTypeUI(type);
@@ -84,7 +82,6 @@ function toggleStackMode(isStacked) {
     _options.isStacked = isStacked;
     _chart.draw(_view, _options);
 }
-
 
 function toggleSeriesVisibility(seriesIndex) {
     // Toggle the visibility
