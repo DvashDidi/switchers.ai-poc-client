@@ -1,4 +1,7 @@
 let questionsData = undefined;
+let mainGraphElement = undefined;
+let questionList = undefined;
+let questionMargin = undefined;
 
 function populateQuestionsList(data, selectedCategory) {
     const questionsList = document.getElementById('questions-list');
@@ -42,9 +45,13 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
 
         // Add additional text below the scrollable-container
         const additionalTextContainer = document.getElementById('additional-text-container');
-        additionalTextContainer.innerHTML = `<div class="additional-text"><strong>Q${listItem.dataset.questionNumber}:</strong> ${questionText}</div>`;
+        additionalTextContainer.innerHTML = `<div class="additional-text"><strong>Question ${listItem.dataset.questionNumber}:</strong> ${questionText}</div>`;
 
         getQuestionData(questionId);
+
+        // Apply the new max heights to start the animations
+        questionList.style.maxHeight =
+            `${Math.max(mainGraphElement.offsetHeight - document.querySelector('.additional-text').offsetHeight - questionMargin, 0)}px`;
     });
 
     parentContainer.appendChild(listItem); // Add the list item to the parent container
@@ -143,6 +150,14 @@ function addPlaceholderListeners() {
 
 $(document).ready(function () {
     init_page().then(function () {
+        mainGraphElement = document.querySelector('#main-graph-data');
+        questionList = document.querySelector('.scrollable-container');
+        questionMargin = getMarginOfCSSClass('additional-text').margins.top;
+
+        // Set question list height to be the same as the graph
+        let questionSection = document.querySelector('#questions-section');
+        questionSection.style.height = `${mainGraphElement.offsetHeight}px`;
+
         // Navigation button event handlers
         $("#questions-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn").each(function () {
             $(this).on('click', function (e) {
@@ -156,7 +171,7 @@ $(document).ready(function () {
             });
         });
 
-        // Event listener for window resize
+        // Event listener for a window resize
         window.addEventListener('resize', resizeChart);
 
         addPlaceholderListeners();

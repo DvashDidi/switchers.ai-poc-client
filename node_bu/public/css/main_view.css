@@ -206,3 +206,7 @@ h3 {
     background-color: #6c757d; /* Bootstrap secondary color */
     color: white;
 }
+
+.question-transition {
+    transition: max-height 0.5s ease-out;
+}

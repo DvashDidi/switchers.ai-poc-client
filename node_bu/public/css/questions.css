@@ -1,16 +1,8 @@
 /* Custom CSS for scrollable container */
 .scrollable-container {
-    max-height: 60vh; /* Adjust the maximum height as needed */
+    max-height: 100%; /* Adjust the maximum height as needed */
     overflow-y: auto;
     overflow-x: auto;
-}
-
-/* Media query for small screens */
-@media (max-width: 576px) {
-    .scrollable-container {
-        max-height: 35vh; /* Adjusted height for small screens */
-        overflow-y: scroll;
-    }
 }
 
 .chart-container {
@@ -22,11 +14,6 @@
     height: 40px; /* or whatever size you prefer */
     width: auto; /* this will keep the image ratio */
     /* additional styles if needed */
-}
-
-.additional-text-container {
-    max-height: 19vh; /* Set maximum height */
-    overflow: auto; /* Add scrollbar if text overflows */
 }
 
 .additional-text {

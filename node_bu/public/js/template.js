@@ -183,7 +183,6 @@ function init_page() {
     });
 }
 
-
 function outdatedResearchFound() {
     Swal.fire({
         title: "Research data was updated",
@@ -195,4 +194,37 @@ function outdatedResearchFound() {
         delete localStorage.selectedResearch;
         location.reload();
     });
+}
+
+function getMarginOfCSSClass(className) {
+    // Create a temporary element
+    let tempElement = document.createElement('div');
+
+    // Apply the class to the element
+    tempElement.className = className;
+
+    // Append the element to the body (it needs to be part of the document to compute styles)
+    document.body.appendChild(tempElement);
+
+    // Use getComputedStyle to get the style properties
+    let style = window.getComputedStyle(tempElement);
+
+    let margins = {
+        top: parseInt(style.marginTop, 10),
+        right: parseInt(style.marginRight, 10),
+        bottom: parseInt(style.marginBottom, 10),
+        left: parseInt(style.marginLeft, 10)
+    };
+
+    let borders = {
+        top: parseInt(style.borderTopWidth, 10),
+        right: parseInt(style.borderRightWidth, 10),
+        bottom: parseInt(style.borderBottomWidth, 10),
+        left: parseInt(style.borderLeftWidth, 10)
+    };
+
+    // Remove the temporary element from the document
+    document.body.removeChild(tempElement);
+
+    return { margins, borders };
 }
