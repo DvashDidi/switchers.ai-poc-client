@@ -84,7 +84,7 @@ function toggleStackMode(isStacked) {
 
 function updateLegendLabels(seriesVisibility) {
     google.visualization.events.addListener(_chart, 'ready', function () {
-        let textElements = document.querySelectorAll('#chart_div text[text-anchor="start"]');
+        let textElements = document.querySelectorAll('#chart-div text[text-anchor="start"]');
         let legendTextElements = Array.from(textElements);
 
         legendTextElements.forEach((text, index) => {
