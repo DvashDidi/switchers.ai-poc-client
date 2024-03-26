@@ -21,7 +21,7 @@ let _options = {
     // hAxis: {format: 'decimal'},
     legend: {position: 'top', maxLines: 3},
     bar: {groupWidth: '75%'},
-    isStacked: true,
+    isStacked: false,
     // animation: {
     //     duration: 1000,
     //     easing: 'inAndOut',
@@ -32,7 +32,7 @@ let _options = {
 const savedChartType = localStorage.getItem('chartType') || 'ColumnChart';
 const savedStackMode = localStorage.getItem('stackMode') === 'true';
 setChartTypeUI(savedChartType);
-setStackModeUI(savedStackMode);
+// setStackModeUI(savedStackMode); TODO: uncomment after fixing stack mode
 
 // Ensure chart options reflect saved preferences
 _options.isStacked = savedStackMode;
@@ -82,7 +82,26 @@ function toggleStackMode(isStacked) {
     _chart.draw(_view, _options);
 }
 
+function updateLegendLabels(seriesVisibility) {
+    google.visualization.events.addListener(_chart, 'ready', function () {
+        let textElements = document.querySelectorAll('#chart_div text[text-anchor="start"]');
+        let legendTextElements = Array.from(textElements);
+
+        legendTextElements.forEach((text, index) => {
+            if (index < seriesVisibility.length) {
+                if (!seriesVisibility[index]) {
+                    text.style.textDecoration = 'line-through';
+                } else {
+                    text.style.textDecoration = 'none';
+                }
+            }
+        });
+    });
+}
+
 function toggleSeriesVisibility(seriesIndex) {
+    if (seriesVisibility.filter(v => v === true).length === 1 && seriesVisibility[seriesIndex]) return;
+
     // Toggle the visibility
     seriesVisibility[seriesIndex] = !seriesVisibility[seriesIndex];
 
@@ -194,20 +213,4 @@ function drawChart(serverData) {
     updateLegendLabels(seriesVisibility);
 }
 
-function updateLegendLabels(seriesVisibility) {
-    google.visualization.events.addListener(_chart, 'ready', function () {
-        let textElements = document.querySelectorAll('#chart-div text[text-anchor="start"]');
-        let legendTextElements = Array.from(textElements);
-
-        legendTextElements.forEach((text, index) => {
-            if (index < seriesVisibility.length) {
-                if (!seriesVisibility[index]) {
-                    text.style.textDecoration = 'line-through';
-                } else {
-                    text.style.textDecoration = 'none';
-                }
-            }
-        });
-    });
-}
-
+// endregion chart
