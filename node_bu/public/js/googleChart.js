@@ -1,7 +1,6 @@
 google.charts.load('current', {'packages': ['corechart']});
 
-// region chart config & functions
-const chartDiv = document.getElementById('chart_div');
+const chartDiv = document.getElementById('chart-div');
 
 let updateChart = true;
 
@@ -190,6 +189,25 @@ function drawChart(serverData) {
 
     // Default to ColumnChart type
     drawColumnType(localStorage.getItem('chartType') || 'ColumnChart');
+
+    // Update legend labels to reflect visibility
+    updateLegendLabels(seriesVisibility);
 }
 
-// endregion chart
+function updateLegendLabels(seriesVisibility) {
+    google.visualization.events.addListener(_chart, 'ready', function () {
+        let textElements = document.querySelectorAll('#chart-div text[text-anchor="start"]');
+        let legendTextElements = Array.from(textElements);
+
+        legendTextElements.forEach((text, index) => {
+            if (index < seriesVisibility.length) {
+                if (!seriesVisibility[index]) {
+                    text.style.textDecoration = 'line-through';
+                } else {
+                    text.style.textDecoration = 'none';
+                }
+            }
+        });
+    });
+}
+

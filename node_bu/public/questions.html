@@ -111,12 +111,12 @@
                         <div class="card">
                             <div class="card bg-dark d-flex justify-content-center">
                                 <div class="row p-2 align-items-center">
-                                    <div class="col-6">
+                                    <div class="col-md-4 col-sm-4 col-xs-4">
                                         <h3 class="text-white">Questions Data</h3>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-md-4 col-sm-4 col-xs-4">
                                     </div>
-                                    <div class="col-4 text-right">
+                                    <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                                         <!-- Chart Type Toggle -->
                                         <div class="btn-group btn-group-toggle" id="chartTypeToggle" role="group" aria-label="Chart Type Toggle">
                                             <button type="button" class="btn btn-sm" onclick="toggleChartType('ColumnChart')" title="Column Chart">
@@ -141,7 +141,7 @@
                             </div>
                         </div>
                         <div class="card mt-2">
-                            <div id="chart_div" style="width: auto; height: 70vh; display: flex; align-items: center; justify-content: center;">
+                            <div id="chart-div" style="width: auto; height: 70vh; display: flex; align-items: center; justify-content: center;">
                                 <div style="text-align: center;">
                                     <strong id="chart-placeholder" class="text-black">Choose a question to inspect.</strong>
                                 </div>
@@ -156,13 +156,11 @@
     <!-- END OF MAIN VIEW-->
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-dark">
-                    <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
-                </div>
-            </div>
+    <footer class="footer bg-dark text-white fixed-bottom">
+        <div class="container text-center py-2">
+            <strong>POV: <span id="pov-value"></span></strong>
+            <br>
+            <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
         </div>
     </footer>
     <!-- End of Footer -->

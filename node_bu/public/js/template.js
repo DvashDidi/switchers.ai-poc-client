@@ -174,8 +174,15 @@ function init_page() {
             Promise.resolve();
 
         researchPromise.then(() => {
-            if (getPOV() === null) {
+            const povValue = getPOV();
+            const povElement = document.getElementById("pov-value");
+
+            if (povValue === null) {
                 showPOVNotification();
+            }
+
+            if (povElement) {
+                povElement.textContent = povValue || "not selected";
             }
 
             resolve(true);

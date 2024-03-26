@@ -156,7 +156,7 @@ $(document).ready(function () {
         $('.sensitivity-level-button').on('click', function () {
             updateChart = false;
 
-            $("#chart_div")
+            $("#chart-div")
                 .empty()
                 .append(`<div style="text-align: center;">
                                     <strong id="chart-placeholder" class="text-black">Choose a question to inspect.</strong>

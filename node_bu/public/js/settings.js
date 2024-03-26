@@ -64,6 +64,11 @@ $(document).ready(() => {
             const candidate = $('#pov-choice').val();
 
             if (candidate) {
+                const povElement = document.getElementById("pov-value");
+                if (povElement) {
+                    povElement.textContent = candidate;
+                }
+
                 localStorage.setItem('pov', candidate);
                 Swal.fire({
                     title: "Settings Updated Successfully",
