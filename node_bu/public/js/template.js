@@ -154,7 +154,7 @@ function showPOVNotification() {
     Swal.fire({
         // title: `<a href="settings.html" style="color: #333; text-decoration: underline;">Set up POV now</a>`,
         // text: `To enhance your experience, consider setting up your Point of View (POV).`,
-        html: `<h3>To enhance your experience, consider <a href="settings.html" style="color: #333; text-decoration: underline;">setting up your Point of View</a> (POV).</h3>`,
+        html: `<h3>To enhance your experience, consider <a href="settings.html" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">setting up your Point of View</a> (POV).</h3>`,
         position: 'bottom',
         backdrop: false,
         timer: 15000,
@@ -199,7 +199,7 @@ function init_page() {
             }
 
             if (povElement) {
-                povElement.textContent = povValue || "not selected";
+                povElement.innerHTML = povValue || `<a href="settings.html" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">setup here</a>`;
             }
 
             resolve(true);

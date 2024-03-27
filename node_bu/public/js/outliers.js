@@ -86,6 +86,25 @@ function getQuestionData(questionId) {
 }
 
 function getImpactsData() {
+    let toast;
+    if (getPOV()) {
+        toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                Swal.showLoading();
+            }
+        });
+
+        toast.fire({
+            icon: "info",
+            title: 'Loading...',
+            text: 'Fetching Impacts data.',
+        });
+    }
+
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
             method: "GET",
             headers: {
@@ -107,8 +126,23 @@ function getImpactsData() {
     }).then(function (data) {
         questionsData = data;
         populateQuestionsList(questionsData, localStorage.getItem("impactLevel") || "medium");
+
+        if (getPOV()) {
+            toast.close(); // Close the loading Swal when data is received and processed
+        }
     }).catch(function (error) {
         console.error(error);
+
+        if (getPOV()) {
+            toast.fire({ // Show error Swal
+                icon: 'error',
+                title: 'Oops...',
+                timer: 1500,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `An error occurred: ${error.message}`
+            });
+        }
     });
 }
 

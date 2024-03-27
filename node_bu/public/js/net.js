@@ -97,6 +97,26 @@ $(document).ready(() => {
 
         // Fetch and update data
         const fetchDataAndUpdateUI = () => {
+            let toast;
+            if (getPOV()) {
+                toast = Swal.mixin({
+                    toast: true,
+                    position: "bottom-end",
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        Swal.showLoading();
+                    }
+                });
+
+                toast.fire({
+                    icon: "info",
+                    title: 'Loading...',
+                    text: 'Fetching Net data.',
+                });
+            }
+
+
             const apiUrl = `${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/net`;
             fetch(apiUrl, {
                 method: "GET",
@@ -120,8 +140,25 @@ $(document).ready(() => {
                 .then(data => {
                     createDynamicTable(data);
                     updateNetData(data);
+
+                    if (getPOV()) {
+                        toast.close(); // Close the loading Swal when data is received and processed
+                    }
                 })
-                .catch(error => console.error('Failed to load data:', error));
+                .catch((error) => {
+                    console.error('Failed to load data:', error);
+
+                    if (getPOV()) {
+                        toast.fire({ // Show error Swal
+                            icon: 'error',
+                            title: 'Oops...',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            text: `An error occurred: ${error.message}`
+                        });
+                    }
+                });
         };
 
         fetchDataAndUpdateUI(); // Initiate fetch operation

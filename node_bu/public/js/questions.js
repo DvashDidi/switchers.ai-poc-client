@@ -80,9 +80,71 @@ function addPlaceholderListeners() {
     const questionsList = $('#questions-list');
 
     placeholder.on("mouseenter", function () {
-        questionsList.fadeTo(700, 0.3, function() {
+        questionsList.fadeTo(700, 0.3, function () {
             questionsList.fadeTo(500, 1);
         });
+    });
+}
+
+function getQuestionsData() {
+    let toast;
+    if (getPOV()) {
+        toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                Swal.showLoading();
+            }
+        });
+
+        toast.fire({
+            icon: "info",
+            title: 'Loading...',
+            text: 'Fetching questions data.',
+        });
+    }
+
+    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            if (response.status === 404) {
+                outdatedResearchFound();
+            }
+
+            return response.text().then(function (message) {
+                throw new Error(`${message}`);
+            });
+        }
+
+        return response.json();
+    }).then(function (data) {
+        for (const question of data) {
+            addClickableItem(document.getElementById('questions-list'), question);
+        }
+
+        if (getPOV()) {
+            toast.close(); // Close the loading Swal when data is received and processed
+        }
+    }).catch(function (error) {
+        console.error(error);
+
+        if (getPOV()) {
+            toast.fire({ // Show error Swal
+                icon: 'error',
+                title: 'Oops...',
+                timer: 1500,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `An error occurred: ${error.message}`
+            });
+        }
     });
 }
 
@@ -114,30 +176,6 @@ $(document).ready(function () {
         // Event listener for a window resize
         window.addEventListener('resize', resizeChart);
 
-        fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        ).then(function (response) {
-            if (!response.ok) {
-                if (response.status === 404) {
-                    outdatedResearchFound();
-                }
-
-                return response.text().then(function (message) {
-                    throw new Error(`${message}`);
-                });
-            }
-
-            return response.json();
-        }).then(function (data) {
-            for (const question of data) {
-                addClickableItem(document.getElementById('questions-list'), question);
-            }
-        }).catch(function (error) {
-            console.error(error);
-        });
+        getQuestionsData();
     });
 });
