@@ -100,19 +100,27 @@ h3 {
     background-image: url('../images/icons/black_logo.svg');
 }
 
-/* notificationBar - for POV alert */
-#notificationBar {
+/* notification-bar - for POV alert */
+.notification-bar {
     background-color: #ffc107; /* Warning color */
     color: #333; /* Text color */
     width: 100%;
     text-align: center;
-    padding: 10px 0;
+    padding: 0;
     position: fixed;
     bottom: 0; /* Changed from top to bottom */
     left: 0;
     z-index: 1000;
     font-family: Arial, sans-serif;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, .2); /* Adjusted shadow for bottom appearance */
+}
+
+/*.swal2-popup {*/
+/*    font-size: 12px !important;*/
+/*}*/
+
+.custom-close-button {
+    color: #000000; /* Change to your desired color */
 }
 
 .close-pov-notification {

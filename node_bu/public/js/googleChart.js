@@ -160,6 +160,9 @@ function drawColumnType(type) {
 
     _chart.draw(_view, _options);
 
+    // Update legend labels to reflect visibility
+    updateLegendLabels(seriesVisibility);
+
     // Add click event listener to toggle series visibility
     google.visualization.events.addListener(_chart, 'select', function () {
         var selection = _chart.getSelection();
@@ -208,9 +211,6 @@ function drawChart(serverData) {
 
     // Default to ColumnChart type
     drawColumnType(localStorage.getItem('chartType') || 'ColumnChart');
-
-    // Update legend labels to reflect visibility
-    updateLegendLabels(seriesVisibility);
 }
 
 // endregion chart

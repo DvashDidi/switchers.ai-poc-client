@@ -151,18 +151,35 @@ function getDefaultResearchFromApi() {
 }
 
 function showPOVNotification() {
-    $('#notificationBar').html('To enhance your experience, consider setting up your Point of View (POV). <a href="settings.html" style="color: #333; text-decoration: underline;">Set up POV now</a> <button class="close-pov-notification" id="closeNotification">&times;</button>')
-        .css('display', 'block');
-
-    // Close button functionality
-    $('#closeNotification').click(function () {
-        $('#notificationBar').fadeOut(1000);
+    Swal.fire({
+        // title: `<a href="settings.html" style="color: #333; text-decoration: underline;">Set up POV now</a>`,
+        // text: `To enhance your experience, consider setting up your Point of View (POV).`,
+        html: `<h3>To enhance your experience, consider <a href="settings.html" style="color: #333; text-decoration: underline;">setting up your Point of View</a> (POV).</h3>`,
+        position: 'bottom',
+        backdrop: false,
+        timer: 15000,
+        grow: 'row', // Adjust the growing behavior as needed
+        showConfirmButton: false,
+        showCloseButton: true,
+        showClass: {
+            popup: `
+      animate__animated
+      animate__fadeInUp
+      animate__faster
+    `,
+        },
+        hideClass: {
+            popup: `
+      animate__animated
+      animate__fadeOutDown
+      animate__faster
+    `,
+        },
+        customClass: {
+            popup: 'notification-bar', // Apply your class here
+            closeButton: 'custom-close-button'
+        }
     });
-
-    // Hide the notification after some time
-    setTimeout(function () {
-        $('#notificationBar').fadeOut(1000);
-    }, 15000); // Hides after 15 seconds
 }
 
 function init_page() {

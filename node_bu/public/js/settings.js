@@ -60,7 +60,6 @@ $(document).ready(() => {
 
         // Setup the save settings button click handler
         $("#save-settings").click(async () => {
-            $('#notificationBar').fadeOut(1000);
             const candidate = $('#pov-choice').val();
 
             if (candidate) {
