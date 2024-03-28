@@ -1,58 +1,7 @@
-Chart.register(ChartDataLabels);
-
-let emptyDataset = [
-    {
-        label: 'No data for selected impact',
-        data: [0, 0, 0],
-        backgroundColor: "rgba(54, 162, 235, 0.7)"
-    }
-]
-
-let charts = {
-    questions: {
-        endpoint: "query/prediction/accuracy",
-        label: 'Impact Data',
-        canvas: $("#impacts-chart"),
-        chart: undefined,
-        currentData: {},
-        baseConfig: {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: emptyDataset
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            title: (context) => {
-                                return context[0].label.replaceAll(',', ' ');
-                            }
-                        }
-                    },
-                    datalabels: {
-                        anchor: 'end', // Position of the labels (start, end, center, etc.)
-                        align: 'end', // Alignment of the labels (start, end, center, etc.)
-                        color: 'black', // Color of the labels
-                        // font: {
-                        //     weight: 'bold',
-                        // },
-                        formatter: function (value, context) {
-                            return value; // Display the actual data value
-                        }
-                    },
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                height: 650
-            }
-        }
-    }
-};
 let questionsData = undefined;
+let mainGraphElement = undefined;
+let questionList = undefined;
+let questionMargin = undefined;
 
 function populateQuestionsList(data, selectedCategory) {
     const questionsList = document.getElementById('questions-list');
@@ -84,10 +33,25 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
     // Append the question text to the list item
     listItem.appendChild(document.createTextNode(questionText));
 
-    // Add an event listener for clicks on this list item
-    listItem.addEventListener('click', function () {
-        // Implement the logic to handle the click event, e.g., fetch more data or display details
+    // Add click event listener to the list item
+    listItem.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent default link behavior
+        // Remove the 'clicked' class from all items
+        document.querySelectorAll('.list-group-item').forEach(item => {
+            item.classList.remove('clicked');
+        });
+        // Add the 'clicked' class to the clicked item
+        listItem.classList.add('clicked');
+
+        // Add additional text below the scrollable-container
+        const additionalTextContainer = document.getElementById('additional-text-container');
+        additionalTextContainer.innerHTML = `<div class="additional-text rounded"><strong>Selected Question ${listItem.dataset.questionNumber}:</strong><br><span>${questionText}</span></div>`;
+
         getQuestionData(questionId);
+
+        // Apply the new max heights to start the animations
+        questionList.style.maxHeight =
+            `${Math.max(mainGraphElement.offsetHeight - document.querySelector('.additional-text').offsetHeight - questionMargin, 0)}px`;
     });
 
     parentContainer.appendChild(listItem); // Add the list item to the parent container
@@ -114,67 +78,31 @@ function getQuestionData(questionId) {
 
         return response.json();
     }).then(function (data) {
-        // TODO: Define data in server
-        updateQuestionData(charts.questions, translateStatistics(data));
+        updateChart = true;
+        drawChart(translateToGoogleChartsData(data));
     }).catch(function (error) {
         console.error(error);
     });
 }
 
-function translateStatistics(serverData) {
-    // Collect all labels from the original object's sub-objects.
-    // This set will help in ensuring uniqueness and the order of labels.
-    const allLabels = new Set();
-    Object.values(serverData).forEach(subObject => {
-        Object.keys(subObject).forEach(label => {
-            allLabels.add(label);
+function getImpactsData() {
+    let toast;
+    if (getPOV()) {
+        toast = Swal.mixin({
+            toast: true,
+            position: "bottom-end",
+            showConfirmButton: false,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                Swal.showLoading();
+            }
         });
-    });
-    const labels = Array.from(allLabels);
 
-    // Construct the dataset array
-    const datasets = Object.entries(serverData).map(([key, value]) => {
-        return {
-            label: key,
-            data: labels.map(label => value[label] || 0) // Use || 0 to handle missing labels
-        };
-    });
-
-    return {
-        labels,
-        datasets
-    };
-}
-
-function updateQuestionData(chartObj, data) {
-    let idx = 0;
-    for (let dataset of data.datasets) {
-        dataset.borderColor = baseColors[idx % baseColors.length].border;
-        dataset.hoverBorderColor = baseColors[idx % baseColors.length].hoverBackground.hoverBorder;
-        dataset.backgroundColor = baseColors[idx % baseColors.length].background;
-        dataset.hoverBackgroundColor = baseColors[idx % baseColors.length].hoverBackground;
-
-        idx += 1;
-    }
-
-    chartObj.currentData = data;
-
-    let configCopy = deepCopy(chartObj.baseConfig);
-
-    configCopy.data = chartObj.currentData;
-
-    configCopy.data.labels = configCopy.data.labels.map(label => label.split(' '));
-
-    if (chartObj.chart) {
-        chartObj.chart.destroy();
-    }
-
-    chartObj.chart = new Chart(chartObj.canvas, configCopy);
-}
-
-function getImpactsData(first) {
-    if (!first) {
-        updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
+        toast.fire({
+            icon: "info",
+            title: 'Loading...',
+            text: 'Fetching Impacts data.',
+        });
     }
 
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
@@ -198,15 +126,49 @@ function getImpactsData(first) {
     }).then(function (data) {
         questionsData = data;
         populateQuestionsList(questionsData, localStorage.getItem("impactLevel") || "medium");
+
+        if (getPOV()) {
+            toast.close(); // Close the loading Swal when data is received and processed
+        }
     }).catch(function (error) {
         console.error(error);
+
+        if (getPOV()) {
+            toast.fire({ // Show error Swal
+                icon: 'error',
+                title: 'Oops...',
+                timer: 1500,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `An error occurred: ${error.message}`
+            });
+        }
     });
 }
 
-$(document).ready(function () {
+function addPlaceholderListeners() {
+    const placeholder = $('#chart-placeholder');
+    const questionsList = $('#questions-list');
+
+    placeholder.on("mouseenter", function () {
+        questionsList.fadeTo(700, 0.3, function () {
+            questionsList.fadeTo(500, 1);
+        });
+    });
+}
+
+function _main() {
     init_page().then(function () {
+        mainGraphElement = document.querySelector('#main-graph-data');
+        questionList = document.querySelector('.scrollable-container');
+        questionMargin = getMarginOfCSSClass('additional-text').margins.bottom;
+
+        // Set question list height to be the same as the graph
+        let questionSection = document.querySelector('#questions-section');
+        questionSection.style.height = `${mainGraphElement.offsetHeight}px`;
+
         // Navigation button event handlers
-        $("#questions-nav-btn, #net-nav-btn, #settings-nav-btn").each(function () {
+        $("#questions-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn").each(function () {
             $(this).on('click', function (e) {
                 e.preventDefault(); // Prevent the default action
 
@@ -218,14 +180,20 @@ $(document).ready(function () {
             });
         });
 
-        $("#new-data-btn").on("click", function () {
-            updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
+        // Event listener for a window resize
+        window.addEventListener('resize', resizeChart);
 
-            getImpactsData();
-        });
+        addPlaceholderListeners();
 
         $('.sensitivity-level-button').on('click', function () {
-            updateQuestionData(charts.questions, {datasets: emptyDataset, labels: []});
+            updateChart = false;
+
+            $("#chart-div")
+                .empty()
+                .append(`<div style="text-align: center;">
+                                    <strong id="chart-placeholder" class="text-black">Choose a question to inspect.</strong>
+                                </div>`);
+            addPlaceholderListeners();
 
             // Remove 'btn-primary' from all buttons and set them to 'btn-secondary'
             $('.sensitivity-level-button').removeClass('btn-primary').addClass('btn-secondary');
@@ -236,6 +204,9 @@ $(document).ready(function () {
             localStorage.setItem("impactLevel", $(this).data('level'));
 
             populateQuestionsList(questionsData, localStorage.getItem("impactLevel"));
+
+            // Clear the additional text container
+            document.getElementById('additional-text-container').innerHTML = '';
         });
 
         // Get the desired impact level from localStorage, defaulting to "medium" if not set
@@ -257,26 +228,10 @@ $(document).ready(function () {
             }
         });
 
-        getImpactsData(true);
-
-        charts.questions.currentData = charts.questions.baseConfig.data;
-        charts.questions.chart = new Chart(charts.questions.canvas, charts.questions.baseConfig);
-
-        // TODO: Change button style
-        // // calling each table to refresh values
-        // for (let chart of Object.keys(charts)) {
-        //     charts[chart].changeTableStyleBtn.on('click', function () {
-        //         changeChartType(charts[chart]);
-        //     });
-        // }
-        //
-        // function changeChartType(chartObj, type = "bar") {
-        //     if (!chartObj || !chartObj.chart) return;
-        //
-        //     if (chartObj.chart) chartObj.chart.destroy();
-        //     chartObj.config.type = type;
-        //     chartObj.chart = new Chart(chartObj.canvas, chartObj.config);
-        //     chartObj.canvas[0].style.display = "";
-        // }
+        getImpactsData();
     });
+}
+
+$(document).ready(function () {
+    google.charts.setOnLoadCallback(_main);
 });

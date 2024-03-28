@@ -52,7 +52,7 @@ $(document).ready(() => {
         getPovs();
 
         // Setup navigation button event handlers
-        $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn").on('click', function (e) {
+        $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn, #icebergs-nav-btn").on('click', function (e) {
             e.preventDefault();
             history.pushState(null, null, location.href); // Push the current state to the history stack
             window.location.href = $(this).data('target'); // Redirect to the target page
@@ -60,10 +60,14 @@ $(document).ready(() => {
 
         // Setup the save settings button click handler
         $("#save-settings").click(async () => {
-            $('#notificationBar').fadeOut(1000);
             const candidate = $('#pov-choice').val();
 
             if (candidate) {
+                const povElement = document.getElementById("pov-value");
+                if (povElement) {
+                    povElement.textContent = candidate;
+                }
+
                 localStorage.setItem('pov', candidate);
                 Swal.fire({
                     title: "Settings Updated Successfully",

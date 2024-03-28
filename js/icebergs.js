@@ -40,6 +40,7 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
         document.querySelectorAll('.list-group-item').forEach(item => {
             item.classList.remove('clicked');
         });
+
         // Add the 'clicked' class to the clicked item
         listItem.classList.add('clicked');
 
@@ -85,7 +86,7 @@ function getQuestionData(questionId) {
     });
 }
 
-function getImpactsData() {
+function getIcebergsData() {
     let toast;
     if (getPOV()) {
         toast = Swal.mixin({
@@ -101,10 +102,11 @@ function getImpactsData() {
         toast.fire({
             icon: "info",
             title: 'Loading...',
-            text: 'Fetching Impacts data.',
+            text: 'Fetching Hazardous data.',
         });
     }
 
+    // TODO: GET THE REAL DATA !
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
             method: "GET",
             headers: {
@@ -125,7 +127,7 @@ function getImpactsData() {
         return response.json();
     }).then(function (data) {
         questionsData = data;
-        populateQuestionsList(questionsData, localStorage.getItem("impactLevel") || "medium");
+        populateQuestionsList(questionsData, localStorage.getItem("icebergLevel") || "medium");
 
         if (getPOV()) {
             toast.close(); // Close the loading Swal when data is received and processed
@@ -168,7 +170,7 @@ function _main() {
         questionSection.style.height = `${mainGraphElement.offsetHeight}px`;
 
         // Navigation button event handlers
-        $("#questions-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn").each(function () {
+        $("#questions-nav-btn, #impacts-nav-btn, #net-nav-btn, #settings-nav-btn").each(function () {
             $(this).on('click', function (e) {
                 e.preventDefault(); // Prevent the default action
 
@@ -201,16 +203,16 @@ function _main() {
             // Set the clicked button to 'btn-primary'
             $(this).removeClass('btn-secondary').addClass('btn-primary');
 
-            localStorage.setItem("impactLevel", $(this).data('level'));
+            localStorage.setItem("icebergLevel", $(this).data('level') || "medium");
 
-            populateQuestionsList(questionsData, localStorage.getItem("impactLevel"));
+            populateQuestionsList(questionsData, localStorage.getItem("icebergLevel"));
 
             // Clear the additional text container
             document.getElementById('additional-text-container').innerHTML = '';
         });
 
-        // Get the desired impact level from localStorage, defaulting to "medium" if not set
-        const impactLevel = localStorage.getItem("impactLevel") || "medium";
+        // Get the desired iceberg level from localStorage, defaulting to "medium" if not set
+        const icebergLevel = localStorage.getItem("icebergLevel") || "medium";
 
         // Get all buttons with the class "sensitivity-level-button"
         const buttons = document.querySelectorAll('.sensitivity-level-button');
@@ -221,14 +223,14 @@ function _main() {
             button.classList.remove('btn-primary');
             button.classList.add('btn-secondary');
 
-            // If the button's value matches the impactLevel, switch classes
-            if (button.dataset.level === impactLevel) {
+            // If the button's value matches the icebergLevel, switch classes
+            if (button.dataset.level === icebergLevel) {
                 button.classList.remove('btn-secondary');
                 button.classList.add('btn-primary');
             }
         });
 
-        getImpactsData();
+        getIcebergsData();
     });
 }
 

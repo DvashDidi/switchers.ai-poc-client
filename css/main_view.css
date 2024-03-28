@@ -90,6 +90,12 @@ h3 {
     transition: background-image 0.5s ease; /* smooth transition for changing the logo */
 }
 
+.scrollable-container {
+    max-height: 100%; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
 /* Default logo, assuming it's the dark theme logo */
 .dark-mode-logo {
     background-image: url('../images/icons/white_logo.svg');
@@ -100,19 +106,27 @@ h3 {
     background-image: url('../images/icons/black_logo.svg');
 }
 
-/* notificationBar - for POV alert */
-#notificationBar {
+/* notification-bar - for POV alert */
+.notification-bar {
     background-color: #ffc107; /* Warning color */
     color: #333; /* Text color */
     width: 100%;
     text-align: center;
-    padding: 10px 0;
+    padding: 0;
     position: fixed;
     bottom: 0; /* Changed from top to bottom */
     left: 0;
     z-index: 1000;
     font-family: Arial, sans-serif;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, .2); /* Adjusted shadow for bottom appearance */
+}
+
+/*.swal2-popup {*/
+/*    font-size: 12px !important;*/
+/*}*/
+
+.custom-close-button {
+    color: #000000; /* Change to your desired color */
 }
 
 .close-pov-notification {
@@ -130,4 +144,90 @@ h3 {
     line-height: 40px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 10;
+}
+
+/* Custom CSS for distinction between list items */
+.list-group-item {
+    border: 1px solid #dee2e6 !important; /* Add border around list items */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.list-group-item.clicked {
+    background-color: rgba(144, 181, 230, 0.87) !important; /* Background color for clicked item */
+    color: black !important;
+}
+
+.list-group-item:hover {
+    background-color: #9ed797 !important; /* Background color on hover */
+    color: black !important;
+}
+
+.list-group-item:not(:last-child) {
+    border-bottom: 1px solid #6f7580 !important; /* Add border between list items */
+}
+
+
+
+
+/* Customize the scrollbar */
+/* Main scrollbar (for the entire page) */
+::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color of the scrollbar track */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar handle */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the scrollbar handle on hover */
+}
+
+/* Inner scrollbar (for inner elements) */
+/* You may override these styles as needed for specific elements */
+.inner-element::-webkit-scrollbar {
+    width: 5px; /* Width of the inner scrollbar */
+}
+
+/* Track */
+.inner-element::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Color of the inner scrollbar track */
+}
+
+/* Handle */
+.inner-element::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the inner scrollbar handle */
+}
+
+/* Handle on hover */
+.inner-element::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the inner scrollbar handle on hover */
+}
+
+.btn-group .btn.active {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+}
+.btn-group .btn {
+    background-color: #6c757d; /* Bootstrap secondary color */
+    color: white;
+}
+
+.question-transition {
+    transition: max-height 0.5s ease-out;
+}
+
+.additional-text {
+    background-color: #f8f9fa; /* Adjust background color as needed */
+    border: 1px solid #dee2e6; /* Adjust border color as needed */
+    padding: 10px; /* Adjust padding as needed */
+    margin-bottom: 10px; /* Adjust margin top as needed */
 }
