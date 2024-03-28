@@ -90,6 +90,12 @@ h3 {
     transition: background-image 0.5s ease; /* smooth transition for changing the logo */
 }
 
+.scrollable-container {
+    max-height: 100%; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
 /* Default logo, assuming it's the dark theme logo */
 .dark-mode-logo {
     background-image: url('../images/icons/white_logo.svg');
@@ -217,4 +223,11 @@ h3 {
 
 .question-transition {
     transition: max-height 0.5s ease-out;
+}
+
+.additional-text {
+    background-color: #f8f9fa; /* Adjust background color as needed */
+    border: 1px solid #dee2e6; /* Adjust border color as needed */
+    padding: 10px; /* Adjust padding as needed */
+    margin-bottom: 10px; /* Adjust margin top as needed */
 }

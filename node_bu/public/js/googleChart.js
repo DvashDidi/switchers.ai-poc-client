@@ -176,30 +176,56 @@ function drawColumnType(type) {
     });
 }
 
-function drawChart(serverData) {
-    const numberOfDatasets = Object.keys(serverData).length;
-    seriesVisibility = new Array(numberOfDatasets).fill(true);
+function transformNetDataForGoogleCharts(data) {
+    // Step 1: Prepare the header
+    const header = ['Name']; // Starting with "Name" column
+    const scoresCategories = Object.keys(data[0].scores);
+    header.push(...scoresCategories); // Adding categories to the header
 
-    _data = new google.visualization.DataTable();
-    _data.addColumn('string', 'Category');
-
-    // Add columns for each dataset
-    Object.keys(serverData).forEach(dataset => {
-        _data.addColumn('number', dataset);
-    });
-
-    // Now, build the rows by category
-    const categories = Object.keys(serverData[Object.keys(serverData)[0]]);
-    const rows = categories.map(category => {
-        const row = [category];
-        Object.keys(serverData).forEach(dataset => {
-            row.push(serverData[dataset][category] || 0);
+    // Step 2: Prepare the data rows
+    const rows = data.map(item => {
+        const row = [item.name]; // Starting each row with the name
+        scoresCategories.forEach(category => {
+            row.push(item.scores[category]); // Adding each score by category
         });
         return row;
     });
 
-    // Add rows to the DataTable
-    _data.addRows(rows);
+    // Step 3: Combine header and rows
+    return [header, ...rows];
+}
+
+function translateToGoogleChartsData(serverData) {
+    // Step 1: Prepare the header
+    const categories = ['Answer', ...Object.keys(serverData)];
+    const data = [categories];
+
+    // Step 2: Aggregate all unique keys from all categories
+    const uniqueKeys = new Set();
+    Object.values(serverData).forEach(categoryData => {
+        Object.keys(categoryData).forEach(key => {
+            uniqueKeys.add(key);
+        });
+    });
+
+    // Step 3: Prepare the data rows
+    uniqueKeys.forEach(key => {
+        const row = [key];
+        categories.slice(1).forEach(category => {
+            const value = serverData[category][key];
+            row.push(value !== undefined ? value : 0); // Add the value if it exists; otherwise, use 0
+        });
+        data.push(row);
+    });
+
+    return data;
+}
+
+function drawChart(drawData) {
+    const numberOfDatasets = drawData[0].length - 1;
+    seriesVisibility = new Array(numberOfDatasets).fill(true);
+
+    _data = new google.visualization.arrayToDataTable(drawData);
 
     const colorList = [];
     for (let idx = 0; idx < numberOfDatasets; idx++) {

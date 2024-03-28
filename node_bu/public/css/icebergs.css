@@ -2,13 +2,6 @@
     margin: 0 2px; /* Adjust the space between buttons */
 }
 
-/* Custom CSS for scrollable container */
-.scrollable-container {
-    max-height: 100%; /* Adjust the maximum height as needed */
-    overflow-y: auto;
-    overflow-x: auto;
-}
-
 .chart-container {
     width: auto; /* or any other fixed size */
     height: 71.55vh;
@@ -18,11 +11,4 @@
     height: 40px; /* or whatever size you prefer */
     width: auto; /* this will keep the image ratio */
     /* additional styles if needed */
-}
-
-.additional-text {
-    background-color: #f8f9fa; /* Adjust background color as needed */
-    border: 1px solid #dee2e6; /* Adjust border color as needed */
-    padding: 10px; /* Adjust padding as needed */
-    margin-top: 10px; /* Adjust margin top as needed */
 }

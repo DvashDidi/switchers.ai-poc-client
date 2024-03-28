@@ -68,6 +68,12 @@
             </div>
         </div>
 
+        <!-- POV STATUS -->
+        <div class="ml-2 mr-5 text-white">
+            <strong class="">POV: </strong><span id="pov-value"></span>
+        </div>
+        <!-- END OF POV STATUS -->
+
         <!-- DARK MODE TOGGLE -->
         <div class="ml-2 mr-5">
             <div class="form-check form-switch">
@@ -90,13 +96,13 @@
         <main>
             <div class="pt-2">
                 <div class="row mt-3 mb-2">
-                    <div id="questions-section" class="col-md-3 mb-2 col-sm-12 mb-1">
+                    <div id="questions-section" class="col-md-3 mb-2 col-sm-12">
+                        <div id="additional-text-container" class="additional-text-container"></div>
                         <div class="scrollable-container question-transition">
                             <div class="list-group" id="questions-list">
                                 <!-- Clickable list items will be appended here dynamically -->
                             </div>
                         </div>
-                        <div id="additional-text-container" class="additional-text-container mt-2"></div>
                     </div>
 
                     <div id="main-graph-data" class="col-md-9 mb-2 col-sm-12 mb-1">
@@ -160,8 +166,6 @@
     <!-- Footer -->
     <footer class="footer bg-dark text-white fixed-bottom">
         <div class="container text-center py-2">
-            <strong>POV: <span id="pov-value"></span></strong>
-            <br>
             <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
         </div>
     </footer>

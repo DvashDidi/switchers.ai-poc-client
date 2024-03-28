@@ -240,6 +240,13 @@ function getMarginOfCSSClass(className) {
         left: parseInt(style.marginLeft, 10)
     };
 
+    let paddings = {
+        top: parseInt(style.paddingTop, 10),
+        right: parseInt(style.paddingRight, 10),
+        bottom: parseInt(style.paddingBottom, 10),
+        left: parseInt(style.paddingLeft, 10)
+    };
+
     let borders = {
         top: parseInt(style.borderTopWidth, 10),
         right: parseInt(style.borderRightWidth, 10),
@@ -250,5 +257,5 @@ function getMarginOfCSSClass(className) {
     // Remove the temporary element from the document
     document.body.removeChild(tempElement);
 
-    return { margins, borders };
+    return { margins, paddings, borders };
 }

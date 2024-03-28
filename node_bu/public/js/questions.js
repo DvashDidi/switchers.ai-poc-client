@@ -36,7 +36,7 @@ function addClickableItem(parentContainer, question) {
 
         // Add additional text below the scrollable-container
         const additionalTextContainer = document.getElementById('additional-text-container');
-        additionalTextContainer.innerHTML = `<div class="additional-text question-transition"><strong>Question ${listItem.dataset.questionNumber}:</strong> ${question["text"]}</div>`;
+        additionalTextContainer.innerHTML = `<div class="additional-text rounded"><strong>Selected Question ${listItem.dataset.questionNumber}:</strong><br><span>${question["text"]}</span></div>`;
 
         getQuestionData(listItem.dataset.questionId);
 
@@ -69,7 +69,7 @@ function getQuestionData(questionId) {
 
         return response.json();
     }).then(function (data) {
-        drawChart(data);
+        drawChart(translateToGoogleChartsData(data));
     }).catch(function (error) {
         console.error(error);
     });
@@ -148,13 +148,13 @@ function getQuestionsData() {
     });
 }
 
-$(document).ready(function () {
+function _main() {
     addPlaceholderListeners();
 
     init_page().then(function () {
         mainGraphElement = document.querySelector('#main-graph-data');
         questionList = document.querySelector('.scrollable-container');
-        questionMargin = getMarginOfCSSClass('additional-text').margins.top;
+        questionMargin = getMarginOfCSSClass('additional-text').margins.bottom;
 
         // Set question list height to be the same as the graph
         let questionSection = document.querySelector('#questions-section');
@@ -178,4 +178,8 @@ $(document).ready(function () {
 
         getQuestionsData();
     });
+}
+
+$(document).ready(function () {
+    google.charts.setOnLoadCallback(_main);
 });

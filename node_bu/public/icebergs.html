@@ -68,6 +68,12 @@
             </div>
         </div>
 
+        <!-- POV STATUS -->
+        <div class="ml-2 mr-5 text-white">
+            <strong class="">POV: </strong><span id="pov-value"></span>
+        </div>
+        <!-- END OF POV STATUS -->
+
         <!-- DARK MODE TOGGLE -->
         <div class="ml-2 mr-5">
             <div class="form-check form-switch">
@@ -91,12 +97,12 @@
             <div class="pt-2">
                 <div class="row mt-3 mb-2">
                     <div id="questions-section" class="col-md-3 mb-2 col-sm-12 mb-1">
-                        <div class="scrollable-container question-transition">
+                        <div id="additional-text-container" class="additional-text-container"></div>
+                        <div id="questions-list-wrapper" class="scrollable-container question-transition">
                             <div class="list-group" id="questions-list">
                                 <!-- Clickable list items will be appended here dynamically -->
                             </div>
                         </div>
-                        <div id="additional-text-container" class="additional-text-container mt-2"></div>
                     </div>
 
                     <div id="main-graph-data" class="col-md-9 mb-2 col-sm-12 mb-1">
@@ -120,32 +126,37 @@
                                     </div>
                                     <div class="col-md-4 col-sm-4 col-xs-4 text-right">
                                         <!-- Chart Type Toggle -->
-                                        <div class="btn-group btn-group-toggle" id="chartTypeToggle" role="group" aria-label="Chart Type Toggle">
-                                            <button type="button" class="btn btn-sm" onclick="toggleChartType('ColumnChart')" title="Column Chart">
+                                        <div class="btn-group btn-group-toggle" id="chartTypeToggle" role="group"
+                                             aria-label="Chart Type Toggle">
+                                            <button type="button" class="btn btn-sm"
+                                                    onclick="toggleChartType('ColumnChart')" title="Column Chart">
                                                 <i class="bi bi-bar-chart-line"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm" onclick="toggleChartType('BarChart')" title="Bar Chart">
+                                            <button type="button" class="btn btn-sm"
+                                                    onclick="toggleChartType('BarChart')" title="Bar Chart">
                                                 <i class="bi bi-bar-chart-steps"></i>
                                             </button>
                                         </div>
 
                                         <!-- Stacked/Grouped Toggle -->
-<!--                                        <div class="btn-group btn-group-toggle ml-2" id="stackedGroupedToggle" role="group" aria-label="Stacked/Grouped Toggle">-->
-<!--                                            <button type="button" class="btn btn-sm" onclick="toggleStackMode(true)" title="Stacked">-->
-<!--                                                <i class="bi bi-stack"></i>-->
-<!--                                            </button>-->
-<!--                                            <button type="button" class="btn btn-sm" onclick="toggleStackMode(false)" title="Grouped">-->
-<!--                                                <i class="bi bi-layout-three-columns"></i>-->
-<!--                                            </button>-->
-<!--                                        </div>-->
+                                        <!--                                        <div class="btn-group btn-group-toggle ml-2" id="stackedGroupedToggle" role="group" aria-label="Stacked/Grouped Toggle">-->
+                                        <!--                                            <button type="button" class="btn btn-sm" onclick="toggleStackMode(true)" title="Stacked">-->
+                                        <!--                                                <i class="bi bi-stack"></i>-->
+                                        <!--                                            </button>-->
+                                        <!--                                            <button type="button" class="btn btn-sm" onclick="toggleStackMode(false)" title="Grouped">-->
+                                        <!--                                                <i class="bi bi-layout-three-columns"></i>-->
+                                        <!--                                            </button>-->
+                                        <!--                                        </div>-->
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card mt-2">
-                            <div id="chart-div" style="width: auto; height: 70vh; display: flex; align-items: center; justify-content: center;">
+                            <div id="chart-div"
+                                 style="width: auto; height: 70vh; display: flex; align-items: center; justify-content: center;">
                                 <div style="text-align: center;">
-                                    <strong id="chart-placeholder" class="text-black">Choose a question to inspect.</strong>
+                                    <strong id="chart-placeholder" class="text-black">Choose a question to
+                                        inspect.</strong>
                                 </div>
                             </div>
                         </div>
@@ -160,8 +171,6 @@
     <!-- Footer -->
     <footer class="footer bg-dark text-white fixed-bottom">
         <div class="container text-center py-2">
-            <strong>POV: <span id="pov-value"></span></strong>
-            <br>
             <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
         </div>
     </footer>
