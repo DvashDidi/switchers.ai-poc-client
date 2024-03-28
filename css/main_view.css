@@ -90,6 +90,12 @@ h3 {
     transition: background-image 0.5s ease; /* smooth transition for changing the logo */
 }
 
+.scrollable-container {
+    max-height: 100%; /* Adjust the maximum height as needed */
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
 /* Default logo, assuming it's the dark theme logo */
 .dark-mode-logo {
     background-image: url('../images/icons/white_logo.svg');
@@ -100,19 +106,27 @@ h3 {
     background-image: url('../images/icons/black_logo.svg');
 }
 
-/* notificationBar - for POV alert */
-#notificationBar {
+/* notification-bar - for POV alert */
+.notification-bar {
     background-color: #ffc107; /* Warning color */
     color: #333; /* Text color */
     width: 100%;
     text-align: center;
-    padding: 10px 0;
+    padding: 0;
     position: fixed;
     bottom: 0; /* Changed from top to bottom */
     left: 0;
     z-index: 1000;
     font-family: Arial, sans-serif;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, .2); /* Adjusted shadow for bottom appearance */
+}
+
+/*.swal2-popup {*/
+/*    font-size: 12px !important;*/
+/*}*/
+
+.custom-close-button {
+    color: #000000; /* Change to your desired color */
 }
 
 .close-pov-notification {
@@ -205,4 +219,15 @@ h3 {
 .btn-group .btn {
     background-color: #6c757d; /* Bootstrap secondary color */
     color: white;
+}
+
+.question-transition {
+    transition: max-height 0.5s ease-out;
+}
+
+.additional-text {
+    background-color: #f8f9fa; /* Adjust background color as needed */
+    border: 1px solid #dee2e6; /* Adjust border color as needed */
+    padding: 10px; /* Adjust padding as needed */
+    margin-bottom: 10px; /* Adjust margin top as needed */
 }

@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="css/main_view.css">
     <!--    <link rel="stylesheet" href="css/settings.css">-->
 </head>
-<body class="body-background-dark">
+<body class="body-background-dark d-flex flex-column min-vh-100">
 <style>
     .navbar-brand img {
         height: 40px;
@@ -112,37 +112,45 @@
                 <button type="button" class="btn btn-sm bg-primary text-white m-1" id="settings-nav-btn"
                         data-target="settings.html"
                         data-toggle="tooltip"
-                        data-placement="bottom" title="settings">
+                        data-placement="bottom" title="Settings">
                     <i class="bi bi-gear"></i>
                     Settings
                 </button>
                 <button type="button" class="btn btn-sm text-white m-1" id="net-nav-btn"
                         data-target="net.html"
                         data-toggle="tooltip"
-                        data-placement="bottom" title="net">
+                        data-placement="bottom" title="Net">
                     <i class="bi bi-speedometer2"></i>
                     Net
                 </button>
                 <button type="button" class="btn btn-sm text-white m-1" id="questions-nav-btn"
                         data-target="questions.html"
-                        data-toggle="tooltip" data-placement="bottom" title="questions">
+                        data-toggle="tooltip" data-placement="bottom" title="Questions">
                     <i class="bi bi-pie-chart"></i>
                     Questions
                 </button>
                 <button type="button" class="btn btn-sm text-white m-1" id="impacts-nav-btn"
                         data-target="outliers.html"
-                        data-toggle="tooltip" data-placement="bottom" title="impacts">
-                    <i class="bi bi-clipboard-data"></i>
+                        data-toggle="tooltip" data-placement="bottom" title="Impacts">
+                    <i class="bi bi-clipboard-data text-success"></i>
                     Impacts
                 </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="icebergs-nav-btn"
-                        data-target="icebergs.html"
-                        data-toggle="tooltip" data-placement="bottom" title="icebergs">
-                    <i class="bi bi-exclamation-triangle text-danger"></i>
-                    Icebergs
-                </button>
+                <div>
+                    <button type="button" class="btn btn-sm text-white m-1" id="icebergs-nav-btn"
+                            data-target="icebergs.html"
+                            data-toggle="tooltip" data-placement="bottom" title="Hazardous">
+                        <i class="bi bi-exclamation-triangle text-danger"></i>
+                        Hazardous
+                    </button>
+                </div>
             </div>
         </div>
+
+        <!-- POV STATUS -->
+        <div class="ml-2 mr-5 text-white">
+            <strong class="">POV: </strong><span id="pov-value"></span>
+        </div>
+        <!-- END OF POV STATUS -->
 
         <!-- DARK MODE TOGGLE -->
         <div class="ml-2 mr-5">
@@ -187,18 +195,12 @@
     <!-- END OF MAIN VIEW-->
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-dark">
-                    <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
-                </div>
-            </div>
+    <footer class="footer bg-dark text-white fixed-bottom">
+        <div class="container text-center py-2">
+            <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
         </div>
     </footer>
     <!-- End of Footer -->
-
-    <div id="notificationBar" style="display: none;"></div>
 </div>
 
 <script crossorigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"

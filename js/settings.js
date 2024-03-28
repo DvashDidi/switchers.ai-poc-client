@@ -60,10 +60,14 @@ $(document).ready(() => {
 
         // Setup the save settings button click handler
         $("#save-settings").click(async () => {
-            $('#notificationBar').fadeOut(1000);
             const candidate = $('#pov-choice').val();
 
             if (candidate) {
+                const povElement = document.getElementById("pov-value");
+                if (povElement) {
+                    povElement.textContent = candidate;
+                }
+
                 localStorage.setItem('pov', candidate);
                 Swal.fire({
                     title: "Settings Updated Successfully",

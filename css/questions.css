@@ -1,18 +1,3 @@
-/* Custom CSS for scrollable container */
-.scrollable-container {
-    max-height: 60vh; /* Adjust the maximum height as needed */
-    overflow-y: auto;
-    overflow-x: auto;
-}
-
-/* Media query for small screens */
-@media (max-width: 576px) {
-    .scrollable-container {
-        max-height: 35vh; /* Adjusted height for small screens */
-        overflow-y: scroll;
-    }
-}
-
 .chart-container {
     width: auto; /* or any other fixed size */
     height: 71.55vh;
@@ -23,19 +8,6 @@
     width: auto; /* this will keep the image ratio */
     /* additional styles if needed */
 }
-
-.additional-text-container {
-    max-height: 19vh; /* Set maximum height */
-    overflow: auto; /* Add scrollbar if text overflows */
-}
-
-.additional-text {
-    background-color: #f8f9fa; /* Adjust background color as needed */
-    border: 1px solid #dee2e6; /* Adjust border color as needed */
-    padding: 10px; /* Adjust padding as needed */
-    margin-top: 10px; /* Adjust margin top as needed */
-}
-
 
 @keyframes blink {
     0% { background-color: transparent; }
