@@ -182,7 +182,21 @@ function showPOVNotification() {
     });
 }
 
+function disableHazardousPage() {
+    // Get the button element by its ID
+    const button = document.getElementById("icebergs-nav-btn");
+
+    // Disable the button
+    button.disabled = true;
+
+    // Change the title
+    $(button.parentElement).attr('title', 'Coming Soon').tooltip('dispose').tooltip();
+}
+
 function init_page() {
+    // TODO: remove it after fixing - Hazardous page
+    disableHazardousPage();
+
     return new Promise((resolve, reject) => {
         setGlobalViewMode();
 
