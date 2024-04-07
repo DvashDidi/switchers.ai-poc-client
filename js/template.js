@@ -188,9 +188,14 @@ function disableHazardousPage() {
 
     // Disable the button
     button.disabled = true;
+    button.classList.add('disabled');
+
+    // Show the title
+    button.style.pointerEvents = 'auto';
+    button.style.cursor = "default";
 
     // Change the title
-    $(button.parentElement).attr('title', 'Coming Soon').tooltip('dispose').tooltip();
+    $(button).tooltip('dispose').attr('title', 'Coming Soon').tooltip();
 }
 
 function init_page() {
@@ -232,44 +237,4 @@ function outdatedResearchFound() {
         delete localStorage.selectedResearch;
         location.reload();
     });
-}
-
-function getMarginOfCSSClass(className) {
-    // Create a temporary element
-    let tempElement = document.createElement('div');
-
-    // Apply the class to the element
-    tempElement.className = className;
-
-    // Append the element to the body (it needs to be part of the document to compute styles)
-    document.body.appendChild(tempElement);
-
-    // Use getComputedStyle to get the style properties
-    let style = window.getComputedStyle(tempElement);
-
-    let margins = {
-        top: parseInt(style.marginTop, 10),
-        right: parseInt(style.marginRight, 10),
-        bottom: parseInt(style.marginBottom, 10),
-        left: parseInt(style.marginLeft, 10)
-    };
-
-    let paddings = {
-        top: parseInt(style.paddingTop, 10),
-        right: parseInt(style.paddingRight, 10),
-        bottom: parseInt(style.paddingBottom, 10),
-        left: parseInt(style.paddingLeft, 10)
-    };
-
-    let borders = {
-        top: parseInt(style.borderTopWidth, 10),
-        right: parseInt(style.borderRightWidth, 10),
-        bottom: parseInt(style.borderBottomWidth, 10),
-        left: parseInt(style.borderLeftWidth, 10)
-    };
-
-    // Remove the temporary element from the document
-    document.body.removeChild(tempElement);
-
-    return { margins, paddings, borders };
 }
