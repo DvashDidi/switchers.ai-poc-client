@@ -190,6 +190,7 @@ function _main() {
         addPlaceholderListeners();
 
         $('.sensitivity-level-button').on('click', function () {
+            questionDivider.style.display = 'none';
             updateChart = false;
 
             $("#chart-div")
