@@ -1,7 +1,5 @@
+let questionDivider = undefined;
 let questionsData = undefined;
-let mainGraphElement = undefined;
-let questionList = undefined;
-let questionMargin = undefined;
 
 function populateQuestionsList(data, selectedCategory) {
     const questionsList = document.getElementById('questions-list');
@@ -36,22 +34,28 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
     // Add click event listener to the list item
     listItem.addEventListener('click', (event) => {
         event.preventDefault(); // Prevent default link behavior
+
+        questionDivider.style.display = 'block';
+
         // Remove the 'clicked' class from all items
         document.querySelectorAll('.list-group-item').forEach(item => {
             item.classList.remove('clicked');
         });
+
         // Add the 'clicked' class to the clicked item
         listItem.classList.add('clicked');
 
         // Add additional text below the scrollable-container
         const additionalTextContainer = document.getElementById('additional-text-container');
-        additionalTextContainer.innerHTML = `<div class="additional-text rounded"><strong>Selected Question ${listItem.dataset.questionNumber}:</strong><br><span>${questionText}</span></div>`;
+        additionalTextContainer.innerHTML = `
+            <div class="additional-text rounded">
+                <strong>Selected Question ${listItem.dataset.questionNumber}:</strong>
+                <br>
+                <span>${questionText}</span>
+            </div>
+        `;
 
         getQuestionData(questionId);
-
-        // Apply the new max heights to start the animations
-        questionList.style.maxHeight =
-            `${Math.max(mainGraphElement.offsetHeight - document.querySelector('.additional-text').offsetHeight - questionMargin, 0)}px`;
     });
 
     parentContainer.appendChild(listItem); // Add the list item to the parent container
@@ -159,12 +163,11 @@ function addPlaceholderListeners() {
 
 function _main() {
     init_page().then(function () {
-        mainGraphElement = document.querySelector('#main-graph-data');
-        questionList = document.querySelector('.scrollable-container');
-        questionMargin = getMarginOfCSSClass('additional-text').margins.bottom;
+        questionDivider = document.getElementById("additional-text-divider");
 
         // Set question list height to be the same as the graph
-        let questionSection = document.querySelector('#questions-section');
+        const mainGraphElement = document.querySelector('#main-graph-data');
+        const questionSection = document.querySelector('#questions-section');
         questionSection.style.height = `${mainGraphElement.offsetHeight}px`;
 
         // Navigation button event handlers
@@ -186,6 +189,7 @@ function _main() {
         addPlaceholderListeners();
 
         $('.sensitivity-level-button').on('click', function () {
+            questionDivider.style.display = 'none';
             updateChart = false;
 
             $("#chart-div")
