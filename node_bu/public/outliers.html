@@ -99,10 +99,15 @@
             <div class="pt-2">
                 <div class="row mt-3 mb-2">
                     <div id="questions-section" class="col-md-3 mb-2 col-sm-12">
-                        <div id="additional-text-container" class="additional-text-container"></div>
-                        <div class="scrollable-container question-transition">
-                            <div class="list-group" id="questions-list">
-                                <!-- Clickable list items will be appended here dynamically -->
+                        <!-- Flexbox container with vertical layout -->
+                        <div class="scrollable-container d-flex flex-column">
+                            <!-- Change order based on screen size -->
+                            <div id="additional-text-container" class="additional-text-container question-transition order-3 order-md-1"></div>
+                            <hr id="additional-text-divider" style="display: none;" class="hr order-2 order-md-2 bg-dark"/>
+                            <div id="questions-list-wrapper" class="scrollable-container question-transition order-1 order-md-3">
+                                <div class="list-group" id="questions-list">
+                                    <!-- Clickable list items will be appended here dynamically -->
+                                </div>
                             </div>
                         </div>
                     </div>

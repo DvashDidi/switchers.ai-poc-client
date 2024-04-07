@@ -1,6 +1,4 @@
-let mainGraphElement = undefined;
-let questionList = undefined;
-let questionMargin = undefined;
+let questionDivider = undefined;
 
 function addClickableItem(parentContainer, question) {
     // Create the list item element
@@ -26,6 +24,8 @@ function addClickableItem(parentContainer, question) {
     listItem.addEventListener('click', (event) => {
         event.preventDefault(); // Prevent default link behavior
 
+        questionDivider.style.display = 'block';
+
         // Remove the 'clicked' class from all items
         document.querySelectorAll('.list-group-item').forEach(item => {
             item.classList.remove('clicked');
@@ -36,13 +36,15 @@ function addClickableItem(parentContainer, question) {
 
         // Add additional text below the scrollable-container
         const additionalTextContainer = document.getElementById('additional-text-container');
-        additionalTextContainer.innerHTML = `<div class="additional-text rounded"><strong>Selected Question ${listItem.dataset.questionNumber}:</strong><br><span>${question["text"]}</span></div>`;
+        additionalTextContainer.innerHTML = `
+            <div class="additional-text rounded">
+                <strong>Selected Question ${listItem.dataset.questionNumber}:</strong>
+                <br>
+                <span>${question["text"]}</span>
+            </div>
+        `;
 
         getQuestionData(listItem.dataset.questionId);
-
-        // Apply the new max heights to start the animations
-        questionList.style.maxHeight =
-            `${Math.max(mainGraphElement.offsetHeight - document.querySelector('.additional-text').offsetHeight - questionMargin, 0)}px`;
     });
 
     // Append the new item to the list
@@ -152,12 +154,11 @@ function _main() {
     addPlaceholderListeners();
 
     init_page().then(function () {
-        mainGraphElement = document.querySelector('#main-graph-data');
-        questionList = document.querySelector('.scrollable-container');
-        questionMargin = getMarginOfCSSClass('additional-text').margins.bottom;
+        questionDivider = document.getElementById("additional-text-divider");
 
         // Set question list height to be the same as the graph
-        let questionSection = document.querySelector('#questions-section');
+        const mainGraphElement = document.querySelector('#main-graph-data');
+        const questionSection = document.querySelector('#questions-section');
         questionSection.style.height = `${mainGraphElement.offsetHeight}px`;
 
         // Navigation button event handlers
