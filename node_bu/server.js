@@ -53,7 +53,7 @@ function sendResToClient(req, res, status, msg = undefined) {
 }
 
 app.get('/', function (req, res) {
-    res.sendFile(publicDir + "/login");
+    res.sendFile(publicDir + "/login.html");
 });
 
 app.get('/keepAlive', function (req, res) {
