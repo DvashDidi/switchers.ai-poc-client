@@ -1,0 +1,46 @@
+/* Style for the floating button */
+#save-settings {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Optional: Add some responsiveness to ensure it doesn't overlap content */
+@media (max-width: 600px) {
+    #floatingButton {
+        right: 10px;
+        bottom: 10px;
+        padding: 5px 10px;
+    }
+}
+
+/* Add some spacing */
+.container-fluid {
+    padding-top: 20px;
+}
+
+/* Adjust position of save button */
+@media (max-width: 768px) {
+    #save-settings {
+        width: 100%;
+        text-align: center;
+        border-radius: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}
+
+/* Flex container for the select and button */
+.select-container {
+    display: flex;
+    align-items: center;
+}
+
+.select-container select {
+    flex: 1;
+    margin-right: 10px;
+}

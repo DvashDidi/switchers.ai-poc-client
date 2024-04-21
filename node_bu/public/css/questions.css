@@ -3,12 +3,6 @@
     height: 71.55vh;
 }
 
-.navbar-brand img {
-    height: 40px; /* or whatever size you prefer */
-    width: auto; /* this will keep the image ratio */
-    /* additional styles if needed */
-}
-
 @keyframes blink {
     0% { background-color: transparent; }
     50% { background-color: rgba(16, 63, 210, 0.85); } /* Change color to your preference */
