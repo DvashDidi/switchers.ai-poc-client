@@ -1,4 +1,5 @@
-const descopeSdk = Descope({projectId: 'P2em0AFZYHKGW50DjyAcu4Gdvhi0', persistTokens: true, autoRefresh: true});
+const descopeProjectId = "P2em0AFZYHKGW50DjyAcu4Gdvhi0";
+const descopeSdk = Descope({projectId: descopeProjectId, persistTokens: true, autoRefresh: true});
 
 const sessionToken = descopeSdk.getSessionToken()
 let notValidToken
@@ -6,9 +7,14 @@ if (sessionToken) {
     notValidToken = descopeSdk.isJwtExpired(sessionToken)
 }
 
-
 if (!sessionToken || notValidToken) {
-    const wcElement = document.getElementsByTagName('descope-wc')[0];
+    const LoginContainer = document.getElementById("descope-login-container");
+    const wcElement = document.createElement('descope-wc');
+    wcElement.setAttribute('project-id', descopeProjectId);
+    wcElement.setAttribute('flow-id', "sign-up-or-in-social-or-otp");
+
+    LoginContainer.appendChild(wcElement);
+
     const onSuccess = (e) => {
         let userDetails = e.detail?.user;
 
