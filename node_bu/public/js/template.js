@@ -1,5 +1,4 @@
 let apiHost = "https://api.switchers.ai";
-apiHost = "http://localhost:8000";
 
 const CHART_COLORS = {
     BLUE: 'rgb(54, 162, 235)',
