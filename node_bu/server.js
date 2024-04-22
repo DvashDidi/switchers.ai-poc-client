@@ -53,7 +53,7 @@ function sendResToClient(req, res, status, msg = undefined) {
 }
 
 app.get('/', function (req, res) {
-    res.sendFile(publicDir + "/net.html");
+    res.sendFile(publicDir + "/login.html");
 });
 
 app.get('/keepAlive', function (req, res) {
@@ -77,19 +77,6 @@ app.get('/keepAlive', function (req, res) {
         '</html>');
     res.end();
 });
-
-app.get('/stats', async function (req, res) {
-    try {
-        logUtil.info(`Client connected from ip: ${req.clientIp}`);
-
-
-        return sendResToClient(req, res, 200, {});
-    } catch (e) {
-        logUtil.error(`Unknown error: ${e}`);
-        return sendResToClient(req, res, 400, e);
-    }
-});
-
 
 http.listen(1709, function () {
     console.log('');

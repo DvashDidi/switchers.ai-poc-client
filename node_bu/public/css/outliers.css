@@ -6,9 +6,3 @@
     width: auto; /* or any other fixed size */
     height: 71.55vh;
 }
-
-.navbar-brand img {
-    height: 40px; /* or whatever size you prefer */
-    width: auto; /* this will keep the image ratio */
-    /* additional styles if needed */
-}

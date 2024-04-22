@@ -3,12 +3,6 @@
     height: 71.55vh;
 }
 
-.navbar-brand img {
-    height: 40px; /* or whatever size you prefer */
-    width: auto; /* this will keep the image ratio */
-    /* additional styles if needed */
-}
-
 
 /* Custom CSS for scrollable table with sticky header */
 .table-container {
