@@ -69,6 +69,11 @@ footer {
     color: #fff;
 }
 
+.navbar-brand img {
+    height: 40px;
+    width: auto;
+}
+
 h3 {
     font-size: 1.25rem;
 }

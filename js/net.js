@@ -49,7 +49,8 @@ function fetchDataAndUpdateUI() {
     fetch(apiUrl, {
         method: "GET",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
         }
     })
         .then((response) => {

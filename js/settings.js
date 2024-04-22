@@ -5,8 +5,8 @@ function populateDropList(candidates) {
 
     // Add the placeholder option
     select.append($('<option>', {
-        value: '',
-        text: 'Select a candidate to inspect',
+        value: getPOV() || "",
+        text: getPOV() || "Select a candidate to inspect",
         disabled: true,
         selected: true
     }));
@@ -25,7 +25,8 @@ function getPovs() {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/points-of-view`, {
         method: "GET",
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
         }
     })
         .then((response) => {
@@ -45,11 +46,57 @@ function getPovs() {
         .catch(error => console.error('Error fetching povs:', error));
 }
 
+function showUserManagement() {
+    let tenantId = descopeSdk.getTenants(descopeSdk.getSessionToken())[0];
+
+    fetch(`${apiHost}/v1/user/is-admin/${tenantId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
+            }
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            return response.text().then(function (message) {
+                throw new Error(`${message}`);
+            });
+        }
+
+        return response.json();
+    }).then(function (is_admin) {
+        console.log(is_admin)
+        if (is_admin) {
+            const userManagementWidgetContainer = document.getElementById("user-management-widget-container");
+
+            // Create the custom widget element
+            const widget = document.createElement('descope-user-management-widget');
+            widget.setAttribute('project-id', descopeProjectId);
+            widget.setAttribute('widget-id', 'user-management-widget');
+            widget.setAttribute('tenant', tenantId);
+
+            // Append the widget to the container
+            userManagementWidgetContainer.appendChild(widget);
+
+            // Display the user management container
+            const userManagementContainer = document.getElementById("user-management-container");
+            userManagementContainer.style.display = "block";
+        }
+    }).catch(function (error) {
+        console.error(error);
+    });
+}
+
 // Document ready function
 $(document).ready(() => {
     init_page().then(function () {
         // Initialize points of view dropdown
         getPovs();
+
+        try {
+            showUserManagement();
+        } catch (e) {
+        }
 
         // Setup navigation button event handlers
         $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn, #icebergs-nav-btn").on('click', function (e) {
@@ -58,7 +105,7 @@ $(document).ready(() => {
             window.location.href = $(this).data('target'); // Redirect to the target page
         });
 
-        // Setup the save settings button click handler
+        // Set up the save settings button click handler
         $("#save-settings").click(async () => {
             const candidate = $('#pov-choice').val();
 

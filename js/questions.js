@@ -55,7 +55,8 @@ function getQuestionData(questionId) {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
             }
         }
     ).then(function (response) {
@@ -111,7 +112,8 @@ function getQuestionsData() {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
             }
         }
     ).then(function (response) {

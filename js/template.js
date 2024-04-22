@@ -68,16 +68,13 @@ function deepCopy(obj) {
     return copy;
 }
 
-$(".random-color").on("mouseover mouseout", function () {
-    // this.style.color = getRandomColor();
-    // using important to override bootstrap important
-    this.style.setProperty('color', getRandomColor(), 'important');
-});
-
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: 'hover'
-    });
+    let tips = $('[data-toggle="tooltip"]')
+    if (tips.length > 0) {
+        tips.tooltip({
+            trigger: 'hover'
+        });
+    }
 })
 
 $("#toggle-dark-mode").on("click", function () {
@@ -130,7 +127,8 @@ function getDefaultResearchFromApi() {
         fetch(`${apiHost}/v1/research/default`, {
                 method: "GET",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
                 }
             }
         ).then(function (response) {
@@ -152,9 +150,9 @@ function getDefaultResearchFromApi() {
 
 function showPOVNotification() {
     Swal.fire({
-        // title: `<a href="settings.html" style="color: #333; text-decoration: underline;">Set up POV now</a>`,
+        // title: `<a href="settings" style="color: #333; text-decoration: underline;">Set up POV now</a>`,
         // text: `To enhance your experience, consider setting up your Point of View (POV).`,
-        html: `<h3>To enhance your experience, consider <a href="settings.html" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">setting up your Point of View</a> (POV).</h3>`,
+        html: `<h3>To enhance your experience, consider <a href="settings" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">setting up your Point of View</a> (POV).</h3>`,
         position: 'bottom',
         backdrop: false,
         timer: 15000,
@@ -182,26 +180,7 @@ function showPOVNotification() {
     });
 }
 
-function disableHazardousPage() {
-    // Get the button element by its ID
-    const button = document.getElementById("icebergs-nav-btn");
-
-    // Disable the button
-    button.disabled = true;
-    button.classList.add('disabled');
-
-    // Show the title
-    button.style.pointerEvents = 'auto';
-    button.style.cursor = "default";
-
-    // Change the title
-    $(button).tooltip('dispose').attr('title', 'Coming Soon').tooltip();
-}
-
 function init_page() {
-    // TODO: remove it after fixing - Hazardous page
-    disableHazardousPage();
-
     return new Promise((resolve, reject) => {
         setGlobalViewMode();
 
@@ -218,7 +197,7 @@ function init_page() {
             }
 
             if (povElement) {
-                povElement.innerHTML = povValue || `<a href="settings.html" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">setup here</a>`;
+                povElement.innerHTML = povValue || `<a href="settings" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">setup here</a>`;
             }
 
             resolve(true);
@@ -238,3 +217,22 @@ function outdatedResearchFound() {
         location.reload();
     });
 }
+
+function updateUserData(userData) {
+    localStorage.setItem('userId', userData.userId || "");
+    localStorage.setItem('userPicture', userData.picture || "");
+    localStorage.setItem('userEmail', userData.email || "");
+    localStorage.setItem('userName', userData.name || "");
+}
+
+function deleteUserData() {
+    delete localStorage.guestLoginMode;
+    delete localStorage.userId;
+    delete localStorage.userPicture;
+    delete localStorage.userEmail;
+    delete localStorage.userName;
+}
+
+$("#open-logout-modal-button").on("click", function () {
+    $(`#user-name`).text(localStorage.getItem('userName') || "");
+});

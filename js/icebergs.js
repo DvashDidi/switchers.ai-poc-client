@@ -66,7 +66,8 @@ function getQuestionData(questionId) {
 
             method: "GET",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
             }
         }
     ).then(function (response) {
@@ -109,11 +110,11 @@ function getIcebergsData() {
         });
     }
 
-    // TODO: GET THE REAL DATA !
-    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
+    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/hazards`, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
             }
         }
     ).then(function (response) {
