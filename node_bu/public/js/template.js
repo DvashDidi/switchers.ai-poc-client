@@ -180,26 +180,7 @@ function showPOVNotification() {
     });
 }
 
-function disableHazardousPage() {
-    // Get the button element by its ID
-    const button = document.getElementById("icebergs-nav-btn");
-
-    // Disable the button
-    button.disabled = true;
-    button.classList.add('disabled');
-
-    // Show the title
-    button.style.pointerEvents = 'auto';
-    button.style.cursor = "default";
-
-    // Change the title
-    $(button).tooltip('dispose').attr('title', 'Coming Soon').tooltip();
-}
-
 function init_page() {
-    // TODO: remove it after fixing - Hazardous page
-    disableHazardousPage();
-
     return new Promise((resolve, reject) => {
         setGlobalViewMode();
 
