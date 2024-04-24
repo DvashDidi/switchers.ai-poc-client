@@ -201,7 +201,11 @@ function init_page() {
             }
 
             resolve(true);
-        }).catch(reject);
+        }).catch(function (error) {
+            $('#main-view').hide();
+            $('#no-data-message').show();
+            reject(error);
+        });
     });
 }
 

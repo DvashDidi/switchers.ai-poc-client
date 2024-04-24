@@ -163,27 +163,31 @@ function addPlaceholderListeners() {
     });
 }
 
+function setNavigationHandlers() {
+    // Navigation button event handlers
+    $("#questions-nav-btn, #impacts-nav-btn, #net-nav-btn, #settings-nav-btn").each(function () {
+        $(this).on('click', function (e) {
+            e.preventDefault(); // Prevent the default action
+
+            // Push the current state to the history stack
+            history.pushState(null, null, location.href);
+
+            // Redirect to the target page
+            window.location.href = $(this).data('target');
+        });
+    });
+}
+
 function _main() {
     init_page().then(function () {
+        setNavigationHandlers();
+
         questionDivider = document.getElementById("additional-text-divider");
 
         // Set question list height to be the same as the graph
         const mainGraphElement = document.querySelector('#main-graph-data');
         const questionSection = document.querySelector('#questions-section');
         questionSection.style.height = `${mainGraphElement.offsetHeight}px`;
-
-        // Navigation button event handlers
-        $("#questions-nav-btn, #impacts-nav-btn, #net-nav-btn, #settings-nav-btn").each(function () {
-            $(this).on('click', function (e) {
-                e.preventDefault(); // Prevent the default action
-
-                // Push the current state to the history stack
-                history.pushState(null, null, location.href);
-
-                // Redirect to the target page
-                window.location.href = $(this).data('target');
-            });
-        });
 
         // Event listener for a window resize
         window.addEventListener('resize', resizeChart);
@@ -235,6 +239,8 @@ function _main() {
         });
 
         getIcebergsData();
+    }).catch(function (error) {
+        setNavigationHandlers();
     });
 }
 
