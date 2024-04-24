@@ -5,17 +5,20 @@ function populateDropList(candidates) {
 
     // Add the placeholder option
     select.append($('<option>', {
-        value: getPOV() || "",
-        text: getPOV() || "Select a candidate to inspect",
+        value: "",
+        text: "Select a candidate to inspect",
         disabled: true,
         selected: true
     }));
 
     // Add options for each candidate
     candidates.forEach(candidate => {
+        let current_selected = (candidate === getPOV());
+
         select.append($('<option>', {
             value: candidate,
-            text: candidate
+            text: candidate,
+            selected: current_selected
         }));
     });
 }
