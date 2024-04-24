@@ -134,7 +134,7 @@
     <!-- END OF LOG OUT MODAL -->
 
     <!-- MAIN VIEW-->
-    <div class="container-fluid">
+    <div id="main-view" class="container-fluid">
         <!--Main layout-->
         <main>
             <div class="pt-2">
@@ -186,6 +186,19 @@
         <!--Main layout-->
     </div>
     <!-- END OF MAIN VIEW-->
+
+    <!-- EMPTY ERROR - MAIN VIEW-->
+    <div id="no-data-message-container" class="container-fluid">
+        <div id="no-data-message" class="text-center" style="display: none;">
+            <h2>Your research dashboard is currently empty.</h2>
+            <p>
+                Looks like you haven't started any research projects yet. To begin, please reach out to us at <a href="mailto:info@switchers.ai">info@switchers.ai</a>.
+                <br>
+                Our team is eager to assist you in setting up your first project and answering any questions you may have. Let's get started!
+            </p>
+        </div>
+    </div>
+    <!-- END OF EMPTY ERROR - MAIN VIEW-->
 
     <!-- Footer -->
     <footer class="footer bg-dark text-white fixed-bottom">

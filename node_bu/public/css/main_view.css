@@ -235,3 +235,35 @@ h3 {
     border: 1px solid #dee2e6; /* Adjust border color as needed */
     padding: 10px; /* Adjust padding as needed */
 }
+
+#no-data-message-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10%;
+    text-align: center;
+}
+
+#no-data-message {
+    color: #ffffff; /* White color text */
+    background-color: rgba(0, 0, 0, 0.75); /* Semi-transparent black background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 700px; /* Maximum width of the message box */
+}
+
+#no-data-message h2 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#no-data-message p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+#no-data-message a {
+    color: #0d6efd; /* Bootstrap primary blue */
+    text-decoration: none; /* Optional: removes underline from links */
+}
