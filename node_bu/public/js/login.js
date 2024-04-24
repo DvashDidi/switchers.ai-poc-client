@@ -1,10 +1,10 @@
 const descopeProjectId = "P2fPv0N8xm1F4e4O7rYxWd5iZoJM";
 const descopeSdk = Descope({projectId: descopeProjectId, persistTokens: true, autoRefresh: true});
 
-const sessionToken = descopeSdk.getSessionToken()
-let notValidToken
+const sessionToken = descopeSdk.getSessionToken();
+let notValidToken;
 if (sessionToken) {
-    notValidToken = descopeSdk.isJwtExpired(sessionToken)
+    notValidToken = descopeSdk.isJwtExpired(sessionToken);
 }
 
 if (!sessionToken || notValidToken) {
@@ -19,13 +19,9 @@ if (!sessionToken || notValidToken) {
         let userDetails = e.detail?.user;
 
         if (userDetails) {
-            delete localStorage.guestLoginMode;
-
-            updateUserData(userDetails);
-            descopeSdk.refresh();
-            window.location.replace("net");
+            onLoginSuccess(userDetails, false);
         } else {
-            fetch(`${apiHost}/v1/user/guest-login`, {
+            fetch(`${apiHost}/v1/user/`, {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json'
@@ -48,14 +44,7 @@ if (!sessionToken || notValidToken) {
             }).catch(function (error) {
                 console.error(error);
             }).finally(function () {
-                updateUserData(userDetails);
-
-                localStorage.setItem("guestLoginMode", "true");
-
-                // TODO: check if needed
-                // const descopeJwtRefreshInterval = setInterval(() => {});
-                descopeSdk.refresh();
-                window.location.replace("net");
+                onLoginSuccess(userDetails, true);
             });
         }
     };
@@ -64,5 +53,17 @@ if (!sessionToken || notValidToken) {
     wcElement.addEventListener('success', onSuccess);
     wcElement.addEventListener('error', onError);
 } else {
+    window.location.replace("net");
+}
+
+function onLoginSuccess(userDetails, isGuest=false) {
+    if (isGuest) {
+        localStorage.setItem("guestLoginMode", "true");
+    } else {
+        delete localStorage.guestLoginMode;
+    }
+
+    updateUserData(userDetails);
+    descopeSdk.refresh();
     window.location.replace("net");
 }

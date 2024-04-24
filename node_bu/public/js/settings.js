@@ -49,7 +49,7 @@ function getPovs() {
 function showUserManagement() {
     let tenantId = descopeSdk.getTenants(descopeSdk.getSessionToken())[0];
 
-    fetch(`${apiHost}/v1/user/is-admin/${tenantId}`, {
+    fetch(`${apiHost}/v1/user/${tenantId}/admin`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -65,7 +65,6 @@ function showUserManagement() {
 
         return response.json();
     }).then(function (is_admin) {
-        console.log(is_admin)
         if (is_admin) {
             const userManagementWidgetContainer = document.getElementById("user-management-widget-container");
 
@@ -87,9 +86,20 @@ function showUserManagement() {
     });
 }
 
+function setNavigationHandlers() {
+    // Setup navigation button event handlers
+    $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn, #icebergs-nav-btn").on('click', function (e) {
+        e.preventDefault();
+        history.pushState(null, null, location.href); // Push the current state to the history stack
+        window.location.href = $(this).data('target'); // Redirect to the target page
+    });
+}
+
 // Document ready function
 $(document).ready(() => {
     init_page().then(function () {
+        setNavigationHandlers();
+
         // Initialize points of view dropdown
         getPovs();
 
@@ -97,13 +107,6 @@ $(document).ready(() => {
             showUserManagement();
         } catch (e) {
         }
-
-        // Setup navigation button event handlers
-        $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn, #icebergs-nav-btn").on('click', function (e) {
-            e.preventDefault();
-            history.pushState(null, null, location.href); // Push the current state to the history stack
-            window.location.href = $(this).data('target'); // Redirect to the target page
-        });
 
         // Set up the save settings button click handler
         $("#save-settings").click(async () => {
@@ -125,5 +128,7 @@ $(document).ready(() => {
                 });
             }
         });
+    }).catch(function (error) {
+        setNavigationHandlers();
     });
 });
