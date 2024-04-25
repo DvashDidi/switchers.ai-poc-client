@@ -154,7 +154,7 @@ function getQuestionsData() {
 
 function setNavigationHandlers() {
     // Navigation button event handlers
-    $("#impacts-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn").each(function () {
+    $("#impacts-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn, #filters-nav-btn").each(function () {
         $(this).on('click', function (e) {
             e.preventDefault(); // Prevent the default action
 

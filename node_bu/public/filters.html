@@ -6,9 +6,9 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <link href="images/icons/favicon.svg" rel="shortcut icon">
 
-    <title>Switchers.ai | Questions</title>
+    <title>Switchers.ai | Filters</title>
 
-    <meta property="og:title" content="Switchers.ai | Questions"/>
+    <meta property="og:title" content="Switchers.ai | Filters"/>
     <meta property="og:type" content="website"/>
     <meta property="og:image" content="https://app.switchers.ai/images/icons/favicon.svg"/>
 
@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/main_view.css">
-    <link rel="stylesheet" href="css/questions.css">
+    <link rel="stylesheet" href="css/filters.css">
 </head>
 
 <body class="body-background-dark">
@@ -46,7 +46,7 @@
                     <i class="bi bi-gear"></i>
                     Settings
                 </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="filters-nav-btn"
+                <button type="button" class="btn btn-sm bg-primary text-white m-1" id="filters-nav-btn"
                         data-target="filters"
                         data-toggle="tooltip" data-placement="bottom" title="Filters">
                     <i class="bi bi-funnel"></i>
@@ -59,7 +59,7 @@
                     <i class="bi bi-speedometer2"></i>
                     Net
                 </button>
-                <button type="button" class="btn btn-sm bg-primary text-white m-1" id="questions-nav-btn"
+                <button type="button" class="btn btn-sm text-white m-1" id="questions-nav-btn"
                         data-target="questions"
                         data-toggle="tooltip" data-placement="bottom" title="Questions">
                     <i class="bi bi-pie-chart"></i>
@@ -98,7 +98,8 @@
 
         <!-- LOG OUT -->
         <div class="ml-2">
-            <button class="btn btn-md text-danger" data-toggle="modal" data-target="#logout-modal" id="open-logout-modal-button">
+            <button class="btn btn-md text-danger" data-toggle="modal" data-target="#logout-modal"
+                    id="open-logout-modal-button">
                 <i class="bi bi-door-open" data-toggle="tooltip" data-placement="bottom" title="logout"></i>
             </button>
         </div>
@@ -119,7 +120,8 @@
 
                     <!-- Modal Header -->
                     <div class="modal-header">
-                        <h4 class="modal-title">Hi <span class="text-primary" id="user-name"></span> !</h4> <i class="bi bi-chat-text"></i>
+                        <h4 class="modal-title">Hi <span class="text-primary" id="user-name"></span> !</h4> <i
+                            class="bi bi-chat-text"></i>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
@@ -127,7 +129,8 @@
                     <div class="modal-body justify-content-center">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h6>Hope you had a great experience using <span class="text-primary">Switchers AI</span></h6>
+                                <h6>Hope you had a great experience using <span class="text-primary">Switchers AI</span>
+                                </h6>
                             </div>
                         </div>
                         <div class="row">
@@ -137,8 +140,10 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" id="logout-button">Log Out <i class="bi bi-box-arrow-right"></i></button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close <i class="bi bi-arrow-return-left"></i></button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" id="logout-button">Log Out <i
+                                class="bi bi-box-arrow-right"></i></button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close <i
+                                class="bi bi-arrow-return-left"></i></button>
                     </div>
                 </div>
             </div>
@@ -146,82 +151,101 @@
     </div>
     <!-- END OF LOG OUT MODAL -->
 
+
     <!-- MAIN VIEW-->
     <div id="main-view" class="container-fluid">
         <!--Main layout-->
         <main>
             <div class="pt-2">
-                <div class="row mt-3 mb-2">
-                    <div id="questions-section" class="col-md-3 mb-2 col-sm-12">
-                        <!-- Flexbox container with vertical layout -->
-                        <div class="scrollable-container d-flex flex-column">
-                            <!-- Change order based on screen size -->
-                            <div id="additional-text-container" class="additional-text-container question-transition order-3 order-md-1"></div>
-                            <hr id="additional-text-divider" style="display: none;" class="hr order-2 order-md-2 bg-dark"/>
-                            <div id="questions-list-wrapper" class="scrollable-container question-transition order-1 order-md-3">
-                                <div class="list-group" id="questions-list">
-                                    <!-- Clickable list items will be appended here dynamically -->
-                                </div>
+                <!-- Filters Section -->
+                <form data-form class="bg-dark">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="create-filter-tab" data-bs-toggle="tab"
+                                    data-bs-target="#create-filter" type="button" role="tab"
+                                    aria-controls="create-filter"
+                                    aria-selected="true">Create Filter
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="filter-list-tab" data-bs-toggle="tab"
+                                    data-bs-target="#filter-list" type="button" role="tab"
+                                    aria-controls="request-headers" aria-selected="false">Filter List
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content p-3 border-top-0 border">
+                        <div class="tab-pane fade show active" id="create-filter" role="tabpanel"
+                             aria-labelledby="create-filter-tab">
+                            <div data-question>
+                                <select name="question" class="form-control" required>
+                                    <option value="" selected disabled>Question to filter...</option>
+                                    <!--<div>Populate with data from server</div>-->
+                                </select>
+                                <hr class="hr bg-light"/>
                             </div>
+
+                            <div data-create-filter></div>
+                            <button data-add-create-filter-btn class="mt-2 btn btn-outline-primary" type="button"> + Add
+                                Condition
+                            </button>
+                        </div>
+                        <hr class="hr bg-light"/>
+                        <div>
+                            <button data-add-filter-btn class="mt-2 btn btn-success" type="button">Add Filter
+                            </button>
                         </div>
                     </div>
-
-                    <div id="main-graph-data" class="col-md-9 mb-2 col-sm-12 mb-1">
-                        <div class="card">
-                            <div class="card bg-dark d-flex justify-content-center">
-                                <div class="row p-2 align-items-center">
-                                    <div class="col-md-4 col-sm-4 col-xs-4">
-                                        <h3 class="text-white">Questions Data</h3>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-4">
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-4 text-right">
-                                        <!-- Chart Type Toggle -->
-                                        <div class="btn-group btn-group-toggle" id="chartTypeToggle" role="group" aria-label="Chart Type Toggle">
-                                            <button type="button" class="btn btn-sm" onclick="toggleChartType('ColumnChart')" title="Column Chart">
-                                                <i class="bi bi-bar-chart-line"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm" onclick="toggleChartType('BarChart')" title="Bar Chart">
-                                                <i class="bi bi-bar-chart-steps"></i>
-                                            </button>
-                                        </div>
-
-                                        <!-- Stacked/Grouped Toggle -->
-<!--                                        <div class="btn-group btn-group-toggle ml-2" id="stackedGroupedToggle" role="group" aria-label="Stacked/Grouped Toggle">-->
-<!--                                            <button type="button" class="btn btn-sm" onclick="toggleStackMode(true)" title="Stacked">-->
-<!--                                                <i class="bi bi-stack"></i>-->
-<!--                                            </button>-->
-<!--                                            <button type="button" class="btn btn-sm" onclick="toggleStackMode(false)" title="Grouped">-->
-<!--                                                <i class="bi bi-layout-three-columns"></i>-->
-<!--                                            </button>-->
-<!--                                        </div>-->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mt-2">
-                            <div id="chart-div" style="width: auto; height: 70vh; display: flex; align-items: center; justify-content: center;">
-                                <div style="text-align: center;">
-                                    <strong id="chart-placeholder" class="text-black">Choose a question to inspect.</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
+
+            <template data-key-value-template>
+                <div class="row input-group my-2" data-key-value-pair>
+                    <div class="col-md-8 col-sm-8 col-xs-8 d-flex justify-content-end">
+                        <input type="text" data-key class="form-control" placeholder="Answer"/>
+                        <!--Replace Answer input text to select options (populated from the server)-->
+                        <select name="equality" class="form-control" required>
+                            <option value="" selected disabled>Choose...</option>
+                            <option value="<"><</option>
+                            <option value="=">=</option>
+                            <option value=">">></option>
+                        </select>
+                        <input type="number" min="0" max="100" step="1" data-value class="form-control"
+                               placeholder="Value"/>
+                        <select name="operator" class="form-control">
+                            <option value="" selected disabled>Choose...</option>
+                            <option value="AND">AND</option>
+                            <option value="OR">OR</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                        <button type="button" data-add-inline-btn class="btn btn-outline-info ms-1">+ Inline
+                            condition
+                        </button>
+
+                        <button type="button" data-remove-btn class="btn btn-outline-danger ms-1"> - Filter Condition
+                        </button>
+                    </div>
+                    <hr class="mt-2 bg-warning">
+                </div>
+            </template>
         </main>
         <!--Main layout-->
     </div>
     <!-- END OF MAIN VIEW-->
+
 
     <!-- EMPTY ERROR - MAIN VIEW-->
     <div id="no-data-message-container" class="container-fluid">
         <div id="no-data-message" class="text-center" style="display: none;">
             <h2>Your research dashboard is currently empty.</h2>
             <p>
-                Looks like you haven't started any research projects yet. To begin, please reach out to us at <a href="mailto:info@switchers.ai">info@switchers.ai</a>.
+                Looks like you haven't started any research projects yet. To begin, please reach out to us at <a
+                    href="mailto:info@switchers.ai">info@switchers.ai</a>.
                 <br>
-                Our team is eager to assist you in setting up your first project and answering any questions you may have. Let's get started!
+                Our team is eager to assist you in setting up your first project and answering any questions you may
+                have. Let's get started!
             </p>
         </div>
     </div>
@@ -236,6 +260,8 @@
     <!-- End of Footer -->
 </div>
 <script src="https://unpkg.com/@descope/web-js-sdk@x.x.x/dist/index.umd.js"></script>
+<script src="js/auth.js" type="text/javascript"></script>
+
 <script crossorigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
         type="text/javascript"></script>
 <script crossorigin="anonymous" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
@@ -246,15 +272,7 @@
         type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-<script src="js/pub_env.js" type="text/javascript"></script>
 <script src="js/template.js" type="text/javascript"></script>
-<script src="js/auth.js" type="text/javascript"></script>
-<script src="js/googleChart.js" type="text/javascript"></script>
-<script src="js/questions.js" type="text/javascript"></script>
+<script src="js/filters.js" type="text/javascript"></script>
 </body>
 </html>
