@@ -1,4 +1,3 @@
-const descopeProjectId = "P2fPv0N8xm1F4e4O7rYxWd5iZoJM";
 const descopeSdk = Descope({projectId: descopeProjectId, persistTokens: true, autoRefresh: true});
 
 const sessionToken = descopeSdk.getSessionToken();

@@ -8,7 +8,6 @@ const path = require('path');
 const publicDir = path.posix.join(process.cwd(), '/public');
 const cfg = require(publicDir + '/js/conf/conf');
 const logUtil = require(publicDir + '/js/utils/log');
-const requestIp = require('request-ip');
 
 // to support JSON-encoded bodies
 app.use(bodyParser.json());
@@ -16,41 +15,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 // to get static files
 app.use('/', express.static(publicDir, {index: false, extensions: ['html']}));
-
+// log new requests
 app.use(async function (req, res, next) {
     logUtil.info('New request.  Uri: ' + req.protocol + '://' + req.get('host') + req.path);
     next();
 });
-// Get client IP
-app.use(function (req, res, next) {
-    try {
-        req.clientIp = requestIp.getClientIp(req);
-    } catch (e) {
-        logUtil.error("Couldn't run 'request-ip' middleware. Error: " + e);
-    }
-
-    next();
-});
-
-// Result for client - HTTP req
-function sendResToClient(req, res, status, msg = undefined) {
-    try {
-        if (typeof msg == "string") {
-            res.writeHead(status, {'Content-Type': 'text/plain'});
-            res.write(msg);
-        } else {
-            res.status(status);
-
-            if (typeof msg == "object") {
-                res.json(msg);
-            }
-        }
-
-        res.end();
-    } catch (e) {
-        console.error('Failed to send response to the user. => ' + e);
-    }
-}
 
 app.get('/', function (req, res) {
     res.sendFile(publicDir + "/login.html");
