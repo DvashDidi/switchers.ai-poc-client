@@ -1,5 +1,4 @@
 // Load third party modules
-const fs = require('fs');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -13,13 +12,26 @@ const logUtil = require(publicDir + '/js/utils/log');
 app.use(bodyParser.json());
 // to support URL-encoded bodies
 app.use(bodyParser.urlencoded({extended: true}));
-// to get static files
-app.use('/', express.static(publicDir, {index: false, extensions: ['html']}));
 // log new requests
 app.use(async function (req, res, next) {
     logUtil.info('New request.  Uri: ' + req.protocol + '://' + req.get('host') + req.path);
     next();
 });
+
+// Set env file
+app.get('/js/pub_env.js', function (req, res) {
+    let filePath;
+
+    if (process.env.DEV_ENV) {
+        filePath = path.join(publicDir, '/js/dev_env.js');
+    } else {
+        filePath = path.join(publicDir, '/js/pub_env.js');
+    }
+
+    res.sendFile(filePath);
+});
+// to get static files
+app.use('/', express.static(publicDir, {index: false, extensions: ['html']}));
 
 app.get('/', function (req, res) {
     res.sendFile(publicDir + "/login.html");
