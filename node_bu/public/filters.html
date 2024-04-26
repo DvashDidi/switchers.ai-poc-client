@@ -158,7 +158,7 @@
         <main>
             <div class="pt-2">
                 <!-- Filters Section -->
-                <form data-form class="bg-dark">
+                <div data-form class="bg-dark">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="create-filter-tab" data-bs-toggle="tab"
@@ -167,74 +167,77 @@
                                     aria-selected="true">Create Filter
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="filter-list-tab" data-bs-toggle="tab"
-                                    data-bs-target="#filter-list" type="button" role="tab"
-                                    aria-controls="request-headers" aria-selected="false">Filter List
-                            </button>
-                        </li>
+                        <!--                        <li class="nav-item" role="presentation">-->
+                        <!--                            <button class="nav-link" id="filter-list-tab" data-bs-toggle="tab"-->
+                        <!--                                    data-bs-target="#filter-list" type="button" role="tab"-->
+                        <!--                                    aria-controls="request-headers" aria-selected="false">Filter List-->
+                        <!--                            </button>-->
+                        <!--                        </li>-->
                     </ul>
 
-                    <div class="tab-content p-3 border-top-0 border">
+                    <div class="tab-content p-3 border-top-0">
                         <div class="tab-pane fade show active" id="create-filter" role="tabpanel"
                              aria-labelledby="create-filter-tab">
-                            <div data-question>
-                                <select name="question" class="form-control" required>
-                                    <option value="" selected disabled>Question to filter...</option>
-                                    <!--<div>Populate with data from server</div>-->
-                                </select>
-                                <hr class="hr bg-light"/>
+                            <div id="conditions-container">
+                                <!-- Cloned templates will be appended here -->
                             </div>
 
+
                             <div data-create-filter></div>
-                            <button data-add-create-filter-btn class="mt-2 btn btn-outline-primary" type="button"> + Add
+                            <button id="add-condition-btn" class="mt-2 btn btn-outline-primary" type="button"> + Add
                                 Condition
                             </button>
+
+                            <template id="condition-template">
+                                <div class="condition-pair">
+                                    <!-- Placeholder for a divider -->
+                                    <div class="divider-placeholder bg-secondary"></div>
+
+                                    <div class="d-flex align-items-center mb-2">
+                                        <select class="form-control question-dropdown mr-2" style="flex-grow: 1;"
+                                                required>
+                                            <option value="" disabled selected>Select a question...</option>
+                                            <!-- Questions populated dynamically -->
+                                        </select>
+                                        <button type="button" class="btn btn-danger btn-sm remove-condition-btn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                    <select class="form-control answer-dropdown" multiple required>
+                                        <option value="" disabled selected>Select question to choose answers...</option>
+                                        <!-- Answers populated dynamically -->
+                                    </select>
+                                </div>
+                            </template>
                         </div>
                         <hr class="hr bg-light"/>
-                        <div>
-                            <button data-add-filter-btn class="mt-2 btn btn-success" type="button">Add Filter
-                            </button>
-                        </div>
+                        <form class="form-inline">
+                            <div class="form-group mb-2">
+                                <label for="filter-name" class="sr-only text-white">Filter Name:</label>
+                                <input type="text" class="form-control" id="filter-name" placeholder="Enter filter name">
+                            </div>
+                            <div id="logic-group" class="form-group mx-sm-3 mb-2">
+                                <div class="form-group">
+                                    <div class="btn-group btn-group-toggle" data-toggle="buttons" title="Select AND for all conditions to be met simultaneously or OR for any condition to be sufficient.">
+                                        <label class="btn bg-primary active">
+                                            <input type="radio" name="logicOptions" id="andLogic" autocomplete="off" data-option="and" checked> AND
+                                        </label>
+                                        <label class="btn btn-secondary">
+                                            <input type="radio" name="logicOptions" id="orLogic" autocomplete="off" data-option="or"> OR
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <button id="add-filter-btn" class="mb-2 btn btn-success" type="button">Add Filter</button>
                     </div>
-                </form>
+                </div>
             </div>
 
-            <template data-key-value-template>
-                <div class="row input-group my-2" data-key-value-pair>
-                    <div class="col-md-8 col-sm-8 col-xs-8 d-flex justify-content-end">
-                        <input type="text" data-key class="form-control" placeholder="Answer"/>
-                        <!--Replace Answer input text to select options (populated from the server)-->
-                        <select name="equality" class="form-control" required>
-                            <option value="" selected disabled>Choose...</option>
-                            <option value="<"><</option>
-                            <option value="=">=</option>
-                            <option value=">">></option>
-                        </select>
-                        <input type="number" min="0" max="100" step="1" data-value class="form-control"
-                               placeholder="Value"/>
-                        <select name="operator" class="form-control">
-                            <option value="" selected disabled>Choose...</option>
-                            <option value="AND">AND</option>
-                            <option value="OR">OR</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-4">
-                        <button type="button" data-add-inline-btn class="btn btn-outline-info ms-1">+ Inline
-                            condition
-                        </button>
-
-                        <button type="button" data-remove-btn class="btn btn-outline-danger ms-1"> - Filter Condition
-                        </button>
-                    </div>
-                    <hr class="mt-2 bg-warning">
-                </div>
-            </template>
         </main>
         <!--Main layout-->
     </div>
     <!-- END OF MAIN VIEW-->
-
 
     <!-- EMPTY ERROR - MAIN VIEW-->
     <div id="no-data-message-container" class="container-fluid">
@@ -271,6 +274,11 @@
 <script crossorigin="anonymous" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"
         type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Include Select2 CSS and JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 
 <script src="js/template.js" type="text/javascript"></script>
 <script src="js/filters.js" type="text/javascript"></script>
