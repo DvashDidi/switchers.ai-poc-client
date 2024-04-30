@@ -67,7 +67,7 @@ function getQuestionData(questionId) {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             }
         }
     ).then(function (response) {
@@ -114,7 +114,7 @@ function getImpactsData() {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             }
         }
     ).then(function (response) {

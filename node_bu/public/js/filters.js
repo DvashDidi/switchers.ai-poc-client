@@ -28,7 +28,7 @@ async function fetchQuestions() {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             }
         }
     );
@@ -40,7 +40,7 @@ async function fetchAnswers(questionId) {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
-            "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+            "Authorization": `bearer ${descopeSdk.getSessionToken()}`
         }
     });
     return response.json();
@@ -190,7 +190,7 @@ function addFilter(filterData) {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             },
             body: JSON.stringify(filterData)
         }

@@ -63,11 +63,10 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
 
 function getQuestionData(questionId) {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
-
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             }
         }
     ).then(function (response) {
@@ -114,7 +113,7 @@ function getIcebergsData() {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             }
         }
     ).then(function (response) {
