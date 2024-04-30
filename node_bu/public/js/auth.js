@@ -26,4 +26,4 @@ function logoutUser() {
     });
 }
 
-document.getElementById("logout-button").addEventListener("click", logoutUser);
+document.getElementById("logout-button")?.addEventListener("click", logoutUser);
