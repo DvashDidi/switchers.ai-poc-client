@@ -1,5 +1,5 @@
 // Function to populate the dropdown list with candidates
-function populateDropList(candidates) {
+function populateDropList(povData) {
     const select = $('#pov-choice');
     select.empty(); // Clear existing options
 
@@ -11,6 +11,8 @@ function populateDropList(candidates) {
         selected: true
     }));
 
+    let candidates = Object.keys(povData);
+
     // Add options for each candidate
     candidates.forEach(candidate => {
         let current_selected = (candidate === getPOV());
@@ -21,6 +23,43 @@ function populateDropList(candidates) {
             selected: current_selected
         }));
     });
+
+    select.change(function () {
+        displayCandidateData(povData);
+    });
+
+    displayCandidateData(povData);
+}
+
+function displayCandidateData(povData) {
+    const selectedCandidate = $('#pov-choice').val();
+    const statisticData = $('#pov-data');
+    statisticData.empty(); // Clear previous data
+
+    if (selectedCandidate && povData[selectedCandidate]) {
+        const data = povData[selectedCandidate];
+        statisticData.append($('<h3>').text(selectedCandidate + " Statistics:"));
+        Object.keys(data).forEach(key => {
+            const filterData = data[key];
+
+            // Ensure leading zero if the number is less than 10
+            let ratioPercent = parseFloat(filterData.ratio).toFixed(2).padStart(5, '0');
+
+            const description = `<strong>${key} Data:</strong><br>` +
+                `${filterData.statistic_weight} participants<br>` +
+                //`(${filterData.statistic_weight}/${filterData.total}) ` +
+                `${ratioPercent}% of the research participants`;
+
+            statisticData.append($('<div>', {
+                html: description
+            }).css({
+                margin: '10px 0',
+                padding: '5px',
+                border: '1px solid #ccc',
+                borderRadius: '5px'
+            }));
+        });
+    }
 }
 
 // Function to fetch points of view (povs) from the API
