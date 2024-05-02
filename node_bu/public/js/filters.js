@@ -225,8 +225,10 @@ function addFilter(filterData) {
         }
 
         return response.json();
-    }).then(function () {
+    }).then(function (filterData) {
         toast.close(); // Close the loading Swal when data is received and processed
+        localStorage.setItem('filterId', filterData.id);
+
         hideFilterCreationElements();
         showSuccessAnimation();
     }).catch(function (error) {
@@ -271,6 +273,7 @@ function deleteFilter() {
         }
     }).then(function () {
         toast.close(); // Close the loading Swal when data is received and processed
+        delete localStorage.filterId;
 
         location.reload();
     }).catch(function (error) {
