@@ -233,6 +233,7 @@ function deleteUserData() {
     delete localStorage.userPicture;
     delete localStorage.userEmail;
     delete localStorage.userName;
+    delete localStorage.filterId;
 }
 
 $("#open-logout-modal-button").on("click", function () {
