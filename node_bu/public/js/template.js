@@ -1,11 +1,11 @@
 const CHART_COLORS = {
     BLUE: 'rgb(54, 162, 235)',
-    GREEN: 'rgb(75,192,94)',
     ORANGE: 'rgb(255, 159, 64)',
+    GREEN: 'rgb(75,192,94)',
     RED: 'rgb(255, 99, 132)',
-    YELLOW: 'rgb(255, 205, 86)',
     PURPLE: 'rgb(153, 102, 255)',
     GREY: 'rgb(201, 203, 207)',
+    YELLOW: 'rgb(255, 205, 86)',
     BLACK: 'rgb(0, 0, 0)'
 };
 
@@ -33,8 +33,36 @@ const baseColors = [
         hoverBorder: rgbaWithAlpha(CHART_COLORS.RED, 0.8),
         background: rgbaWithAlpha(CHART_COLORS.RED, 0.7),
         hoverBackground: rgbaWithAlpha(CHART_COLORS.RED, 0.45),
+    },
+    {
+        border: CHART_COLORS.PURPLE,
+        hoverBorder: rgbaWithAlpha(CHART_COLORS.PURPLE, 0.8),
+        background: rgbaWithAlpha(CHART_COLORS.PURPLE, 0.7),
+        hoverBackground: rgbaWithAlpha(CHART_COLORS.PURPLE, 0.45),
+    },
+    {
+        border: CHART_COLORS.GREY,
+        hoverBorder: rgbaWithAlpha(CHART_COLORS.GREY, 0.8),
+        background: rgbaWithAlpha(CHART_COLORS.GREY, 0.7),
+        hoverBackground: rgbaWithAlpha(CHART_COLORS.GREY, 0.45),
     }
 ];
+
+// When adding a new page to the header - remember to add it here
+const navigationIdsPrefixes = ["settings", "filters", "net", "questions", "impacts", "hazards"];
+
+function setNavigationHandlers(navigationIds) {
+    for (const navigationId of navigationIds) {
+        const navigationBtn = document.getElementById(`${navigationId}-nav-btn`);
+        if (navigationBtn) {
+            navigationBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                history.pushState(null, null, location.href);
+                window.location.href = navigationBtn.dataset.target;
+            })
+        }
+    }
+}
 
 function rgbaWithAlpha(rgb, alpha) {
     const rgbComponents = rgb.match(/\d+/g);
@@ -44,15 +72,6 @@ function rgbaWithAlpha(rgb, alpha) {
 
     const [r, g, b] = rgbComponents;
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-// User UX //
-function getRandomColor() {
-    let color = [];
-    for (let i = 0; i < 3; i++) {
-        color.push(Math.floor(Math.random() * 256));
-    }
-    return 'rgb(' + color.join(', ') + ')';
 }
 
 function deepCopy(obj) {

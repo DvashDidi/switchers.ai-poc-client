@@ -8,20 +8,6 @@ let toast = Swal.mixin({
     }
 });
 
-function setNavigationHandlers() {
-    // Navigation button event handlers
-    $("#questions-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn, #impacts-nav-btn").each(function () {
-        $(this).on('click', function (e) {
-            e.preventDefault(); // Prevent the default action
-
-            // Push the current state to the history stack
-            history.pushState(null, null, location.href);
-
-            // Redirect to the target page
-            window.location.href = $(this).data('target');
-        });
-    });
-}
 
 async function fetchQuestions() {
     const response = await fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
@@ -365,7 +351,7 @@ function showSuccessAnimation() {
 // Document ready function
 $(document).ready(() => {
     init_page().then(function () {
-        setNavigationHandlers();
+        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "filters"));
 
         $('input[name="logicOptions"]').change(function () {
             // Reset classes
