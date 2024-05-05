@@ -48,9 +48,6 @@ const baseColors = [
     }
 ];
 
-// When adding a new page to the header - remember to add it here
-const navigationIdsPrefixes = ["settings", "filters", "net", "questions", "impacts", "hazards"];
-
 function setNavigationHandlers(navigationIds) {
     for (const navigationId of navigationIds) {
         const navigationBtn = document.getElementById(`${navigationId}-nav-btn`);
@@ -68,12 +65,18 @@ function createNavBar(activeName) {
     // Pages Order Is Significant !
     // This is the order the navigation bar would look like
     const pages = [
-        { id: "settings-nav-btn", icon: "bi-gear", target: "settings", text: "Settings" },
-        { id: "filters-nav-btn", icon: "bi-funnel", target: "filters", text: "Filters" },
-        { id: "net-nav-btn", icon: "bi-speedometer2", target: "net", text: "Net" },
-        { id: "questions-nav-btn", icon: "bi-pie-chart", target: "questions", text: "Questions" },
-        { id: "impacts-nav-btn", icon: "bi-clipboard-data", color: "text-success", target: "impacts", text: "Impacts" },
-        { id: "hazards-nav-btn", icon: "bi-exclamation-triangle", color: "text-danger", target: "hazards", text: "Hazardous" }
+        {id: "settings-nav-btn", icon: "bi-gear", target: "settings", text: "Settings"},
+        {id: "filters-nav-btn", icon: "bi-funnel", target: "filters", text: "Filters"},
+        {id: "net-nav-btn", icon: "bi-speedometer2", target: "net", text: "Net"},
+        {id: "questions-nav-btn", icon: "bi-pie-chart", target: "questions", text: "Questions"},
+        {id: "impacts-nav-btn", icon: "bi-clipboard-data", color: "text-success", target: "impacts", text: "Impacts"},
+        {
+            id: "hazards-nav-btn",
+            icon: "bi-exclamation-triangle",
+            color: "text-danger",
+            target: "hazards",
+            text: "Hazardous"
+        }
     ];
 
 
@@ -93,7 +96,7 @@ function createNavBar(activeName) {
     });
 
     document.querySelector("#switchers-navbar").querySelector(".navbar-nav").innerHTML = navHTML;
-    setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== activeName));
+    setNavigationHandlers(pages.map(v => v.target).filter(v => v !== activeName));
 }
 
 
