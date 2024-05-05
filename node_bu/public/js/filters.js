@@ -34,6 +34,8 @@ async function fetchAnswers(questionId) {
 
 function handleFilterCreation() {
     const conditionsContainer = document.getElementById('conditions-container');
+    document.getElementById('conditions-container').innerHTML = "";
+
     const addConditionBtn = document.getElementById('add-condition-btn');
     const addFilterBtn = document.getElementById('add-filter-btn');
 
@@ -179,9 +181,22 @@ function handleFilterCreation() {
                 }
             };
 
-            addFilter(filterData)
+            addFilter(filterData);
         }
     });
+}
+
+function cleanAddFilterForm() {
+    // Clear the input for the filter name
+    document.getElementById('filter-name').value = '';
+
+    document.querySelector("#andLogic").click();
+
+    // Optionally, clear any error messages or invalid classes if you are using form validation
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = ''); // Assuming error messages might be displayed
+
+    handleFilterCreation();
 }
 
 function addFilter(filterData) {
@@ -213,10 +228,16 @@ function addFilter(filterData) {
         return response.json();
     }).then(function (filterData) {
         toast.close(); // Close the loading Swal when data is received and processed
-        localStorage.setItem('filterId', filterData.id);
 
-        hideFilterCreationElements();
-        showSuccessAnimation();
+        Swal.fire({
+            title: "Filter created successfully!",
+            text: `You can activate it in the Filter List`,
+            icon: "success",
+            showConfirmButton: true
+        }).then(() => {
+            cleanAddFilterForm();
+            location.reload();
+        });
     }).catch(function (error) {
         console.error(error);
 
@@ -233,14 +254,65 @@ function addFilter(filterData) {
     });
 }
 
-function deleteFilter() {
+    function activateFilter(filterId) {
+        toast.fire({
+            icon: "info",
+            title: 'Loading...',
+            text: 'Activating Filter.',
+        });
+
+        fetch(`${apiHost}/v1/research-participant-filters/${filterId}/activate`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `bearer ${descopeSdk.getSessionToken()}`
+                }
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    outdatedResearchFound();
+                }
+
+                return response.text().then(function (message) {
+                    throw new Error(`${message}`);
+                });
+            }
+        }).then(function () {
+            toast.close(); // Close the loading Swal when data is received and processed
+            localStorage.setItem('filterId', filterId);
+            Swal.fire({
+                title: "Filter activated successfully!",
+                text: `filter is now active`,
+                icon: "success",
+                showConfirmButton: false
+            });
+
+            location.reload();
+        }).catch(function (error) {
+            console.error(error);
+
+            if (getPOV()) {
+                toast.fire({ // Show error Swal
+                    icon: 'error',
+                    title: 'Oops...',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    text: `An error occurred: ${error.message}`
+                });
+            }
+        });
+    }
+
+function deleteFilter(filterId) {
     toast.fire({
         icon: "info",
         title: 'Loading...',
         text: 'Deleting Filter.',
     });
 
-    fetch(`${apiHost}/v1/research-participant-filters/${localStorage.getItem('filterId')}`, {
+    fetch(`${apiHost}/v1/research-participant-filters/${filterId}`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
@@ -259,7 +331,9 @@ function deleteFilter() {
         }
     }).then(function () {
         toast.close(); // Close the loading Swal when data is received and processed
-        delete localStorage.filterId;
+        if (localStorage.filterId === filterId) {
+            delete localStorage.filterId;
+        }
 
         location.reload();
     }).catch(function (error) {
@@ -325,26 +399,77 @@ function getFilters() {
     });
 }
 
-function hideFilterCreationElements() {
-    const createFilterDiv = document.getElementById('create-filter');
-    createFilterDiv.innerHTML = ''; // Clear the content of the div
-
-    document.getElementById('add-filter-btn').remove();
-    document.getElementById('logic-group').remove();
-    document.getElementById('filter-name').disabled = true;
-
-    // Get all elements with the class name 'remove-filter-btn'
-    let elements = document.getElementsByClassName('remove-filter-btn');
-    elements[0].style.display = ''; // Set display property to default
-    elements[0].style.visibility = 'visible'; // Make sure the element is visible
+function confirmDeleteFilter(filterName, filterId) {
+    Swal.fire({
+        title: `Are you sure you want to delete '${filterName}' filter?`,
+        text: "This action cannot be undone.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        cancelButtonText: 'No',
+        confirmButtonColor: '#d33',  // Red color for the Delete button
+        cancelButtonColor: '#3085d6',  // Blue color for the No button
+        reverseButtons: true  // Reverses the order of the buttons
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteFilter(filterId);  // Call your function to delete the filter
+        }
+    });
 }
 
-function showSuccessAnimation() {
-    Swal.fire({
-        title: "Filter created successfully!",
-        text: `You can now view the analysis changes`,
-        icon: "success",
-        showConfirmButton: true
+
+function displayFilters(filters) {
+    const listGroup = document.querySelector('.list-group');
+    listGroup.innerHTML = '';  // Clear existing filters
+
+    filters.forEach(filter => {
+        const isActive = filter.is_active;
+        const filterElement = document.createElement('div');
+        filterElement.className = 'list-group-item';
+        filterElement.classList.add("list-group-item", "m-2");
+        filterElement.innerHTML = `
+            <h5 class="list-group-item-heading">${filter.name}</h5>
+            <p class="list-group-item-text">Status: <span class="badge ${isActive ? 'badge-success' : 'badge-secondary'}">${isActive ? 'Active' : 'Inactive'}</span></p>
+            <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn" ${isActive ? 'disabled' : ''}>Activate</button>
+            <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+        `;
+        listGroup.appendChild(filterElement);
+
+        // Add event listeners for buttons
+        const activateBtn = filterElement.querySelector('.activate-btn');
+        activateBtn.addEventListener('click', () => activateFilter(filter.id));
+
+        const deleteBtn = filterElement.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => confirmDeleteFilter(filter.name, filter.id));
+    });
+}
+
+function sortFilters(filters) {
+    return filters.sort((a, b) => {
+        // Sort by isActive descending (true first)
+        if (a.is_active === b.is_active) {
+            // If the isActive status is the same, sort by name ascending
+            return a.name.localeCompare(b.name);
+        }
+        // If isActive is not the same, sort such that true (active) comes before false (inactive)
+        return a.is_active ? -1 : 1;
+    });
+}
+
+function reloadPreviousActiveTab() {
+    // Set the active tab from localStorage if exists
+    const activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+        $('.nav-tabs button[data-bs-target="' + activeTab + '"]').tab('show');
+    } else {
+        // Optionally set a default tab if none is stored
+        $('.nav-tabs button[data-bs-target="#create-filter"]').tab('show');
+    }
+
+    // Update localStorage when tab changes
+    $('button[data-bs-toggle="tab"]').on('click', function (e) {
+        const activeTab = $(e.target).attr('data-bs-target');
+        localStorage.setItem('activeTab', activeTab);
     });
 }
 
@@ -352,6 +477,8 @@ function showSuccessAnimation() {
 $(document).ready(() => {
     init_page().then(function () {
         setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "filters"));
+
+        reloadPreviousActiveTab();
 
         $('input[name="logicOptions"]').change(function () {
             // Reset classes
@@ -363,23 +490,15 @@ $(document).ready(() => {
             $('input[name="logicOptions"]:checked').parent().removeClass('btn-secondary').addClass('bg-primary');
         });
 
-        let removeFilterButtons = document.getElementsByClassName('remove-filter-btn');
-        for (let i = 0; i < removeFilterButtons.length; i++) {
-            removeFilterButtons[i].addEventListener('click', function() {
-                deleteFilter();
-            });
-        }
-
         getFilters().then(function (filtersData) {
+            console.log(filtersData)
             if (filtersData.length > 0) {
-                document.getElementById('filter-name').value = filtersData[0].name;
-                localStorage.setItem('filterId', filtersData[0].id);
-
-                hideFilterCreationElements();
-            } else {
-                handleFilterCreation();
+                sortFilters(filtersData);
+                displayFilters(filtersData);
             }
         });
     }).catch(() => {
     })
+
+    handleFilterCreation();
 });
