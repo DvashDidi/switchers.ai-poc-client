@@ -101,7 +101,7 @@ function main() {
 
         fetchDataAndUpdateUI(); // Initiate fetch operation
     }).catch(function (error) {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "net"));
+        createNavBar('net');
     });
 }
 

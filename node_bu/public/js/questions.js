@@ -177,7 +177,7 @@ function _main() {
 
         getQuestionsData();
     }).catch(function (error) {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "questions"));
+        createNavBar('questions');
     });
 }
 

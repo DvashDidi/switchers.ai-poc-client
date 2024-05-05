@@ -498,6 +498,7 @@ $(document).ready(() => {
             }
         });
     }).catch(() => {
+        createNavBar('filters');
     })
 
     handleFilterCreation();

@@ -225,7 +225,7 @@ function _main() {
 
         getHazardsData();
     }).catch(function (error) {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "hazards"));
+        createNavBar('hazards');
     });
 }
 

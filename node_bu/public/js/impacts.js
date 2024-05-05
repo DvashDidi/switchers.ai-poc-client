@@ -227,7 +227,7 @@ function _main() {
 
         getImpactsData();
     }).catch(function (error) {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "impacts"));
+        createNavBar('impacts');
     });
 }
 

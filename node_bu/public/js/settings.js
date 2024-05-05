@@ -162,7 +162,7 @@ $(document).ready(() => {
                 });
             }
         });
-    }).catch(function (error) {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "settings"));
+    }).catch(function () {
+        createNavBar('settings');
     });
 });
