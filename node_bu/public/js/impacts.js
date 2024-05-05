@@ -167,7 +167,7 @@ function addPlaceholderListeners() {
 
 function _main() {
     init_page().then(function () {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "impacts"));
+        createNavBar('impacts');
 
         questionDivider = document.getElementById("additional-text-divider");
 

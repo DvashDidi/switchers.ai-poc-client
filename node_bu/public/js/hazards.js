@@ -165,7 +165,7 @@ function addPlaceholderListeners() {
 
 function _main() {
     init_page().then(function () {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "hazards"));
+        createNavBar('hazards');
 
         questionDivider = document.getElementById("additional-text-divider");
 

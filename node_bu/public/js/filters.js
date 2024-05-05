@@ -254,56 +254,56 @@ function addFilter(filterData) {
     });
 }
 
-    function activateFilter(filterId) {
-        toast.fire({
-            icon: "info",
-            title: 'Loading...',
-            text: 'Activating Filter.',
-        });
+function activateFilter(filterId) {
+    toast.fire({
+        icon: "info",
+        title: 'Loading...',
+        text: 'Activating Filter.',
+    });
 
-        fetch(`${apiHost}/v1/research-participant-filters/${filterId}/activate`, {
-                method: "PUT",
-                headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": `bearer ${descopeSdk.getSessionToken()}`
-                }
+    fetch(`${apiHost}/v1/research-participant-filters/${filterId}/activate`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             }
-        ).then(function (response) {
-            if (!response.ok) {
-                if (response.status === 404) {
-                    outdatedResearchFound();
-                }
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            if (response.status === 404) {
+                outdatedResearchFound();
+            }
 
-                return response.text().then(function (message) {
-                    throw new Error(`${message}`);
-                });
-            }
-        }).then(function () {
-            toast.close(); // Close the loading Swal when data is received and processed
-            localStorage.setItem('filterId', filterId);
-            Swal.fire({
-                title: "Filter activated successfully!",
-                text: `filter is now active`,
-                icon: "success",
-                showConfirmButton: false
+            return response.text().then(function (message) {
+                throw new Error(`${message}`);
             });
-
-            location.reload();
-        }).catch(function (error) {
-            console.error(error);
-
-            if (getPOV()) {
-                toast.fire({ // Show error Swal
-                    icon: 'error',
-                    title: 'Oops...',
-                    timer: 1500,
-                    showConfirmButton: false,
-                    timerProgressBar: true,
-                    text: `An error occurred: ${error.message}`
-                });
-            }
+        }
+    }).then(function () {
+        toast.close(); // Close the loading Swal when data is received and processed
+        localStorage.setItem('filterId', filterId);
+        Swal.fire({
+            title: "Filter activated successfully!",
+            text: `filter is now active`,
+            icon: "success",
+            showConfirmButton: false
         });
-    }
+
+        location.reload();
+    }).catch(function (error) {
+        console.error(error);
+
+        if (getPOV()) {
+            toast.fire({ // Show error Swal
+                icon: 'error',
+                title: 'Oops...',
+                timer: 1500,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `An error occurred: ${error.message}`
+            });
+        }
+    });
+}
 
 function deleteFilter(filterId) {
     toast.fire({
@@ -476,7 +476,7 @@ function reloadPreviousActiveTab() {
 // Document ready function
 $(document).ready(() => {
     init_page().then(function () {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "filters"));
+        createNavBar('filters');
 
         reloadPreviousActiveTab();
 

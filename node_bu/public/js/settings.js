@@ -132,7 +132,7 @@ function showUserManagement() {
 // Document ready function
 $(document).ready(() => {
     init_page().then(function () {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "settings"));
+        createNavBar('settings');
 
         // Initialize points of view dropdown
         getPovs();

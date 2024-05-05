@@ -64,6 +64,39 @@ function setNavigationHandlers(navigationIds) {
     }
 }
 
+function createNavBar(activeName) {
+    // Pages Order Is Significant !
+    // This is the order the navigation bar would look like
+    const pages = [
+        { id: "settings-nav-btn", icon: "bi-gear", target: "settings", text: "Settings" },
+        { id: "filters-nav-btn", icon: "bi-funnel", target: "filters", text: "Filters" },
+        { id: "net-nav-btn", icon: "bi-speedometer2", target: "net", text: "Net" },
+        { id: "questions-nav-btn", icon: "bi-pie-chart", target: "questions", text: "Questions" },
+        { id: "impacts-nav-btn", icon: "bi-clipboard-data", color: "text-success", target: "impacts", text: "Impacts" },
+        { id: "hazards-nav-btn", icon: "bi-exclamation-triangle", color: "text-danger", target: "hazards", text: "Hazardous" }
+    ];
+
+
+    let navHTML = "";
+
+    pages.forEach(page => {
+        const bgClass = page.id === `${activeName}-nav-btn` ? 'bg-primary text-white' : 'text-white';
+        const iconColor = page.color || '';
+        navHTML += `
+            <button type="button" class="btn btn-sm ${bgClass} m-1" id="${page.id}"
+                    data-target="${page.target}"
+                    data-toggle="tooltip" data-placement="bottom" title="${page.text}">
+                <i class="bi ${page.icon} ${iconColor}"></i>
+                ${page.text}
+            </button>
+        `;
+    });
+
+    document.querySelector("#switchers-navbar").querySelector(".navbar-nav").innerHTML = navHTML;
+    setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== activeName));
+}
+
+
 function rgbaWithAlpha(rgb, alpha) {
     const rgbComponents = rgb.match(/\d+/g);
     if (rgbComponents.length !== 3) {

@@ -163,7 +163,7 @@ function _main() {
     addPlaceholderListeners();
 
     init_page().then(function () {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "questions"));
+        createNavBar('questions');
 
         questionDivider = document.getElementById("additional-text-divider");
 

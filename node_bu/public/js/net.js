@@ -94,7 +94,7 @@ function fetchDataAndUpdateUI() {
 
 function main() {
     init_page().then(function () {
-        setNavigationHandlers(navigationIdsPrefixes.filter(v => v !== "net"));
+        createNavBar('net');
 
         // Event listener for a window resize
         window.addEventListener('resize', resizeChart);
