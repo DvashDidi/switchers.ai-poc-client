@@ -500,7 +500,12 @@ function displayFilters(filters) {
             <p class="list-group-item-text">Status: <span class="badge ${isActive ? 'badge-success' : 'badge-secondary'}">${isActive ? 'Active' : 'Inactive'}</span></p>
             <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn">${isActive ? 'Deactivate' : 'Activate'}</button>
             <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+            <br>
+            ${parseFloat(filter.statistic_weight).toFixed(2)} participants
+            <br>
+            ${filter.ratio}% of the research participants
         `;
+
         listGroup.appendChild(filterElement);
 
         // Add event listeners for buttons
