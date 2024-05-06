@@ -201,6 +201,44 @@ function getDefaultResearchFromApi() {
     });
 }
 
+function getDefaultFiltersFromApi() {
+    return new Promise(function (resolve, reject) {
+        fetch(`${apiHost}/v1/research/${getSelectedResearch()}/research-participant-filters/active`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `bearer ${descopeSdk.getSessionToken()}`
+                }
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    outdatedResearchFound();
+                }
+
+                return response.text().then(function (message) {
+                    throw new Error(`${message}`);
+                });
+            }
+
+            return response.json();
+        }).then(function (clientFilters) {
+            // localStorage.filtersName = clientFilters.join(', ');
+            if (clientFilters.length === 0) {
+                $('#filter-value').hide()
+            } else {
+                const filterElement = document.getElementById("filter-name");
+                filterElement.innerHTML = clientFilters[0] + " is active";
+            }
+
+            resolve(clientFilters);
+        }).catch(function (error) {
+            console.error(error);
+            reject(error);
+        });
+    });
+}
+
 function showPOVNotification() {
     Swal.fire({
         // title: `<a href="settings" style="color: #333; text-decoration: underline;">Set up POV now</a>`,
@@ -241,7 +279,7 @@ function init_page() {
             getDefaultResearchFromApi().then(setSelectedResearch) :
             Promise.resolve();
 
-        researchPromise.then(() => {
+        researchPromise.then(getDefaultFiltersFromApi).then(() => {
             const povValue = getPOV();
             const povElement = document.getElementById("pov-value");
 
