@@ -29,3 +29,11 @@
 select.is-invalid {
     animation: blink-red 2s ease-in-out; /* Adjusted for background color change */
 }
+
+.list-group {
+    display: flex;
+}
+
+.list-group-item {
+    flex-grow: 1;
+}
