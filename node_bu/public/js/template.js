@@ -99,7 +99,6 @@ function createNavBar(activeName) {
     setNavigationHandlers(pages.map(v => v.target).filter(v => v !== activeName));
 }
 
-
 function rgbaWithAlpha(rgb, alpha) {
     const rgbComponents = rgb.match(/\d+/g);
     if (rgbComponents.length !== 3) {
