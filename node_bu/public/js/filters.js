@@ -71,11 +71,13 @@ function handleFilterCreation() {
         questions.forEach(question => {
             const option = document.createElement('option');
             option.value = question.id;
-            option.textContent = question.text;
-            // Add dataset attributes to each question option
+            option.textContent = `Q${question.sequence_number}: ${question.text}`;
+
+            // Add dataset attributes to each questions option
             option.dataset.sequenceNumber = question.sequence_number;
             option.dataset.questionId = question.id;
             option.dataset.researchId = question.research_id;
+
             questionDropdown.appendChild(option);
         });
 
@@ -83,15 +85,18 @@ function handleFilterCreation() {
         questionDropdown.addEventListener('change', async function () {
             const questionId = this.value;
             const answers = await fetchAnswers(questionId);
+
             answerDropdown.innerHTML = ''; // Clear previous answers if any
             answers.forEach(answer => {
                 const option = document.createElement('option');
                 option.value = answer.id;
                 option.textContent = answer.text;
+
                 // Add dataset attributes to each answer option
                 option.dataset.sequenceNumber = answer.sequence_number;
                 option.dataset.answerId = answer.id;
                 option.dataset.questionId = answer.question_id;
+
                 answerDropdown.appendChild(option);
             });
         });
@@ -112,29 +117,29 @@ function handleFilterCreation() {
         const conditionPairs = document.querySelectorAll('.condition-pair');
         let isValid = true;
 
+        let input = document.getElementById('filter-name');
+        if (input.value.trim() === '') {
+            isValid = false;
+            toast.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                timer: 2000,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `Please choose a name for your filter`
+            }).then(() => {
+                input.scrollIntoView({behavior: 'smooth', block: 'center'});
+                input.classList.add('is-invalid');
+
+                setTimeout(() => {
+                    input.classList.remove('is-invalid');
+                }, 2100);
+            });
+        }
+
         conditionPairs.forEach(pair => {
             const questionDropdown = pair.querySelector('.question-dropdown');
             const answerDropdown = pair.querySelector('.answer-dropdown'); // Ensure defined for use below
-
-            var input = document.getElementById('filter-name');
-            if (input.value.trim() === '') {
-                isValid = false;
-                toast.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    timerProgressBar: true,
-                    text: `Please choose a name for your filter`
-                }).then(() => {
-                    input.scrollIntoView({behavior: 'smooth', block: 'center'});
-                    input.classList.add('is-invalid');
-
-                    setTimeout(() => {
-                        input.classList.remove('is-invalid');
-                    }, 2100);
-                });
-            }
 
             if (questionDropdown.value === "") {
                 isValid = false;
@@ -157,12 +162,20 @@ function handleFilterCreation() {
                 const selectedQuestionOption = questionDropdown.selectedOptions[0];
                 const selectedAnswerOptions = Array.from(answerDropdown.selectedOptions);
                 const questionSequenceNumber = selectedQuestionOption.dataset.sequenceNumber;
-                const answersSequenceNumbers = selectedAnswerOptions.map(opt => opt.dataset.sequenceNumber);
+                let answersSequenceNumbers = selectedAnswerOptions.map(opt => opt.dataset.sequenceNumber);
+                let is_excluded = false;
+
+                if (answersSequenceNumbers.length === 0) {
+                    // Check if the user hasn't chosen any answer for a specific question.
+                    // If so, filter out participants who did not respond to this question.
+                    answersSequenceNumbers = Array.from(answerDropdown).map(opt => opt.dataset.sequenceNumber);
+                    is_excluded = true;
+                }
 
                 const condition = {
                     question_sequence_number: parseInt(questionSequenceNumber),
                     answers_sequence_number: answersSequenceNumbers.map(Number),
-                    is_excluded: true,
+                    is_excluded: is_excluded,
                     type: "FilterCondition"
                 };
 
@@ -254,6 +267,14 @@ function addFilter(filterData) {
     });
 }
 
+function toggleFilter(filterId, isActive) {
+    if (isActive) {
+        deactivateFilter(filterId)
+    } else {
+        activateFilter(filterId)
+    }
+}
+
 function activateFilter(filterId) {
     toast.fire({
         icon: "info",
@@ -280,10 +301,61 @@ function activateFilter(filterId) {
         }
     }).then(function () {
         toast.close(); // Close the loading Swal when data is received and processed
-        localStorage.setItem('filterId', filterId);
+
         Swal.fire({
             title: "Filter activated successfully!",
             text: `filter is now active`,
+            icon: "success",
+            showConfirmButton: false
+        });
+
+        location.reload();
+    }).catch(function (error) {
+        console.error(error);
+
+        if (getPOV()) {
+            toast.fire({ // Show error Swal
+                icon: 'error',
+                title: 'Oops...',
+                timer: 1500,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `An error occurred: ${error.message}`
+            });
+        }
+    });
+}
+
+function deactivateFilter(filterId) {
+    toast.fire({
+        icon: "info",
+        title: 'Loading...',
+        text: 'Deactivating Filter.',
+    });
+
+    fetch(`${apiHost}/v1/research-participant-filters/${filterId}/deactivate`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
+            }
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            if (response.status === 404) {
+                outdatedResearchFound();
+            }
+
+            return response.text().then(function (message) {
+                throw new Error(`${message}`);
+            });
+        }
+    }).then(function () {
+        toast.close(); // Close the loading Swal when data is received and processed
+
+        Swal.fire({
+            title: "Filter deactivated successfully!",
+            text: `filter is deactivated now`,
             icon: "success",
             showConfirmButton: false
         });
@@ -331,9 +403,6 @@ function deleteFilter(filterId) {
         }
     }).then(function () {
         toast.close(); // Close the loading Swal when data is received and processed
-        if (localStorage.filterId === filterId) {
-            delete localStorage.filterId;
-        }
 
         location.reload();
     }).catch(function (error) {
@@ -417,7 +486,6 @@ function confirmDeleteFilter(filterName, filterId) {
     });
 }
 
-
 function displayFilters(filters) {
     const listGroup = document.querySelector('.list-group');
     listGroup.innerHTML = '';  // Clear existing filters
@@ -430,14 +498,14 @@ function displayFilters(filters) {
         filterElement.innerHTML = `
             <h5 class="list-group-item-heading">${filter.name}</h5>
             <p class="list-group-item-text">Status: <span class="badge ${isActive ? 'badge-success' : 'badge-secondary'}">${isActive ? 'Active' : 'Inactive'}</span></p>
-            <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn" ${isActive ? 'disabled' : ''}>Activate</button>
+            <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn">${isActive ? 'Deactivate' : 'Activate'}</button>
             <button class="btn btn-sm btn-danger delete-btn">Delete</button>
         `;
         listGroup.appendChild(filterElement);
 
         // Add event listeners for buttons
         const activateBtn = filterElement.querySelector('.activate-btn');
-        activateBtn.addEventListener('click', () => activateFilter(filter.id));
+        activateBtn.addEventListener('click', () => toggleFilter(filter.id, isActive));
 
         const deleteBtn = filterElement.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', () => confirmDeleteFilter(filter.name, filter.id));
@@ -446,13 +514,7 @@ function displayFilters(filters) {
 
 function sortFilters(filters) {
     return filters.sort((a, b) => {
-        // Sort by isActive descending (true first)
-        if (a.is_active === b.is_active) {
-            // If the isActive status is the same, sort by name ascending
-            return a.name.localeCompare(b.name);
-        }
-        // If isActive is not the same, sort such that true (active) comes before false (inactive)
-        return a.is_active ? -1 : 1;
+        return a.name.localeCompare(b.name);
     });
 }
 
@@ -491,7 +553,6 @@ $(document).ready(() => {
         });
 
         getFilters().then(function (filtersData) {
-            console.log(filtersData)
             if (filtersData.length > 0) {
                 sortFilters(filtersData);
                 displayFilters(filtersData);
@@ -499,7 +560,7 @@ $(document).ready(() => {
         });
     }).catch(() => {
         createNavBar('filters');
-    })
+    });
 
     handleFilterCreation();
 });

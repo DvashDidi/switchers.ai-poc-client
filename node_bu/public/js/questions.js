@@ -52,12 +52,6 @@ function addClickableItem(parentContainer, question) {
 }
 
 function getQuestionData(questionId) {
-    // let useFilterIdQuery = '';
-    // if (localStorage.getItem('filterId') !== undefined) {
-    //     useFilterIdQuery = `?useFilterId=`;
-    //     //${encodeURIComponent(localStorage.getItem('filterId'))
-    // }
-
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
             method: "GET",
             headers: {
