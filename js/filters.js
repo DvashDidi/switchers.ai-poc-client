@@ -110,14 +110,14 @@ function handleFilterCreation() {
     }
 
     addFilterBtn.addEventListener('click', function () {
-        const filterName = document.getElementById('filter-name').value;
+        const filterName = document.getElementById('new-filter-name').value;
         const useAndLogic = document.getElementById('andLogic').checked; // true if AND is selected, false if OR is selected
 
         const conditions = [];
         const conditionPairs = document.querySelectorAll('.condition-pair');
         let isValid = true;
 
-        let input = document.getElementById('filter-name');
+        let input = document.getElementById('new-filter-name');
         if (input.value.trim() === '') {
             isValid = false;
             toast.fire({
@@ -201,7 +201,7 @@ function handleFilterCreation() {
 
 function cleanAddFilterForm() {
     // Clear the input for the filter name
-    document.getElementById('filter-name').value = '';
+    document.getElementById('new-filter-name').value = '';
 
     document.querySelector("#andLogic").click();
 
