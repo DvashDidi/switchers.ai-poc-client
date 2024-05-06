@@ -1,11 +1,11 @@
 const CHART_COLORS = {
     BLUE: 'rgb(54, 162, 235)',
-    GREEN: 'rgb(75,192,94)',
     ORANGE: 'rgb(255, 159, 64)',
+    GREEN: 'rgb(75,192,94)',
     RED: 'rgb(255, 99, 132)',
-    YELLOW: 'rgb(255, 205, 86)',
     PURPLE: 'rgb(153, 102, 255)',
     GREY: 'rgb(201, 203, 207)',
+    YELLOW: 'rgb(255, 205, 86)',
     BLACK: 'rgb(0, 0, 0)'
 };
 
@@ -33,8 +33,71 @@ const baseColors = [
         hoverBorder: rgbaWithAlpha(CHART_COLORS.RED, 0.8),
         background: rgbaWithAlpha(CHART_COLORS.RED, 0.7),
         hoverBackground: rgbaWithAlpha(CHART_COLORS.RED, 0.45),
+    },
+    {
+        border: CHART_COLORS.PURPLE,
+        hoverBorder: rgbaWithAlpha(CHART_COLORS.PURPLE, 0.8),
+        background: rgbaWithAlpha(CHART_COLORS.PURPLE, 0.7),
+        hoverBackground: rgbaWithAlpha(CHART_COLORS.PURPLE, 0.45),
+    },
+    {
+        border: CHART_COLORS.GREY,
+        hoverBorder: rgbaWithAlpha(CHART_COLORS.GREY, 0.8),
+        background: rgbaWithAlpha(CHART_COLORS.GREY, 0.7),
+        hoverBackground: rgbaWithAlpha(CHART_COLORS.GREY, 0.45),
     }
 ];
+
+function setNavigationHandlers(navigationIds) {
+    for (const navigationId of navigationIds) {
+        const navigationBtn = document.getElementById(`${navigationId}-nav-btn`);
+        if (navigationBtn) {
+            navigationBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                history.pushState(null, null, location.href);
+                window.location.href = navigationBtn.dataset.target;
+            })
+        }
+    }
+}
+
+function createNavBar(activeName) {
+    // Pages Order Is Significant !
+    // This is the order the navigation bar would look like
+    const pages = [
+        {id: "settings-nav-btn", icon: "bi-gear", target: "settings", text: "Settings"},
+        {id: "filters-nav-btn", icon: "bi-funnel", target: "filters", text: "Filters"},
+        {id: "net-nav-btn", icon: "bi-speedometer2", target: "net", text: "Net"},
+        {id: "questions-nav-btn", icon: "bi-pie-chart", target: "questions", text: "Questions"},
+        {id: "impacts-nav-btn", icon: "bi-clipboard-data", color: "text-success", target: "impacts", text: "Impacts"},
+        {
+            id: "hazards-nav-btn",
+            icon: "bi-exclamation-triangle",
+            color: "text-danger",
+            target: "hazards",
+            text: "Hazardous"
+        }
+    ];
+
+
+    let navHTML = "";
+
+    pages.forEach(page => {
+        const bgClass = page.id === `${activeName}-nav-btn` ? 'bg-primary text-white' : 'text-white';
+        const iconColor = page.color || '';
+        navHTML += `
+            <button type="button" class="btn btn-sm ${bgClass} m-1" id="${page.id}"
+                    data-target="${page.target}"
+                    data-toggle="tooltip" data-placement="bottom" title="${page.text}">
+                <i class="bi ${page.icon} ${iconColor}"></i>
+                ${page.text}
+            </button>
+        `;
+    });
+
+    document.querySelector("#switchers-navbar").querySelector(".navbar-nav").innerHTML = navHTML;
+    setNavigationHandlers(pages.map(v => v.target).filter(v => v !== activeName));
+}
 
 function rgbaWithAlpha(rgb, alpha) {
     const rgbComponents = rgb.match(/\d+/g);
@@ -44,15 +107,6 @@ function rgbaWithAlpha(rgb, alpha) {
 
     const [r, g, b] = rgbComponents;
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-// User UX //
-function getRandomColor() {
-    let color = [];
-    for (let i = 0; i < 3; i++) {
-        color.push(Math.floor(Math.random() * 256));
-    }
-    return 'rgb(' + color.join(', ') + ')';
 }
 
 function deepCopy(obj) {
@@ -146,6 +200,44 @@ function getDefaultResearchFromApi() {
     });
 }
 
+function getDefaultFiltersFromApi() {
+    return new Promise(function (resolve, reject) {
+        fetch(`${apiHost}/v1/research/${getSelectedResearch()}/research-participant-filters/active`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `bearer ${descopeSdk.getSessionToken()}`
+                }
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    outdatedResearchFound();
+                }
+
+                return response.text().then(function (message) {
+                    throw new Error(`${message}`);
+                });
+            }
+
+            return response.json();
+        }).then(function (clientFilters) {
+            // localStorage.filtersName = clientFilters.join(', ');
+            if (clientFilters.length === 0) {
+                $('#filter-value').hide()
+            } else {
+                const filterElement = document.getElementById("filter-name");
+                filterElement.innerHTML = clientFilters[0] + " is active";
+            }
+
+            resolve(clientFilters);
+        }).catch(function (error) {
+            console.error(error);
+            reject(error);
+        });
+    });
+}
+
 function showPOVNotification() {
     Swal.fire({
         // title: `<a href="settings" style="color: #333; text-decoration: underline;">Set up POV now</a>`,
@@ -186,7 +278,7 @@ function init_page() {
             getDefaultResearchFromApi().then(setSelectedResearch) :
             Promise.resolve();
 
-        researchPromise.then(() => {
+        researchPromise.then(getDefaultFiltersFromApi).then(() => {
             const povValue = getPOV();
             const povElement = document.getElementById("pov-value");
 
@@ -233,7 +325,6 @@ function deleteUserData() {
     delete localStorage.userPicture;
     delete localStorage.userEmail;
     delete localStorage.userName;
-    delete localStorage.filterId;
 }
 
 $("#open-logout-modal-button").on("click", function () {

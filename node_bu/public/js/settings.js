@@ -128,19 +128,11 @@ function showUserManagement() {
     });
 }
 
-function setNavigationHandlers() {
-    // Setup navigation button event handlers
-    $("#impacts-nav-btn, #net-nav-btn, #questions-nav-btn, #icebergs-nav-btn, #filters-nav-btn").on('click', function (e) {
-        e.preventDefault();
-        history.pushState(null, null, location.href); // Push the current state to the history stack
-        window.location.href = $(this).data('target'); // Redirect to the target page
-    });
-}
 
 // Document ready function
 $(document).ready(() => {
     init_page().then(function () {
-        setNavigationHandlers();
+        createNavBar('settings');
 
         // Initialize points of view dropdown
         getPovs();
@@ -170,7 +162,7 @@ $(document).ready(() => {
                 });
             }
         });
-    }).catch(function (error) {
-        setNavigationHandlers();
+    }).catch(function () {
+        createNavBar('settings');
     });
 });

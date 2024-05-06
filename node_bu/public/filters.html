@@ -39,50 +39,14 @@
 
         <div class="collapse navbar-collapse" id="switchers-navbar">
             <div class="navbar-nav">
-                <button type="button" class="btn btn-sm text-white m-1" id="settings-nav-btn"
-                        data-target="settings"
-                        data-toggle="tooltip"
-                        data-placement="bottom" title="Settings">
-                    <i class="bi bi-gear"></i>
-                    Settings
-                </button>
-                <button type="button" class="btn btn-sm bg-primary text-white m-1" id="filters-nav-btn"
-                        data-target="filters"
-                        data-toggle="tooltip" data-placement="bottom" title="Filters">
-                    <i class="bi bi-funnel"></i>
-                    Filters
-                </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="net-nav-btn"
-                        data-target="net"
-                        data-toggle="tooltip"
-                        data-placement="bottom" title="Net">
-                    <i class="bi bi-speedometer2"></i>
-                    Net
-                </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="questions-nav-btn"
-                        data-target="questions"
-                        data-toggle="tooltip" data-placement="bottom" title="Questions">
-                    <i class="bi bi-pie-chart"></i>
-                    Questions
-                </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="impacts-nav-btn"
-                        data-target="outliers"
-                        data-toggle="tooltip" data-placement="bottom" title="Impacts">
-                    <i class="bi bi-clipboard-data text-success"></i>
-                    Impacts
-                </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="icebergs-nav-btn"
-                        data-target="icebergs"
-                        data-toggle="tooltip" data-placement="bottom" title="Hazardous">
-                    <i class="bi bi-exclamation-triangle text-danger"></i>
-                    Hazardous
-                </button>
             </div>
         </div>
 
         <!-- POV STATUS -->
         <div class="ml-2 mr-5 text-white">
             <strong class="">POV: </strong><span id="pov-value"></span>
+            <br>
+            <strong class="" id="filter-value">Filter: </strong><span id="filter-name"></span>
         </div>
         <!-- END OF POV STATUS -->
 
@@ -121,7 +85,7 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">Hi <span class="text-primary" id="user-name"></span>!</h4>
-<!--                        <i class="bi bi-chat-text"></i>-->
+                        <!--                        <i class="bi bi-chat-text"></i>-->
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
 
@@ -167,12 +131,12 @@
                                     aria-selected="true">Create Filter
                             </button>
                         </li>
-                        <!--                        <li class="nav-item" role="presentation">-->
-                        <!--                            <button class="nav-link" id="filter-list-tab" data-bs-toggle="tab"-->
-                        <!--                                    data-bs-target="#filter-list" type="button" role="tab"-->
-                        <!--                                    aria-controls="request-headers" aria-selected="false">Filter List-->
-                        <!--                            </button>-->
-                        <!--                        </li>-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="filter-list-tab" data-bs-toggle="tab"
+                                    data-bs-target="#filter-list" type="button" role="tab"
+                                    aria-controls="filter-list" aria-selected="false">Filter List
+                            </button>
+                        </li>
                     </ul>
 
                     <div class="tab-content p-3 border-top-0">
@@ -182,61 +146,67 @@
                                 <!-- Cloned templates will be appended here -->
                             </div>
 
-
                             <div data-create-filter></div>
                             <button id="add-condition-btn" class="mt-2 btn btn-outline-primary" type="button"> + Add
                                 Condition
                             </button>
 
-                            <template id="condition-template">
-                                <div class="condition-pair">
-                                    <!-- Placeholder for a divider -->
-                                    <div class="divider-placeholder bg-secondary"></div>
-
-                                    <div class="d-flex align-items-center mb-2">
-                                        <select class="form-control question-dropdown mr-2" style="flex-grow: 1;"
-                                                required>
-                                            <option value="" disabled selected>Select a question...</option>
-                                            <!-- Questions populated dynamically -->
-                                        </select>
-                                        <button type="button" class="btn btn-danger btn-sm remove-condition-btn">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                    <select class="form-control answer-dropdown" multiple required>
-                                        <option value="" disabled selected>Select question to choose answers...</option>
-                                        <!-- Answers populated dynamically -->
-                                    </select>
+                            <form class="form-inline">
+                                <div class="form-group mb-2">
+                                    <label for="filter-name" class="sr-only text-white">Filter Name:</label>
+                                    <input type="text" class="form-control" id="filter-name"
+                                           placeholder="Enter filter name">
                                 </div>
-                            </template>
+                                <div id="logic-group" class="form-group mx-sm-3 mt-2 mb-2">
+                                    <div class="form-group">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons"
+                                             title="Select AND for all conditions to be met simultaneously or OR for any condition to be sufficient.">
+                                            <label class="btn bg-primary active">
+                                                <input type="radio" name="logicOptions" id="andLogic" autocomplete="off"
+                                                       data-option="and" checked> AND
+                                            </label>
+                                            <label class="btn btn-secondary">
+                                                <input type="radio" name="logicOptions" id="orLogic" autocomplete="off"
+                                                       data-option="or"> OR
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <button id="add-filter-btn" class="mb-2 btn btn-success" type="button">Add Filter</button>
                         </div>
-                        <hr class="hr bg-light"/>
-                        <form class="form-inline">
-                            <div class="form-group mb-2">
-                                <label for="filter-name" class="sr-only text-white">Filter Name:</label>
-                                <input type="text" class="form-control" id="filter-name" placeholder="Enter filter name">
+                        <div class="tab-pane fade" id="filter-list" role="tabpanel"
+                             aria-labelledby="filter-list-tab">
+                            <div class="list-group">
+                                <!-- Filters will be injected here using JavaScript -->
                             </div>
-                            <div id="logic-group" class="form-group mx-sm-3 mb-2">
-                                <div class="form-group">
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons" title="Select AND for all conditions to be met simultaneously or OR for any condition to be sufficient.">
-                                        <label class="btn bg-primary active">
-                                            <input type="radio" name="logicOptions" id="andLogic" autocomplete="off" data-option="and" checked> AND
-                                        </label>
-                                        <label class="btn btn-secondary">
-                                            <input type="radio" name="logicOptions" id="orLogic" autocomplete="off" data-option="or"> OR
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-danger btn-sm remove-filter-btn" style="visibility: hidden;">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </form>
-                        <button id="add-filter-btn" class="mb-2 btn btn-success" type="button">Add Filter</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <template id="condition-template">
+                <div class="condition-pair">
+                    <!-- Placeholder for a divider -->
+                    <div class="divider-placeholder bg-secondary"></div>
+
+                    <div class="d-flex align-items-center mb-2">
+                        <select class="form-control question-dropdown mr-2" style="flex-grow: 1;"
+                                required>
+                            <option value="" disabled selected>Select a question...</option>
+                            <!-- Questions populated dynamically -->
+                        </select>
+                        <button type="button" class="btn btn-danger btn-sm remove-condition-btn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <select class="form-control answer-dropdown" multiple required>
+                        <option value="" disabled selected>Select question to choose answers...
+                        </option>
+                        <!-- Answers populated dynamically -->
+                    </select>
+                </div>
+            </template>
         </main>
         <!--Main layout-->
     </div>

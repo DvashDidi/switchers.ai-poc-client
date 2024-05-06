@@ -63,7 +63,6 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
 
 function getQuestionData(questionId) {
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
-
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -90,7 +89,7 @@ function getQuestionData(questionId) {
     });
 }
 
-function getImpactsData() {
+function getHazardsData() {
     let toast;
     if (getPOV()) {
         toast = Swal.mixin({
@@ -106,11 +105,11 @@ function getImpactsData() {
         toast.fire({
             icon: "info",
             title: 'Loading...',
-            text: 'Fetching Impacts data.',
+            text: 'Fetching Hazardous data.',
         });
     }
 
-    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/outliers`, {
+    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/hazards`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -131,7 +130,7 @@ function getImpactsData() {
         return response.json();
     }).then(function (data) {
         questionsData = data;
-        populateQuestionsList(questionsData, localStorage.getItem("impactLevel") || "medium");
+        populateQuestionsList(questionsData, localStorage.getItem("hazardLevel") || "medium");
 
         if (getPOV()) {
             toast.close(); // Close the loading Swal when data is received and processed
@@ -163,24 +162,10 @@ function addPlaceholderListeners() {
     });
 }
 
-function setNavigationHandlers() {
-    // Navigation button event handlers
-    $("#questions-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn, #filters-nav-btn").each(function () {
-        $(this).on('click', function (e) {
-            e.preventDefault(); // Prevent the default action
-
-            // Push the current state to the history stack
-            history.pushState(null, null, location.href);
-
-            // Redirect to the target page
-            window.location.href = $(this).data('target');
-        });
-    });
-}
 
 function _main() {
     init_page().then(function () {
-        setNavigationHandlers();
+        createNavBar('hazards');
 
         questionDivider = document.getElementById("additional-text-divider");
 
@@ -211,16 +196,16 @@ function _main() {
             // Set the clicked button to 'btn-primary'
             $(this).removeClass('btn-secondary').addClass('btn-primary');
 
-            localStorage.setItem("impactLevel", $(this).data('level'));
+            localStorage.setItem("hazardLevel", $(this).data('level') || "medium");
 
-            populateQuestionsList(questionsData, localStorage.getItem("impactLevel"));
+            populateQuestionsList(questionsData, localStorage.getItem("hazardLevel"));
 
             // Clear the additional text container
             document.getElementById('additional-text-container').innerHTML = '';
         });
 
-        // Get the desired impact level from localStorage, defaulting to "medium" if not set
-        const impactLevel = localStorage.getItem("impactLevel") || "medium";
+        // Get the desired hazard level from localStorage, defaulting to "medium" if not set
+        const hazardLevel = localStorage.getItem("hazardLevel") || "medium";
 
         // Get all buttons with the class "sensitivity-level-button"
         const buttons = document.querySelectorAll('.sensitivity-level-button');
@@ -231,16 +216,16 @@ function _main() {
             button.classList.remove('btn-primary');
             button.classList.add('btn-secondary');
 
-            // If the button's value matches the impactLevel, switch classes
-            if (button.dataset.level === impactLevel) {
+            // If the button's value matches the hazardLevel, switch classes
+            if (button.dataset.level === hazardLevel) {
                 button.classList.remove('btn-secondary');
                 button.classList.add('btn-primary');
             }
         });
 
-        getImpactsData();
+        getHazardsData();
     }).catch(function (error) {
-        setNavigationHandlers();
+        createNavBar('hazards');
     });
 }
 

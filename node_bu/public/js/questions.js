@@ -52,12 +52,6 @@ function addClickableItem(parentContainer, question) {
 }
 
 function getQuestionData(questionId) {
-    // let useFilterIdQuery = '';
-    // if (localStorage.getItem('filterId') !== undefined) {
-    //     useFilterIdQuery = `?useFilterId=`;
-    //     //${encodeURIComponent(localStorage.getItem('filterId'))
-    // }
-
     fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
             method: "GET",
             headers: {
@@ -158,26 +152,12 @@ function getQuestionsData() {
     });
 }
 
-function setNavigationHandlers() {
-    // Navigation button event handlers
-    $("#impacts-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn, #filters-nav-btn").each(function () {
-        $(this).on('click', function (e) {
-            e.preventDefault(); // Prevent the default action
-
-            // Push the current state to the history stack
-            history.pushState(null, null, location.href);
-
-            // Redirect to the target page
-            window.location.href = $(this).data('target');
-        });
-    });
-}
 
 function _main() {
     addPlaceholderListeners();
 
     init_page().then(function () {
-        setNavigationHandlers();
+        createNavBar('questions');
 
         questionDivider = document.getElementById("additional-text-divider");
 
@@ -191,7 +171,7 @@ function _main() {
 
         getQuestionsData();
     }).catch(function (error) {
-        setNavigationHandlers();
+        createNavBar('questions');
     });
 }
 

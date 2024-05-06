@@ -91,31 +91,17 @@ function fetchDataAndUpdateUI() {
         });
 }
 
-function setNavigationHandlers() {
-    // Navigation button event handlers
-    $("#questions-nav-btn, #impacts-nav-btn, #settings-nav-btn, #icebergs-nav-btn, #filters-nav-btn").each(function () {
-        $(this).on('click', function (e) {
-            e.preventDefault(); // Prevent the default action
-
-            // Push the current state to the history stack
-            history.pushState(null, null, location.href);
-
-            // Redirect to the target page
-            window.location.href = $(this).data('target');
-        });
-    });
-}
 
 function main() {
     init_page().then(function () {
-        setNavigationHandlers();
+        createNavBar('net');
 
         // Event listener for a window resize
         window.addEventListener('resize', resizeChart);
 
         fetchDataAndUpdateUI(); // Initiate fetch operation
     }).catch(function (error) {
-        setNavigationHandlers();
+        createNavBar('net');
     });
 }
 

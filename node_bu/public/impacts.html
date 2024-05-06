@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <script src="https://fastly.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/main_view.css">
-    <link rel="stylesheet" href="css/outliers.css">
+    <link rel="stylesheet" href="css/impacts.css">
 </head>
 
 <body class="body-background-dark">
@@ -32,50 +32,14 @@
 
         <div class="collapse navbar-collapse" id="switchers-navbar">
             <div class="navbar-nav">
-                <button type="button" class="btn btn-sm text-white m-1" id="settings-nav-btn"
-                        data-target="settings"
-                        data-toggle="tooltip"
-                        data-placement="bottom" title="Settings">
-                    <i class="bi bi-gear"></i>
-                    Settings
-                </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="filters-nav-btn"
-                        data-target="filters"
-                        data-toggle="tooltip" data-placement="bottom" title="Filters">
-                    <i class="bi bi-funnel"></i>
-                    Filters
-                </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="net-nav-btn"
-                        data-target="net"
-                        data-toggle="tooltip"
-                        data-placement="bottom" title="Net">
-                    <i class="bi bi-speedometer2"></i>
-                    Net
-                </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="questions-nav-btn"
-                        data-target="questions"
-                        data-toggle="tooltip" data-placement="bottom" title="Questions">
-                    <i class="bi bi-pie-chart"></i>
-                    Questions
-                </button>
-                <button type="button" class="btn btn-sm bg-primary text-white m-1" id="impacts-nav-btn"
-                        data-target="outliers"
-                        data-toggle="tooltip" data-placement="bottom" title="Impacts">
-                    <i class="bi bi-clipboard-data text-success"></i>
-                    Impacts
-                </button>
-                <button type="button" class="btn btn-sm text-white m-1" id="icebergs-nav-btn"
-                        data-target="icebergs"
-                        data-toggle="tooltip" data-placement="bottom" title="Hazardous">
-                    <i class="bi bi-exclamation-triangle text-danger"></i>
-                    Hazardous
-                </button>
             </div>
         </div>
 
         <!-- POV STATUS -->
         <div class="ml-2 mr-5 text-white">
             <strong class="">POV: </strong><span id="pov-value"></span>
+            <br>
+            <strong class="" id="filter-value">Filter: </strong><span id="filter-name"></span>
         </div>
         <!-- END OF POV STATUS -->
 
@@ -273,6 +237,6 @@
 <script src="js/template.js" type="text/javascript"></script>
 <script src="js/auth.js" type="text/javascript"></script>
 <script src="js/googleChart.js" type="text/javascript"></script>
-<script src="js/outliers.js" type="text/javascript"></script>
+<script src="js/impacts.js" type="text/javascript"></script>
 </body>
 </html>

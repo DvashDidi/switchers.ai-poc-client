@@ -8,20 +8,6 @@ let toast = Swal.mixin({
     }
 });
 
-function setNavigationHandlers() {
-    // Navigation button event handlers
-    $("#questions-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn, #impacts-nav-btn").each(function () {
-        $(this).on('click', function (e) {
-            e.preventDefault(); // Prevent the default action
-
-            // Push the current state to the history stack
-            history.pushState(null, null, location.href);
-
-            // Redirect to the target page
-            window.location.href = $(this).data('target');
-        });
-    });
-}
 
 async function fetchQuestions() {
     const response = await fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
@@ -48,6 +34,8 @@ async function fetchAnswers(questionId) {
 
 function handleFilterCreation() {
     const conditionsContainer = document.getElementById('conditions-container');
+    document.getElementById('conditions-container').innerHTML = "";
+
     const addConditionBtn = document.getElementById('add-condition-btn');
     const addFilterBtn = document.getElementById('add-filter-btn');
 
@@ -83,11 +71,13 @@ function handleFilterCreation() {
         questions.forEach(question => {
             const option = document.createElement('option');
             option.value = question.id;
-            option.textContent = question.text;
-            // Add dataset attributes to each question option
+            option.textContent = `Q${question.sequence_number}: ${question.text}`;
+
+            // Add dataset attributes to each questions option
             option.dataset.sequenceNumber = question.sequence_number;
             option.dataset.questionId = question.id;
             option.dataset.researchId = question.research_id;
+
             questionDropdown.appendChild(option);
         });
 
@@ -95,15 +85,18 @@ function handleFilterCreation() {
         questionDropdown.addEventListener('change', async function () {
             const questionId = this.value;
             const answers = await fetchAnswers(questionId);
+
             answerDropdown.innerHTML = ''; // Clear previous answers if any
             answers.forEach(answer => {
                 const option = document.createElement('option');
                 option.value = answer.id;
                 option.textContent = answer.text;
+
                 // Add dataset attributes to each answer option
                 option.dataset.sequenceNumber = answer.sequence_number;
                 option.dataset.answerId = answer.id;
                 option.dataset.questionId = answer.question_id;
+
                 answerDropdown.appendChild(option);
             });
         });
@@ -124,29 +117,29 @@ function handleFilterCreation() {
         const conditionPairs = document.querySelectorAll('.condition-pair');
         let isValid = true;
 
+        let input = document.getElementById('filter-name');
+        if (input.value.trim() === '') {
+            isValid = false;
+            toast.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                timer: 2000,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `Please choose a name for your filter`
+            }).then(() => {
+                input.scrollIntoView({behavior: 'smooth', block: 'center'});
+                input.classList.add('is-invalid');
+
+                setTimeout(() => {
+                    input.classList.remove('is-invalid');
+                }, 2100);
+            });
+        }
+
         conditionPairs.forEach(pair => {
             const questionDropdown = pair.querySelector('.question-dropdown');
             const answerDropdown = pair.querySelector('.answer-dropdown'); // Ensure defined for use below
-
-            var input = document.getElementById('filter-name');
-            if (input.value.trim() === '') {
-                isValid = false;
-                toast.fire({
-                    icon: 'warning',
-                    title: 'Oops...',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    timerProgressBar: true,
-                    text: `Please choose a name for your filter`
-                }).then(() => {
-                    input.scrollIntoView({behavior: 'smooth', block: 'center'});
-                    input.classList.add('is-invalid');
-
-                    setTimeout(() => {
-                        input.classList.remove('is-invalid');
-                    }, 2100);
-                });
-            }
 
             if (questionDropdown.value === "") {
                 isValid = false;
@@ -169,12 +162,20 @@ function handleFilterCreation() {
                 const selectedQuestionOption = questionDropdown.selectedOptions[0];
                 const selectedAnswerOptions = Array.from(answerDropdown.selectedOptions);
                 const questionSequenceNumber = selectedQuestionOption.dataset.sequenceNumber;
-                const answersSequenceNumbers = selectedAnswerOptions.map(opt => opt.dataset.sequenceNumber);
+                let answersSequenceNumbers = selectedAnswerOptions.map(opt => opt.dataset.sequenceNumber);
+                let is_excluded = false;
+
+                if (answersSequenceNumbers.length === 0) {
+                    // Check if the user hasn't chosen any answer for a specific question.
+                    // If so, filter out participants who did not respond to this question.
+                    answersSequenceNumbers = Array.from(answerDropdown).map(opt => opt.dataset.sequenceNumber);
+                    is_excluded = true;
+                }
 
                 const condition = {
                     question_sequence_number: parseInt(questionSequenceNumber),
                     answers_sequence_number: answersSequenceNumbers.map(Number),
-                    is_excluded: true,
+                    is_excluded: is_excluded,
                     type: "FilterCondition"
                 };
 
@@ -193,9 +194,22 @@ function handleFilterCreation() {
                 }
             };
 
-            addFilter(filterData)
+            addFilter(filterData);
         }
     });
+}
+
+function cleanAddFilterForm() {
+    // Clear the input for the filter name
+    document.getElementById('filter-name').value = '';
+
+    document.querySelector("#andLogic").click();
+
+    // Optionally, clear any error messages or invalid classes if you are using form validation
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = ''); // Assuming error messages might be displayed
+
+    handleFilterCreation();
 }
 
 function addFilter(filterData) {
@@ -227,10 +241,16 @@ function addFilter(filterData) {
         return response.json();
     }).then(function (filterData) {
         toast.close(); // Close the loading Swal when data is received and processed
-        localStorage.setItem('filterId', filterData.id);
 
-        hideFilterCreationElements();
-        showSuccessAnimation();
+        Swal.fire({
+            title: "Filter created successfully!",
+            text: `You can activate it in the Filter List`,
+            icon: "success",
+            showConfirmButton: true
+        }).then(() => {
+            cleanAddFilterForm();
+            location.reload();
+        });
     }).catch(function (error) {
         console.error(error);
 
@@ -247,14 +267,124 @@ function addFilter(filterData) {
     });
 }
 
-function deleteFilter() {
+function toggleFilter(filterId, isActive) {
+    if (isActive) {
+        deactivateFilter(filterId)
+    } else {
+        activateFilter(filterId)
+    }
+}
+
+function activateFilter(filterId) {
+    toast.fire({
+        icon: "info",
+        title: 'Loading...',
+        text: 'Activating Filter.',
+    });
+
+    fetch(`${apiHost}/v1/research-participant-filters/${filterId}/activate`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
+            }
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            if (response.status === 404) {
+                outdatedResearchFound();
+            }
+
+            return response.text().then(function (message) {
+                throw new Error(`${message}`);
+            });
+        }
+    }).then(function () {
+        toast.close(); // Close the loading Swal when data is received and processed
+
+        Swal.fire({
+            title: "Filter activated successfully!",
+            text: `filter is now active`,
+            icon: "success",
+            showConfirmButton: false
+        });
+
+        location.reload();
+    }).catch(function (error) {
+        console.error(error);
+
+        if (getPOV()) {
+            toast.fire({ // Show error Swal
+                icon: 'error',
+                title: 'Oops...',
+                timer: 1500,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `An error occurred: ${error.message}`
+            });
+        }
+    });
+}
+
+function deactivateFilter(filterId) {
+    toast.fire({
+        icon: "info",
+        title: 'Loading...',
+        text: 'Deactivating Filter.',
+    });
+
+    fetch(`${apiHost}/v1/research-participant-filters/${filterId}/deactivate`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
+            }
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            if (response.status === 404) {
+                outdatedResearchFound();
+            }
+
+            return response.text().then(function (message) {
+                throw new Error(`${message}`);
+            });
+        }
+    }).then(function () {
+        toast.close(); // Close the loading Swal when data is received and processed
+
+        Swal.fire({
+            title: "Filter deactivated successfully!",
+            text: `filter is deactivated now`,
+            icon: "success",
+            showConfirmButton: false
+        });
+
+        location.reload();
+    }).catch(function (error) {
+        console.error(error);
+
+        if (getPOV()) {
+            toast.fire({ // Show error Swal
+                icon: 'error',
+                title: 'Oops...',
+                timer: 1500,
+                showConfirmButton: false,
+                timerProgressBar: true,
+                text: `An error occurred: ${error.message}`
+            });
+        }
+    });
+}
+
+function deleteFilter(filterId) {
     toast.fire({
         icon: "info",
         title: 'Loading...',
         text: 'Deleting Filter.',
     });
 
-    fetch(`${apiHost}/v1/research-participant-filters/${localStorage.getItem('filterId')}`, {
+    fetch(`${apiHost}/v1/research-participant-filters/${filterId}`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
@@ -273,7 +403,6 @@ function deleteFilter() {
         }
     }).then(function () {
         toast.close(); // Close the loading Swal when data is received and processed
-        delete localStorage.filterId;
 
         location.reload();
     }).catch(function (error) {
@@ -339,33 +468,84 @@ function getFilters() {
     });
 }
 
-function hideFilterCreationElements() {
-    const createFilterDiv = document.getElementById('create-filter');
-    createFilterDiv.innerHTML = ''; // Clear the content of the div
-
-    document.getElementById('add-filter-btn').remove();
-    document.getElementById('logic-group').remove();
-    document.getElementById('filter-name').disabled = true;
-
-    // Get all elements with the class name 'remove-filter-btn'
-    let elements = document.getElementsByClassName('remove-filter-btn');
-    elements[0].style.display = ''; // Set display property to default
-    elements[0].style.visibility = 'visible'; // Make sure the element is visible
+function confirmDeleteFilter(filterName, filterId) {
+    Swal.fire({
+        title: `Are you sure you want to delete '${filterName}' filter?`,
+        text: "This action cannot be undone.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Delete',
+        cancelButtonText: 'No',
+        confirmButtonColor: '#d33',  // Red color for the Delete button
+        cancelButtonColor: '#3085d6',  // Blue color for the No button
+        reverseButtons: true  // Reverses the order of the buttons
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteFilter(filterId);  // Call your function to delete the filter
+        }
+    });
 }
 
-function showSuccessAnimation() {
-    Swal.fire({
-        title: "Filter created successfully!",
-        text: `You can now view the analysis changes`,
-        icon: "success",
-        showConfirmButton: true
+function displayFilters(filters) {
+    const listGroup = document.querySelector('.list-group');
+    listGroup.innerHTML = '';  // Clear existing filters
+
+    filters.forEach(filter => {
+        const isActive = filter.is_active;
+        const filterElement = document.createElement('div');
+        filterElement.className = 'list-group-item';
+        filterElement.classList.add("list-group-item", "m-2");
+        filterElement.innerHTML = `
+            <h5 class="list-group-item-heading">${filter.name}</h5>
+            <p class="list-group-item-text">Status: <span class="badge ${isActive ? 'badge-success' : 'badge-secondary'}">${isActive ? 'Active' : 'Inactive'}</span></p>
+            <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn">${isActive ? 'Deactivate' : 'Activate'}</button>
+            <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+            <br>
+            ${parseFloat(filter.statistic_weight).toFixed(2)} participants
+            <br>
+            ${filter.ratio}% of the research participants
+        `;
+
+        listGroup.appendChild(filterElement);
+
+        // Add event listeners for buttons
+        const activateBtn = filterElement.querySelector('.activate-btn');
+        activateBtn.addEventListener('click', () => toggleFilter(filter.id, isActive));
+
+        const deleteBtn = filterElement.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', () => confirmDeleteFilter(filter.name, filter.id));
+    });
+}
+
+function sortFilters(filters) {
+    return filters.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+    });
+}
+
+function reloadPreviousActiveTab() {
+    // Set the active tab from localStorage if exists
+    const activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+        $('.nav-tabs button[data-bs-target="' + activeTab + '"]').tab('show');
+    } else {
+        // Optionally set a default tab if none is stored
+        $('.nav-tabs button[data-bs-target="#create-filter"]').tab('show');
+    }
+
+    // Update localStorage when tab changes
+    $('button[data-bs-toggle="tab"]').on('click', function (e) {
+        const activeTab = $(e.target).attr('data-bs-target');
+        localStorage.setItem('activeTab', activeTab);
     });
 }
 
 // Document ready function
 $(document).ready(() => {
     init_page().then(function () {
-        setNavigationHandlers();
+        createNavBar('filters');
+
+        reloadPreviousActiveTab();
 
         $('input[name="logicOptions"]').change(function () {
             // Reset classes
@@ -377,23 +557,15 @@ $(document).ready(() => {
             $('input[name="logicOptions"]:checked').parent().removeClass('btn-secondary').addClass('bg-primary');
         });
 
-        let removeFilterButtons = document.getElementsByClassName('remove-filter-btn');
-        for (let i = 0; i < removeFilterButtons.length; i++) {
-            removeFilterButtons[i].addEventListener('click', function() {
-                deleteFilter();
-            });
-        }
-
         getFilters().then(function (filtersData) {
             if (filtersData.length > 0) {
-                document.getElementById('filter-name').value = filtersData[0].name;
-                localStorage.setItem('filterId', filtersData[0].id);
-
-                hideFilterCreationElements();
-            } else {
-                handleFilterCreation();
+                sortFilters(filtersData);
+                displayFilters(filtersData);
             }
         });
     }).catch(() => {
-    })
+        createNavBar('filters');
+    });
+
+    handleFilterCreation();
 });
