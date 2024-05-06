@@ -56,7 +56,7 @@ function getQuestionData(questionId) {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             }
         }
     ).then(function (response) {
@@ -113,7 +113,7 @@ function getQuestionsData() {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": sessionToken ? `bearer ${sessionToken}` : ""
+                "Authorization": `bearer ${descopeSdk.getSessionToken()}`
             }
         }
     ).then(function (response) {
@@ -152,26 +152,12 @@ function getQuestionsData() {
     });
 }
 
-function setNavigationHandlers() {
-    // Navigation button event handlers
-    $("#impacts-nav-btn, #net-nav-btn, #settings-nav-btn, #icebergs-nav-btn").each(function () {
-        $(this).on('click', function (e) {
-            e.preventDefault(); // Prevent the default action
-
-            // Push the current state to the history stack
-            history.pushState(null, null, location.href);
-
-            // Redirect to the target page
-            window.location.href = $(this).data('target');
-        });
-    });
-}
 
 function _main() {
     addPlaceholderListeners();
 
     init_page().then(function () {
-        setNavigationHandlers();
+        createNavBar('questions');
 
         questionDivider = document.getElementById("additional-text-divider");
 
@@ -185,7 +171,7 @@ function _main() {
 
         getQuestionsData();
     }).catch(function (error) {
-        setNavigationHandlers();
+        createNavBar('questions');
     });
 }
 

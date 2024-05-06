@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <link href="images/icons/favicon.svg" rel="shortcut icon">
+
+    <title>Switchers.ai | Filters</title>
+
+    <meta property="og:title" content="Switchers.ai | Filters"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="https://app.switchers.ai/images/icons/favicon.svg"/>
+
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet" type="text/css">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet" type="text/css">
+    <link crossorigin="anonymous" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"
+          rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://fastly.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="css/main_view.css">
+    <link rel="stylesheet" href="css/filters.css">
+</head>
+
+<body class="body-background-dark">
+
+<div>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-md bg-dark">
+        <a href="https://switchers.ai" class="navbar-brand">
+            <div class="logo dark-mode-logo" id="site-logo"></div>
+        </a>
+
+        <div class="collapse navbar-collapse" id="switchers-navbar">
+            <div class="navbar-nav">
+            </div>
+        </div>
+
+        <!-- POV STATUS -->
+        <div class="ml-2 mr-5 text-white">
+            <strong class="">POV: </strong><span id="pov-value"></span>
+            <br>
+            <strong class="" id="filter-value">Filter: </strong><span id="filter-name"></span>
+        </div>
+        <!-- END OF POV STATUS -->
+
+        <!-- DARK MODE TOGGLE -->
+        <div class="ml-2 mr-5">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="toggle-dark-mode"
+                       data-toggle="tooltip" data-placement="bottom" title="dark/light mode">
+                <label class="form-check-label text-white" for="toggle-dark-mode">Dark/Light</label>
+            </div>
+        </div>
+        <!-- END OF DARK MODE TOGGLE -->
+
+        <!-- LOG OUT -->
+        <div class="ml-2">
+            <button class="btn btn-md text-danger" data-toggle="modal" data-target="#logout-modal"
+                    id="open-logout-modal-button">
+                <i class="bi bi-door-open" data-toggle="tooltip" data-placement="bottom" title="logout"></i>
+            </button>
+        </div>
+        <!-- END OF LOG OUT -->
+
+        <a href="#" data-toggle="collapse" data-target="#switchers-navbar" class="ml-auto h3 mb-0 d-md-none">
+            <i class="bi bi-list"></i>
+        </a>
+    </nav>
+    <!-- END OF NAVBAR -->
+
+    <!-- LOG OUT MODAL -->
+    <div class="container">
+        <!-- The Modal -->
+        <div class="modal fade" id="logout-modal">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Hi <span class="text-primary" id="user-name"></span>!</h4>
+                        <!--                        <i class="bi bi-chat-text"></i>-->
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body justify-content-center">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6>Hope you had a great experience using <span class="text-primary">Switchers AI</span>
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">Are you sure you want log out?</div>
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" id="logout-button">Log Out <i
+                                class="bi bi-box-arrow-right"></i></button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close <i
+                                class="bi bi-arrow-return-left"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END OF LOG OUT MODAL -->
+
+
+    <!-- MAIN VIEW-->
+    <div id="main-view" class="container-fluid">
+        <!--Main layout-->
+        <main>
+            <div class="pt-2">
+                <!-- Filters Section -->
+                <div data-form class="bg-dark">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="create-filter-tab" data-bs-toggle="tab"
+                                    data-bs-target="#create-filter" type="button" role="tab"
+                                    aria-controls="create-filter"
+                                    aria-selected="true">Create Filter
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="filter-list-tab" data-bs-toggle="tab"
+                                    data-bs-target="#filter-list" type="button" role="tab"
+                                    aria-controls="filter-list" aria-selected="false">Filter List
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content p-3 border-top-0">
+                        <div class="tab-pane fade show active" id="create-filter" role="tabpanel"
+                             aria-labelledby="create-filter-tab">
+                            <div id="conditions-container">
+                                <!-- Cloned templates will be appended here -->
+                            </div>
+
+                            <div data-create-filter></div>
+                            <button id="add-condition-btn" class="mt-2 btn btn-outline-primary" type="button"> + Add
+                                Condition
+                            </button>
+
+                            <form class="form-inline">
+                                <div class="form-group mb-2">
+                                    <label for="filter-name" class="sr-only text-white">Filter Name:</label>
+                                    <input type="text" class="form-control" id="filter-name"
+                                           placeholder="Enter filter name">
+                                </div>
+                                <div id="logic-group" class="form-group mx-sm-3 mt-2 mb-2">
+                                    <div class="form-group">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons"
+                                             title="Select AND for all conditions to be met simultaneously or OR for any condition to be sufficient.">
+                                            <label class="btn bg-primary active">
+                                                <input type="radio" name="logicOptions" id="andLogic" autocomplete="off"
+                                                       data-option="and" checked> AND
+                                            </label>
+                                            <label class="btn btn-secondary">
+                                                <input type="radio" name="logicOptions" id="orLogic" autocomplete="off"
+                                                       data-option="or"> OR
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <button id="add-filter-btn" class="mb-2 btn btn-success" type="button">Add Filter</button>
+                        </div>
+                        <div class="tab-pane fade" id="filter-list" role="tabpanel"
+                             aria-labelledby="filter-list-tab">
+                            <div class="list-group">
+                                <!-- Filters will be injected here using JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <template id="condition-template">
+                <div class="condition-pair">
+                    <!-- Placeholder for a divider -->
+                    <div class="divider-placeholder bg-secondary"></div>
+
+                    <div class="d-flex align-items-center mb-2">
+                        <select class="form-control question-dropdown mr-2" style="flex-grow: 1;"
+                                required>
+                            <option value="" disabled selected>Select a question...</option>
+                            <!-- Questions populated dynamically -->
+                        </select>
+                        <button type="button" class="btn btn-danger btn-sm remove-condition-btn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <select class="form-control answer-dropdown" multiple required>
+                        <option value="" disabled selected>Select question to choose answers...
+                        </option>
+                        <!-- Answers populated dynamically -->
+                    </select>
+                </div>
+            </template>
+        </main>
+        <!--Main layout-->
+    </div>
+    <!-- END OF MAIN VIEW-->
+
+    <!-- EMPTY ERROR - MAIN VIEW-->
+    <div id="no-data-message-container" class="container-fluid">
+        <div id="no-data-message" class="text-center" style="display: none;">
+            <h2>Your research dashboard is currently empty.</h2>
+            <p>
+                Looks like you haven't started any research projects yet. To begin, please reach out to us at <a
+                    href="mailto:info@switchers.ai">info@switchers.ai</a>.
+                <br>
+                Our team is eager to assist you in setting up your first project and answering any questions you may
+                have. Let's get started!
+            </p>
+        </div>
+    </div>
+    <!-- END OF EMPTY ERROR - MAIN VIEW-->
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-white fixed-bottom">
+        <div class="container text-center py-2">
+            <strong>&copy; 2024 Switchers.ai. All rights reserved.</strong>
+        </div>
+    </footer>
+    <!-- End of Footer -->
+</div>
+<script crossorigin="anonymous" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+        type="text/javascript"></script>
+<script crossorigin="anonymous" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        type="text/javascript"></script>
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"
+        type="text/javascript"></script>
+<script crossorigin="anonymous" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"
+        type="text/javascript"></script>
+<script src="https://fastly.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Include Select2 CSS and JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://unpkg.com/@descope/web-js-sdk@x.x.x/dist/index.umd.js"></script>
+
+<script src="js/pub_env.js" type="text/javascript"></script>
+<script src="js/template.js" type="text/javascript"></script>
+<script src="js/auth.js" type="text/javascript"></script>
+<script src="js/filters.js" type="text/javascript"></script>
+</body>
+</html>

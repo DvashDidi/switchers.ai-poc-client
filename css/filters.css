@@ -1,0 +1,31 @@
+#conditions-container .condition-pair {
+    margin-bottom: 20px;
+}
+
+.divider {
+    height: 1px;
+    margin: 20px 0;
+}
+
+@keyframes blink-red {
+    0%, 100% {
+        border-color: transparent;
+        background-color: #FFFFFF; /* Normal background color */
+    }
+    25% {
+        border-color: #FF0000;
+        background-color: #FFDDDD; /* Light red background for emphasis */
+    }
+    50% {
+        border-color: transparent;
+        background-color: #FFFFFF; /* Normal background color */
+    }
+    70% {
+        border-color: #FF0000;
+        background-color: #FFDDDD; /* Light red background for emphasis */
+    }
+}
+
+select.is-invalid {
+    animation: blink-red 2s ease-in-out; /* Adjusted for background color change */
+}
