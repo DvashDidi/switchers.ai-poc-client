@@ -226,7 +226,7 @@ function getDefaultFiltersFromApi() {
             if (clientFilters.length === 0) {
                 $('#filter-value').hide()
             } else {
-                const filterElement = document.getElementById("header-filter-name");
+                const filterElement = document.getElementById("filter-name");
                 filterElement.innerHTML = `'${clientFilters[0]?.trim()}'` + " is active";
             }
 
