@@ -29,3 +29,17 @@
 select.is-invalid {
     animation: blink-red 2s ease-in-out; /* Adjusted for background color change */
 }
+
+.list-group {
+    display: flex;
+}
+
+.list-group-item {
+    flex-grow: 1;
+}
+
+@media (max-width: 767px) {
+    .row > [class*="col-"] {
+        margin-bottom: 20px; /* Adds bottom margin for spacing */
+    }
+}
