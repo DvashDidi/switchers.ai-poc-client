@@ -39,7 +39,7 @@ select.is-invalid {
 }
 
 @media (max-width: 767px) {
-    .row > [class*="col-"] {
+    .row > [class*="col-"]:not(:last-child) {
         margin-bottom: 20px; /* Adds bottom margin for spacing */
     }
 }
