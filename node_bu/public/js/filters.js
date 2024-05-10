@@ -496,28 +496,32 @@ function displayFilters(filters) {
         filterElement.className = 'list-group-item';
         filterElement.classList.add("list-group-item", "m-2");
         filterElement.innerHTML = `
-            <div class="row g-3">
-                    <h5 class="list-group-item-heading">${filter.name}</h5>
-                    <div>
-                        <p class="list-group-item-text">Status: <span class="badge ${isActive ? 'badge-success' : 'badge-secondary'}">${isActive ? 'Active' : 'Inactive'}</span></p>
-                        <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn">${isActive ? 'Deactivate' : 'Activate'}</button>
-                        <button class="btn btn-sm btn-danger delete-btn">Delete</button>    
-                    </div>
-                    
-                    <table class="table table-responsive">
+            <div class="row align-items-center">
+                <div class="col-xs-12 col-sm-12 col-md-7">
+                    <h5>${filter.name}</h5>
+                    <p>Status: <span class="badge ${isActive ? 'badge-success' : 'badge-secondary'}">${isActive ? 'Active' : 'Inactive'}</span></p>
+        
+                    <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn">${isActive ? 'Deactivate' : 'Activate'}</button>
+                    <button class="btn btn-sm btn-danger delete-btn">Delete</button>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-5">
+                    <table class="table">
                         <thead>
                             <tr>
+                                <th> </th>
                                 <th>Participants</th>
-                                <th>Percentage</th>
+                                <th>% of the research participants</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>${parseFloat(filter.statistic_weight).toFixed(2)} participants</td>
-                                <td>${filter.ratio}% of the research participants</td>
+                                <td style="font-weight: bold">All</td>
+                                <td>${parseFloat(filter.statistic_weight).toFixed(2)}</td>
+                                <td>${filter.ratio}%</td>
                             </tr>
                         </tbody>
-                    </table>                
+                    </table>
+                </div>
             </div>
         `;
 
