@@ -496,14 +496,29 @@ function displayFilters(filters) {
         filterElement.className = 'list-group-item';
         filterElement.classList.add("list-group-item", "m-2");
         filterElement.innerHTML = `
-            <h5 class="list-group-item-heading">${filter.name}</h5>
-            <p class="list-group-item-text">Status: <span class="badge ${isActive ? 'badge-success' : 'badge-secondary'}">${isActive ? 'Active' : 'Inactive'}</span></p>
-            <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn">${isActive ? 'Deactivate' : 'Activate'}</button>
-            <button class="btn btn-sm btn-danger delete-btn">Delete</button>
-            <br>
-            ${parseFloat(filter.statistic_weight).toFixed(2)} participants
-            <br>
-            ${filter.ratio}% of the research participants
+            <div class="row g-3">
+                    <h5 class="list-group-item-heading">${filter.name}</h5>
+                    <div>
+                        <p class="list-group-item-text">Status: <span class="badge ${isActive ? 'badge-success' : 'badge-secondary'}">${isActive ? 'Active' : 'Inactive'}</span></p>
+                        <button class="btn btn-sm ${isActive ? 'btn-secondary' : 'btn-primary'} activate-btn">${isActive ? 'Deactivate' : 'Activate'}</button>
+                        <button class="btn btn-sm btn-danger delete-btn">Delete</button>    
+                    </div>
+                    
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Participants</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${parseFloat(filter.statistic_weight).toFixed(2)} participants</td>
+                                <td>${filter.ratio}% of the research participants</td>
+                            </tr>
+                        </tbody>
+                    </table>                
+            </div>
         `;
 
         listGroup.appendChild(filterElement);
