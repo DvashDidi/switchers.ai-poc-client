@@ -64,7 +64,7 @@ function displayCandidateData(povData) {
 
 // Function to fetch points of view (povs) from the API
 function getPovs() {
-    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/points-of-view`, {
+    fetch(apiQueryParams(`research/${getSelectedResearch()}/points-of-view`), {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -89,9 +89,13 @@ function getPovs() {
 }
 
 function showUserManagement() {
-    let tenantId = descopeSdk.getTenants(descopeSdk.getSessionToken())[0];
+    let tenantId = getParameterByName('tenant');
 
-    fetch(`${apiHost}/v1/user/${tenantId}/admin`, {
+    if (!tenantId) {
+        tenantId = descopeSdk.getTenants(descopeSdk.getSessionToken())[0];
+    }
+
+    fetch(apiQueryParams(`user/${tenantId}/admin`), {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

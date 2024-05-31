@@ -49,14 +49,17 @@ const baseColors = [
 ];
 
 function setNavigationHandlers(navigationIds) {
+    const tenantId = getParameterByName('tenant');
+    const queryParams = tenantId ? `?tenant=${tenantId}` : '';
+
     for (const navigationId of navigationIds) {
         const navigationBtn = document.getElementById(`${navigationId}-nav-btn`);
         if (navigationBtn) {
             navigationBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 history.pushState(null, null, location.href);
-                window.location.href = navigationBtn.dataset.target;
-            })
+                window.location.href = navigationBtn.dataset.target + queryParams;
+            });
         }
     }
 }
@@ -176,7 +179,7 @@ function setSelectedResearch(value) {
 
 function getDefaultResearchFromApi() {
     return new Promise(function (resolve, reject) {
-        fetch(`${apiHost}/v1/research/default`, {
+        fetch(apiQueryParams(`research/default`), {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -202,7 +205,7 @@ function getDefaultResearchFromApi() {
 
 function getDefaultFiltersFromApi() {
     return new Promise(function (resolve, reject) {
-        fetch(`${apiHost}/v1/research/${getSelectedResearch()}/research-participant-filters/active`, {
+        fetch(apiQueryParams(`research/${getSelectedResearch()}/research-participant-filters/active`), {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
@@ -330,3 +333,20 @@ function deleteUserData() {
 $("#open-logout-modal-button").on("click", function () {
     $(`#user-name`).text(localStorage.getItem('userName') || "");
 });
+
+// Function to get the value of a parameter by name from the URL
+function getParameterByName(name) {
+    // Get the current URL
+    const url = new URL(window.location.href);
+
+    // Use URLSearchParams to access query parameters
+    const params = new URLSearchParams(url.search);
+
+    return params.get(name);
+}
+
+function apiQueryParams(url) {
+    const tenantId = getParameterByName('tenant');
+
+    return `${apiHost}/v1/${url}${tenantId ? '?tenant=' + tenantId : ''}`;
+}

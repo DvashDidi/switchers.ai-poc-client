@@ -8,9 +8,8 @@ let toast = Swal.mixin({
     }
 });
 
-
 async function fetchQuestions() {
-    const response = await fetch(`${apiHost}/v1/research/${getSelectedResearch()}/questions`, {
+    const response = await fetch(apiQueryParams(`research/${getSelectedResearch()}/questions`), {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -22,7 +21,7 @@ async function fetchQuestions() {
 }
 
 async function fetchAnswers(questionId) {
-    const response = await fetch(`${apiHost}/v1/question/${questionId}/answers`, {
+    const response = await fetch(apiQueryParams(`question/${questionId}/answers`), {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
@@ -202,7 +201,6 @@ function handleFilterCreation() {
 function cleanAddFilterForm() {
     // Clear the input for the filter name
     document.getElementById('new-filter-name').value = '';
-
     document.querySelector("#andLogic").click();
 
     // Optionally, clear any error messages or invalid classes if you are using form validation
@@ -219,7 +217,7 @@ function addFilter(filterData) {
         text: 'Adding Filter.',
     });
 
-    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/research-participant-filters`, {
+    fetch(apiQueryParams(`research/${getSelectedResearch()}/research-participant-filters`), {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -282,7 +280,7 @@ function activateFilter(filterId) {
         text: 'Activating Filter.',
     });
 
-    fetch(`${apiHost}/v1/research-participant-filters/${filterId}/activate`, {
+    fetch(apiQueryParams(`research-participant-filters/${filterId}/activate`), {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
@@ -333,7 +331,7 @@ function deactivateFilter(filterId) {
         text: 'Deactivating Filter.',
     });
 
-    fetch(`${apiHost}/v1/research-participant-filters/${filterId}/deactivate`, {
+    fetch(apiQueryParams(`research-participant-filters/${filterId}/deactivate`), {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
@@ -384,7 +382,7 @@ function deleteFilter(filterId) {
         text: 'Deleting Filter.',
     });
 
-    fetch(`${apiHost}/v1/research-participant-filters/${filterId}`, {
+    fetch(apiQueryParams(`research-participant-filters/${filterId}`), {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
@@ -429,7 +427,7 @@ function getFilters() {
             text: 'Loading Your Filters.',
         });
 
-        fetch(`${apiHost}/v1/research/${getSelectedResearch()}/research-participant-filters`, {
+        fetch(apiQueryParams(`research/${getSelectedResearch()}/research-participant-filters`), {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
