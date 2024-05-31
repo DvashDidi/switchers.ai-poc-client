@@ -49,14 +49,17 @@ const baseColors = [
 ];
 
 function setNavigationHandlers(navigationIds) {
+    const tenantId = getParameterByName('tenant');
+    const queryParams = tenantId ? `?tenant=${tenantId}` : '';
+
     for (const navigationId of navigationIds) {
         const navigationBtn = document.getElementById(`${navigationId}-nav-btn`);
         if (navigationBtn) {
             navigationBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 history.pushState(null, null, location.href);
-                window.location.href = navigationBtn.dataset.target;
-            })
+                window.location.href = navigationBtn.dataset.target + queryParams;
+            });
         }
     }
 }
