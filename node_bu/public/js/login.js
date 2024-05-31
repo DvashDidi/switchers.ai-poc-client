@@ -20,7 +20,7 @@ if (!sessionToken || notValidToken) {
         if (userDetails) {
             onLoginSuccess(userDetails, false);
         } else {
-            fetch(`${apiHost}/v1/user/`, {
+            fetch(apiQueryParams(`user`), {
                     method: "GET",
                     headers: {
                         'Content-Type': 'application/json'

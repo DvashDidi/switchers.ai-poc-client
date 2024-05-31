@@ -45,7 +45,7 @@ function fetchDataAndUpdateUI() {
         });
     }
 
-    const apiUrl = `${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/net`;
+    const apiUrl = apiQueryParams(`research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/net`);
     fetch(apiUrl, {
         method: "GET",
         headers: {

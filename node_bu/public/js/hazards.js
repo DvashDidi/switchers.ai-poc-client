@@ -62,7 +62,7 @@ function addClickableItem(parentContainer, questionId, questionText, questionNum
 }
 
 function getQuestionData(questionId) {
-    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`, {
+    fetch(apiQueryParams(`research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/question/${questionId}`), {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ function getHazardsData() {
         });
     }
 
-    fetch(`${apiHost}/v1/research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/hazards`, {
+    fetch(apiQueryParams(`research/${getSelectedResearch()}/statistics/${decodeURIComponent(localStorage.getItem('pov'))}/hazards`), {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
